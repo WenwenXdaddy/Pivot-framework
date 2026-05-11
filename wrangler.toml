@@ -1,4 +1,4 @@
-name = "pivot-framework-api"
+name = "pivot-framework"
 main = "src/worker.js"
 compatibility_date = "2024-12-01"
 

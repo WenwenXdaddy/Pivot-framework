@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trump Economic Approval → Policy Pivot Framework</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAF9F6;
+  --card: #FFFFFF;
+  --card-alt: #F3F1EC;
+  --border: #E2DFD6;
+  --border-light: #EDEBE4;
+  --text: #1A1A18;
+  --text-sec: #6B6960;
+  --text-tert: #9C9A8F;
+  --accent: #2D5A9E;
+  --danger: #B03030;
+  --danger-bg: #FDF0F0;
+  --danger-light: #E88;
+  --warning: #9A6B11;
+  --warning-bg: #FDF6E8;
+  --success: #2D7A3A;
+  --success-bg: #EDF7EF;
+  --info: #2D5A9E;
+  --info-bg: #EDF2FA;
+  --font: 'DM Sans', -apple-system, sans-serif;
+  --serif: 'DM Serif Display', Georgia, serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+
+.container { max-width: 920px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+header h1 { font-family: var(--serif); font-size: 28px; font-weight: 400; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+header p { font-size: 14px; color: var(--text-sec); max-width: 600px; }
+.date-tag { display: inline-block; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tert); margin-bottom: 0.5rem; }
+
+nav.toc { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 2.5rem; position: sticky; top: 12px; z-index: 100; background: var(--card); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+nav.toc a { flex: 1; text-align: center; padding: 10px 12px; font-size: 12px; font-weight: 500; color: var(--text-sec); text-decoration: none; border-right: 1px solid var(--border); transition: all 0.15s; }
+nav.toc a:last-child { border-right: none; }
+nav.toc a:hover { background: var(--card-alt); color: var(--text); }
+nav.toc a.active { background: var(--text); color: #fff; }
+
+.section { margin-bottom: 3rem; scroll-margin-top: 60px; }
+.section-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-tert); margin-bottom: 12px; }
+h2 { font-family: var(--serif); font-size: 22px; font-weight: 400; margin-bottom: 1rem; }
+h3 { font-size: 15px; font-weight: 600; margin-bottom: 0.75rem; }
+
+.gauge-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 2rem; }
+.gauge { background: var(--card); border: 1px solid var(--border-light); border-radius: 12px; padding: 16px 18px; }
+.gauge-label { font-size: 12px; color: var(--text-sec); margin-bottom: 4px; }
+.gauge-val { font-size: 24px; font-weight: 600; }
+.gauge-val.danger { color: var(--danger); }
+.gauge-val.warning { color: var(--warning); }
+.gauge-sub { font-size: 11px; color: var(--text-tert); margin-top: 3px; }
+.gauge-bar { height: 4px; border-radius: 2px; background: var(--border-light); margin-top: 12px; position: relative; }
+.gauge-fill { height: 100%; border-radius: 2px; position: absolute; left: 0; top: 0; }
+.gauge-marker { position: absolute; top: -4px; width: 2px; height: 12px; border-radius: 1px; }
+
+.chain { display: flex; align-items: stretch; margin-bottom: 2rem; }
+.chain-step { flex: 1; padding: 14px 16px; background: var(--card); border: 1px solid var(--border-light); border-radius: 10px; }
+.chain-arrow { display: flex; align-items: center; justify-content: center; width: 30px; flex-shrink: 0; color: var(--text-tert); font-size: 14px; }
+.chain-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+.chain-desc { font-size: 11px; color: var(--text-sec); line-height: 1.45; }
+
+.scenario-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 2rem; }
+.sc-card { border-radius: 12px; padding: 18px; border: 1px solid var(--border-light); background: var(--card); cursor: pointer; transition: all 0.2s; }
+.sc-card:hover { border-color: var(--accent); box-shadow: 0 2px 12px rgba(45,90,158,0.08); transform: translateY(-1px); }
+.sc-card.featured { border: 2px solid var(--accent); }
+.sc-tag { display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 6px; margin-bottom: 8px; }
+.sc-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.sc-card p { font-size: 12px; color: var(--text-sec); line-height: 1.45; margin-bottom: 10px; }
+.mtag { font-size: 10px; display: inline-block; padding: 2px 7px; border-radius: 4px; margin: 2px 2px 2px 0; font-weight: 500; }
+.mtag.bull { background: var(--success-bg); color: var(--success); }
+.mtag.bear { background: var(--danger-bg); color: var(--danger); }
+
+.sources { display: flex; flex-wrap: wrap; gap: 8px; }
+.src { font-size: 12px; padding: 5px 12px; border-radius: 8px; background: var(--card); border: 1px solid var(--border-light); color: var(--text-sec); }
+.src-freq { font-size: 10px; color: var(--text-tert); margin-left: 5px; }
+
+.divider { height: 1px; background: var(--border); margin: 2.5rem 0; }
+
+/* Scenario detail sections */
+.scenario-detail { display: none; }
+.scenario-detail.active { display: block; }
+
+.logic-block { margin-bottom: 2rem; }
+.logic-row { display: flex; align-items: stretch; margin-bottom: 2px; }
+.logic-lbl { width: 85px; flex-shrink: 0; display: flex; align-items: center; font-size: 11px; font-weight: 600; color: var(--text-tert); text-transform: uppercase; letter-spacing: 0.06em; }
+.logic-body { flex: 1; padding: 12px 16px; background: var(--card-alt); font-size: 13px; color: var(--text-sec); line-height: 1.55; }
+.logic-body:first-of-type { border-radius: 10px 10px 0 0; }
+.logic-body:last-of-type { border-radius: 0 0 10px 10px; }
+.logic-body strong { color: var(--text); font-weight: 600; }
+.logic-arrow-row { display: flex; align-items: center; padding-left: 85px; color: var(--text-tert); font-size: 14px; height: 22px; }
+
+.asset-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 2rem; }
+.asset-card { border-radius: 12px; padding: 18px; background: var(--card); border: 1px solid var(--border-light); }
+.asset-name { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.asset-dir { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+.asset-desc { font-size: 12px; color: var(--text-sec); line-height: 1.5; margin-bottom: 10px; }
+.trade { font-size: 12px; padding: 6px 10px; background: var(--card-alt); border-radius: 8px; margin-bottom: 5px; }
+.trade strong { font-weight: 600; }
+
+.phase-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 2rem; }
+.phase { background: var(--card); border: 1px solid var(--border-light); border-radius: 12px; padding: 16px 18px; }
+.phase-num { font-size: 10px; font-weight: 600; color: var(--text-tert); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.phase-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.phase-desc { font-size: 12px; color: var(--text-sec); line-height: 1.45; margin-bottom: 6px; }
+.phase-dur { font-size: 11px; color: var(--text-tert); font-style: italic; }
+
+.sector-tbl { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 2rem; }
+.sector-tbl th { text-align: left; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tert); padding: 8px 12px; border-bottom: 2px solid var(--border); }
+.sector-tbl td { padding: 10px 12px; border-bottom: 1px solid var(--border-light); vertical-align: top; }
+.sector-tbl .sn { font-weight: 600; }
+.sector-tbl .names { font-size: 11px; color: var(--text-sec); }
+.stag { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+.stag.hi { background: var(--success-bg); color: var(--success); }
+.stag.md { background: var(--warning-bg); color: var(--warning); }
+
+.macro-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 2rem; }
+.macro-card { background: var(--card-alt); border-radius: 10px; padding: 14px 16px; }
+.macro-lbl { font-size: 11px; color: var(--text-tert); font-weight: 500; margin-bottom: 2px; }
+.macro-val { font-size: 16px; font-weight: 600; }
+.macro-note { font-size: 11px; color: var(--text-sec); margin-top: 4px; line-height: 1.4; }
+
+.timeline { display: flex; gap: 0; margin-bottom: 2rem; position: relative; padding-top: 8px; }
+.timeline::before { content: ''; position: absolute; top: 14px; left: 5%; right: 5%; height: 2px; background: var(--border); }
+.tl-step { flex: 1; position: relative; padding-top: 24px; text-align: center; }
+.tl-dot { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 14px; height: 14px; border-radius: 50%; z-index: 1; }
+.tl-label { font-size: 12px; font-weight: 600; margin-bottom: 3px; }
+.tl-desc { font-size: 10px; color: var(--text-sec); line-height: 1.35; padding: 0 4px; }
+
+.trap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 2rem; }
+.trap-card { border-radius: 12px; padding: 18px; background: var(--card); border: 1px solid var(--border-light); }
+.trap-title { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.trap-desc { font-size: 12px; color: var(--text-sec); line-height: 1.5; }
+
+.hurt-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 2rem; }
+.hurt-card { background: var(--card-alt); border-radius: 10px; padding: 14px 16px; }
+.hurt-lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--danger); margin-bottom: 4px; }
+.hurt-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.hurt-desc { font-size: 11px; color: var(--text-sec); line-height: 1.45; }
+
+.pos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 2rem; }
+.pos-card { border-radius: 12px; padding: 16px; border: 1px solid var(--border-light); background: var(--card); }
+.pos-dir { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.pos-name { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
+.pos-rat { font-size: 12px; color: var(--text-sec); line-height: 1.45; margin-bottom: 8px; }
+.pos-expr { font-size: 12px; padding: 6px 10px; background: var(--card-alt); border-radius: 8px; }
+.pos-expr strong { font-weight: 600; }
+
+.prose { font-size: 14px; color: var(--text-sec); line-height: 1.7; margin-bottom: 1.5rem; }
+.prose strong { color: var(--text); font-weight: 600; }
+
+.invalidation { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1rem; }
+.inv-tag { font-size: 12px; padding: 5px 12px; border-radius: 8px; border: 1px solid var(--border-light); color: var(--text-sec); background: var(--card); }
+
+footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-tert); }
+
+@media (max-width: 700px) {
+  .gauge-row, .scenario-cards, .asset-grid, .phase-row, .macro-row, .hurt-row, .pos-grid, .trap-grid { grid-template-columns: 1fr; }
+  .chain { flex-direction: column; }
+  .chain-arrow { width: auto; height: 22px; }
+  nav.toc { flex-wrap: wrap; }
+  nav.toc a { font-size: 11px; padding: 8px 6px; }
+  .timeline { flex-direction: column; gap: 12px; }
+  .timeline::before { display: none; }
+  .tl-dot { position: static; transform: none; margin: 0 auto 4px; }
+  .tl-step { padding-top: 0; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="date-tag">Research framework — March 28, 2026</div>
+  <h1>Trump Economic Approval → Policy Pivot Framework</h1>
+  <p>Tracking economic approval ratings as a leading indicator for policy pivots, with scenario analysis mapping political dynamics to market positioning across rates, gold, and equity volatility.</p>
+</header>
+
+<nav class="toc" id="toc">
+  <a href="#overview" class="active" onclick="showSection('overview')">Overview</a>
+  <a href="#s1" onclick="showSection('s1')">S1: No Pivot</a>
+  <a href="#s2" onclick="showSection('s2')">S2: Tariff Rollback</a>
+  <a href="#s3" onclick="showSection('s3')">S3: Oil Trap</a>
+  <a href="#sources-section" onclick="showSection('sources-section')">Data Sources</a>
+</nav>
+
+<!-- ═══════════════════ OVERVIEW ═══════════════════ -->
+<div class="scenario-detail active" id="overview">
+
+<div class="section">
+  <div class="section-label">Current readings — March 2026</div>
+  <div class="gauge-row">
+    <div class="gauge">
+      <div class="gauge-label">Economic approval</div>
+      <div class="gauge-val danger">29%</div>
+      <div class="gauge-sub">Below Biden's all-time low (32%)</div>
+      <div class="gauge-bar"><div class="gauge-fill" style="width:29%;background:var(--danger);opacity:0.65"></div><div class="gauge-marker" style="left:32%;background:var(--warning)"></div></div>
+    </div>
+    <div class="gauge">
+      <div class="gauge-label">GOP-specific approval</div>
+      <div class="gauge-val warning">82%</div>
+      <div class="gauge-sub">Down from 88% in 3 weeks</div>
+      <div class="gauge-bar"><div class="gauge-fill" style="width:82%;background:var(--warning);opacity:0.55"></div><div class="gauge-marker" style="left:75%;background:var(--danger)"></div></div>
+    </div>
+    <div class="gauge">
+      <div class="gauge-label">Generic ballot (D vs R)</div>
+      <div class="gauge-val danger">D+9</div>
+      <div class="gauge-sub">Was R+14 under Biden</div>
+      <div class="gauge-bar"><div class="gauge-fill" style="width:70%;background:var(--danger);opacity:0.55"></div><div class="gauge-marker" style="left:50%;background:var(--text-tert)"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">Transmission mechanism</div>
+  <div class="chain">
+    <div class="chain-step"><div class="chain-title">Affordability shock</div><div class="chain-desc">Gas prices + tariffs + sticky inflation erode household confidence</div></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step"><div class="chain-title">Econ approval collapses</div><div class="chain-desc">Headline drops below Biden floor; independents at -48 net</div></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step"><div class="chain-title">Intra-GOP fracture</div><div class="chain-desc">GOP approval trends below 80%; 61% say Rs shouldn't back Trump blindly</div></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step"><div class="chain-title">Congressional break</div><div class="chain-desc">Vulnerable Rs in OH, NC publicly demand tariff relief</div></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step"><div class="chain-title">Policy pivot</div><div class="chain-desc">Selective tariff rollback, exemptions horse-traded for votes</div></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+  <div class="section-label">Scenario tree → market implications</div>
+  <p class="prose">Click any scenario card to view detailed analysis and positioning.</p>
+  <div class="scenario-cards">
+    <div class="sc-card" onclick="showSection('s1')">
+      <div class="sc-tag" style="background:var(--danger-bg);color:var(--danger);">No pivot</div>
+      <h3>Approval stabilizes at lows</h3>
+      <p>Admin accepts midterm losses. Tariff + fiscal stance maintained. Stagflation probability elevated.</p>
+      <span class="mtag bull">Gold / commodities</span>
+      <span class="mtag bear">Rate-sensitive</span>
+      <span class="mtag bear">Consumer disc.</span>
+    </div>
+    <div class="sc-card featured" onclick="showSection('s2')">
+      <div class="sc-tag" style="background:var(--info-bg);color:var(--info);">Base case</div>
+      <h3>Selective tariff rollback</h3>
+      <p>GOP Senate incumbents (OH, NC) demand relief. OBBBA becomes horse-trading vehicle. Q2–Q3 2026 timeline.</p>
+      <span class="mtag bull">NDX / SPX rally</span>
+      <span class="mtag bull">Import consumer</span>
+      <span class="mtag bear">USD premium</span>
+    </div>
+    <div class="sc-card" onclick="showSection('s3')">
+      <div class="sc-tag" style="background:var(--warning-bg);color:var(--warning);">Trap</div>
+      <h3>Oil drop → bounce → no pivot</h3>
+      <p>Iran ceasefire removes gas price pressure. Approval recovers mechanically. Tariff status quo persists — most underpriced.</p>
+      <span class="mtag bear">Pivot longs</span>
+      <span class="mtag bull">Oil vol sellers</span>
+      <span class="mtag bear">Tariff-exposed</span>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- ═══════════════════ SCENARIO 1 ═══════════════════ -->
+<div class="scenario-detail" id="s1">
+
+<div class="section-label" style="color:var(--danger);">Scenario 1</div>
+<h2>No pivot — stagflation lock-in</h2>
+
+<div class="logic-block">
+  <div class="logic-row"><div class="logic-lbl">Premise</div><div class="logic-body" style="border-radius:10px 10px 0 0"><strong>Approval at 29% econ / 82% GOP does not trigger Congressional revolt.</strong> Admin calculates that tariff reversal = base betrayal, and that midterm losses are survivable (Senate map favors GOP regardless). Policy stance maintained through Nov 2026.</div></div>
+  <div class="logic-arrow-row">↓</div>
+  <div class="logic-row"><div class="logic-lbl">Macro</div><div class="logic-body"><strong>Dual supply shock persists.</strong> Tariffs + Iran oil disruption = sticky goods inflation + energy cost pass-through. Growth decelerates but doesn't crater. Fed trapped between inflation mandate and weakening labor data.</div></div>
+  <div class="logic-arrow-row">↓</div>
+  <div class="logic-row"><div class="logic-lbl">Feedback</div><div class="logic-body" style="border-radius:0 0 10px 10px"><strong>No relief valve for markets.</strong> Without tariff rollback, there's no catalyst for a broad risk-on rotation. Earnings estimates get revised down. Corporate margin compression accelerates in import-exposed sectors. The "wall of worry" market grinds lower via rotation and churn, not a monolithic crash.</div></div>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Asset class positioning</div>
+
+<div class="asset-grid">
+  <div class="asset-card">
+    <div class="asset-name" style="color:var(--warning)">Rates</div>
+    <div class="asset-dir">Curve steepens</div>
+    <div class="asset-desc">Front end anchored by a Fed that can't cut (inflation) or hike (growth). Long end reprices higher on term premium from fiscal stress + inflation expectations. 10Y pushed by deficit concerns as tariff revenue falls post-SCOTUS ruling.</div>
+    <div class="trade"><strong>Core:</strong> Steepener (2s10s or 2s30s)</div>
+    <div class="trade"><strong>Hedge:</strong> Short TLT / long SOFR futures</div>
+    <div class="trade"><strong>Key level:</strong> 10Y above 5% = stress regime</div>
+  </div>
+  <div class="asset-card">
+    <div class="asset-name" style="color:var(--success)">Gold</div>
+    <div class="asset-dir">Structural bid</div>
+    <div class="asset-desc">The ideal gold regime: negative real rates implied by stagflation, central bank buying at 585t/quarter, de-dollarization flows, and no credible policy relief. Path to $5,000+ consolidation well supported.</div>
+    <div class="trade"><strong>Core:</strong> Long gold (physical / GLD / futures)</div>
+    <div class="trade"><strong>Amplifier:</strong> Gold miners (GDX) on margin expansion</div>
+    <div class="trade"><strong>Risk:</strong> Forced liquidation in cash-conversion episodes</div>
+  </div>
+  <div class="asset-card">
+    <div class="asset-name" style="color:var(--danger)">Equity vol</div>
+    <div class="asset-dir">Elevated floor</div>
+    <div class="asset-desc">VIX at 31 with record put demand creates a vol floor. Under the surface: avg Nasdaq member drawdown of 31% vs index 7%. Corrections via rotation and churn.</div>
+    <div class="trade"><strong>Core:</strong> Long vol via put spreads on SPX</div>
+    <div class="trade"><strong>Structure:</strong> Sell near-term / buy 3-6M tails</div>
+    <div class="trade"><strong>Dispersion:</strong> Long single-stock vs short index vol</div>
+  </div>
+</div>
+
+<div class="prose"><strong>Key analytical insight:</strong> Under Scenario 1, there's no single catalyst that resolves the uncertainty. It's a grind, not a crash. That favors carry-and-hedge strategies over directional bets. The steepener thesis is driven by the SCOTUS tariff ruling's fiscal implications — lost tariff revenue means more Treasury issuance, pushing term premium higher even as the Fed considers easing. Gold benefits from the ideal combination of negative real rates, central bank buying, and no credible policy relief valve.</div>
+
+<div class="section-label">Invalidation signals</div>
+<div class="invalidation">
+  <span class="inv-tag">Iran ceasefire → oil collapses</span>
+  <span class="inv-tag">GOP Senate defections accelerate</span>
+  <span class="inv-tag">AI productivity boost offsets tariffs</span>
+  <span class="inv-tag">Fed capitulates and cuts anyway</span>
+  <span class="inv-tag">Supreme Court expands tariff limits</span>
+</div>
+
+</div>
+
+<!-- ═══════════════════ SCENARIO 2 ═══════════════════ -->
+<div class="scenario-detail" id="s2">
+
+<div class="section-label" style="color:var(--info);">Scenario 2 — base case</div>
+<h2>GOP defections → selective tariff rollback</h2>
+
+<div class="logic-block">
+  <div class="logic-row"><div class="logic-lbl">Catalyst</div><div class="logic-body" style="border-radius:10px 10px 0 0"><strong>The defection infrastructure already exists.</strong> Six House Rs voted to overturn Canada tariffs (Feb 2026). Three Rs broke the procedural shield blocking tariff votes. SCOTUS struck down IEEPA tariffs. GOP approval at 82% and falling. The question isn't if — it's when the defection count hits critical mass.</div></div>
+  <div class="logic-arrow-row">↓</div>
+  <div class="logic-row"><div class="logic-lbl">Vehicle</div><div class="logic-body"><strong>OBBBA reconciliation or Section 122 negotiation.</strong> Johnson admits "a challenge to find consensus on tariffs legislatively." But the razor-thin House majority means 3-5 Rs can extract tariff exemptions as the price of any must-pass legislation. Farm state Rs + swing district Rs form the coalition.</div></div>
+  <div class="logic-arrow-row">↓</div>
+  <div class="logic-row"><div class="logic-lbl">Outcome</div><div class="logic-body" style="border-radius:0 0 10px 10px"><strong>Partial rollback, not full reversal.</strong> Section 301 China tariffs + sector-specific steel/aluminum tariffs likely survive. What changes: the 10-15% baseline "Section 122" tariffs get exempted for key categories (consumer goods, auto parts, agricultural inputs). Effective tariff rate drops from ~17.5% to ~8-10%.</div></div>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Rally anatomy — three phases</div>
+
+<div class="phase-row">
+  <div class="phase">
+    <div class="phase-num">Phase 1</div>
+    <div class="phase-title">Sentiment snap</div>
+    <div class="phase-desc">First credible signal of rollback. VIX compresses 5-8 points. Import-heavy names gap up 5-10% intraday. Short covering drives initial move. SPX reclaims 200-DMA.</div>
+    <div class="phase-dur">Duration: 1-3 days</div>
+  </div>
+  <div class="phase">
+    <div class="phase-num">Phase 2</div>
+    <div class="phase-title">Earnings re-rate</div>
+    <div class="phase-desc">Analysts revise margins. Wells Fargo estimates +2.4% S&P EBIT uplift from tariff removal. Consumer/industrial guidance lifts. Multiple expansion in tariff-relief basket (already +20% since SCOTUS hearing).</div>
+    <div class="phase-dur">Duration: 4-8 weeks</div>
+  </div>
+  <div class="phase">
+    <div class="phase-num">Phase 3</div>
+    <div class="phase-title">Restocking cycle</div>
+    <div class="phase-desc">Real economy response. Retailers and industrials rebuild depleted inventories. Import volumes surge. Transport and logistics benefit. Small caps re-rate on domestic demand improvement.</div>
+    <div class="phase-dur">Duration: 2-4 quarters</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Sector beneficiary ranking</div>
+
+<table class="sector-tbl">
+  <thead><tr><th>Sector / names</th><th>Sensitivity</th><th>Mechanism</th></tr></thead>
+  <tbody>
+    <tr><td><span class="sn">Consumer durables & apparel</span><br><span class="names">Nike, Deckers, Under Armour, Crocs, American Eagle</span></td><td><span class="stag hi">Highest</span></td><td>Heaviest China import exposure. Mid-single digit EBITDA uplift. + $170B IEEPA refund liquidity injection.</td></tr>
+    <tr><td><span class="sn">Staples distribution & retail</span><br><span class="names">Costco, Amazon, TJX, Target, Best Buy</span></td><td><span class="stag hi">Highest</span></td><td>Margin normalization + consumer confidence recovery. TJX benefits from excess inventory clearing.</td></tr>
+    <tr><td><span class="sn">Home furnishings</span><br><span class="names">Wayfair, Williams-Sonoma, RH</span></td><td><span class="stag hi">High</span></td><td>Near-total import dependence. Wayfair unit economics flip from negative to viable.</td></tr>
+    <tr><td><span class="sn">Industrials / machinery</span><br><span class="names">Caterpillar, Deere, Stanley Black & Decker</span></td><td><span class="stag md">Medium</span></td><td>Input cost relief on imported components. Largest refund windfall for CAT/DE.</td></tr>
+    <tr><td><span class="sn">Autos</span><br><span class="names">Toyota, GM, Ford, Stellantis</span></td><td><span class="stag md">Medium</span></td><td>Overlapping tariffs on steel/aluminum/components. Ford booked $800M tariff hit in one quarter.</td></tr>
+    <tr><td><span class="sn">Financials / banks</span><br><span class="names">Regional + money center banks</span></td><td><span class="stag md">Medium</span></td><td>Indirect via consumer confidence and credit quality improvement.</td></tr>
+    <tr><td><span class="sn">Transport / logistics</span><br><span class="names">Container shipping, trucking, rails</span></td><td><span class="stag md">Medium</span></td><td>Restocking = import volume surge. Benefits lag initial rally by 1-2 quarters.</td></tr>
+  </tbody>
+</table>
+
+<div class="section-label">Macro cross-asset implications</div>
+<div class="macro-row">
+  <div class="macro-card"><div class="macro-lbl">USD</div><div class="macro-val" style="color:var(--danger)">Weakens</div><div class="macro-note">Exceptionalism premium deflates. Import volumes rising = current account pressure. DXY gives back tariff-era gains.</div></div>
+  <div class="macro-card"><div class="macro-lbl">Rates</div><div class="macro-val" style="color:var(--warning)">Mixed</div><div class="macro-note">Inflation expectations ease (positive for front end). But growth recovery + fiscal stimulus complicates the Fed's cut path.</div></div>
+  <div class="macro-card"><div class="macro-lbl">Gold</div><div class="macro-val" style="color:var(--warning)">Risk-off unwind</div><div class="macro-note">Stagflation premium compresses. Rotation out of safe havens into cyclicals. Gold corrects 5-10% but structural bid limits downside.</div></div>
+</div>
+
+<div class="prose"><strong>Key analytical insight:</strong> Wells Fargo's 28-stock tariff-relief basket has already risen 20% since the November SCOTUS hearing versus just 1% for the S&P 500. That 19-point outperformance happened on anticipation alone — the actual rollback would trigger the earnings revision and restocking phases. The political plumbing is in place: Rep. Bacon suggested as many as 30 Republicans privately agree on tariff opposition, and the SCOTUS ruling means votes now carry real policy consequences.</div>
+
+</div>
+
+<!-- ═══════════════════ SCENARIO 3 ═══════════════════ -->
+<div class="scenario-detail" id="s3">
+
+<div class="section-label" style="color:var(--warning);">Scenario 3 — the trap</div>
+<h2>Oil drop → approval bounce → no structural pivot</h2>
+
+<div class="logic-block">
+  <div class="logic-row"><div class="logic-lbl">Setup</div><div class="logic-body" style="border-radius:10px 10px 0 0"><strong>Gas prices are the primary driver of approval erosion.</strong> Silver Bulletin attributes "much of the recent decline" directly to gas prices. The Iran war is compounding tariff-era affordability pressure — but it's the visible, pump-price inflation that voters react to fastest. Remove that input, and the political math changes.</div></div>
+  <div class="logic-arrow-row">↓</div>
+  <div class="logic-row"><div class="logic-lbl">Trigger</div><div class="logic-body"><strong>Ceasefire or Hormuz reopening.</strong> Trump's 15-point plan is on the table. Allianz baseline: deal within 4 weeks, Brent ends 2026 at ~$70. EIA projects Brent dropping from $95+ to $70 by year-end if Strait reopens. Futures already price this: Dec 2026 WTI at $69 vs. spot ~$94.</div></div>
+  <div class="logic-arrow-row">↓</div>
+  <div class="logic-row"><div class="logic-lbl">The trap</div><div class="logic-body" style="border-radius:0 0 10px 10px"><strong>Approval recovers → pivot pressure evaporates → tariffs stay.</strong> If gas falls from $4+ back to $3, the most acute voter pain lifts. GOP approval stabilizes above the 80% danger zone. The defection math from Scenario 2 no longer reaches critical mass. The admin claims vindication: "We said oil would drop — and it did."</div></div>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Sequence of events</div>
+
+<div class="timeline">
+  <div class="tl-step"><div class="tl-dot" style="background:var(--danger)"></div><div class="tl-label">Now</div><div class="tl-desc">Brent $104, WTI $94. Gas $4+. Approval 29% econ. GOP at 82%.</div></div>
+  <div class="tl-step"><div class="tl-dot" style="background:var(--warning)"></div><div class="tl-label">Q2 2026</div><div class="tl-desc">Ceasefire or Hormuz reopening. Oil drops 25-30%. Gas falls toward $3.</div></div>
+  <div class="tl-step"><div class="tl-dot" style="background:var(--info)"></div><div class="tl-label">Summer</div><div class="tl-desc">Approval bounces 4-6 pts. GOP stabilizes 84-86%. Defection pressure fades.</div></div>
+  <div class="tl-step"><div class="tl-dot" style="background:var(--text-tert)"></div><div class="tl-label">Nov 2026</div><div class="tl-desc">Midterms with 10-15% baseline tariffs still in place. Slow-burn margin compression continues.</div></div>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Why this is underpriced — market positioning is binary</div>
+
+<div class="trap-grid">
+  <div class="trap-card"><div class="trap-title">What markets are pricing</div><div class="trap-desc">Most positioning is a binary bet: either things get worse (long gold, long vol — Scenario 1) or a pivot happens (long tariff-relief basket, cyclicals — Scenario 2). The ceasefire trade is the popular relief bet. But relief from oil ≠ relief from tariffs. These are being conflated.</div></div>
+  <div class="trap-card"><div class="trap-title">What markets are missing</div><div class="trap-desc">The ceasefire removes the catalyst for both the bearish AND the bullish scenario. No oil shock = no stagflation crisis. But no oil shock also = no political pressure for tariff rollback. You're left in a muddle: moderate growth, sticky inflation, and tariffs grinding on margins — the worst environment for directional bets.</div></div>
+</div>
+
+<div class="section-label">Three things that get hurt</div>
+<div class="hurt-row">
+  <div class="hurt-card"><div class="hurt-lbl">Hurt</div><div class="hurt-title">Pivot longs</div><div class="hurt-desc">WF's 28-stock tariff-relief basket (+20% since Nov) is priced for a rollback that doesn't come. Consumer/import names give back the anticipation premium.</div></div>
+  <div class="hurt-card"><div class="hurt-lbl">Hurt</div><div class="hurt-title">Oil tail hedges</div><div class="hurt-desc">Put protection on energy-exposed names becomes worthless. VIX compresses from 31 to 18-20 on ceasefire. Insurance premium decays rapidly.</div></div>
+  <div class="hurt-card"><div class="hurt-lbl">Hurt</div><div class="hurt-title">Macro directional</div><div class="hurt-desc">Neither the goldilocks (pivot + rate cuts) nor the crisis (stagflation + gold $6K) thesis plays out. Rates chop in a range. SPX grinds sideways.</div></div>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Positioning for the trap</div>
+
+<div class="pos-grid">
+  <div class="pos-card"><div class="pos-dir" style="color:var(--success)">Favored</div><div class="pos-name">Short vol / sell premium</div><div class="pos-rat">Ceasefire compresses VIX from 31 to ~20. Vol risk premium has been historically wide during war. Mean-reversion kicks in hard. Sell straddles or iron condors on SPX.</div><div class="pos-expr"><strong>Expression:</strong> Short VIX futures curve (contango normalises from backwardation)</div></div>
+  <div class="pos-card"><div class="pos-dir" style="color:var(--success)">Favored</div><div class="pos-name">Domestic-facing quality</div><div class="pos-rat">Companies with pricing power, low import exposure, and domestic revenue bases. Healthcare, domestic software, regulated utilities. They don't need a tariff rollback to grow.</div><div class="pos-expr"><strong>Expression:</strong> Long domestic quality factor / short tariff-relief basket</div></div>
+  <div class="pos-card"><div class="pos-dir" style="color:var(--danger)">Fade</div><div class="pos-name">Tariff-relief anticipation</div><div class="pos-rat">WF's basket already up 20% on SCOTUS anticipation. If political pressure evaporates with falling gas prices, these names are priced for a catalyst that doesn't arrive.</div><div class="pos-expr"><strong>Expression:</strong> Reduce/hedge consumer import + apparel overweights</div></div>
+  <div class="pos-card"><div class="pos-dir" style="color:var(--warning)">Nuanced</div><div class="pos-name">Gold — tactical short, structural long</div><div class="pos-rat">Ceasefire unwinds war premium (-5 to -10%). But central bank buying (585t/qtr), fiscal deficits, and de-dollarization persist. The correction is a dip to buy, not a regime change.</div><div class="pos-expr"><strong>Expression:</strong> Reduce tactical gold pre-ceasefire; rebuild on pullback to $4,500-4,700</div></div>
+</div>
+
+<div class="prose"><strong>Key analytical insight:</strong> JP Morgan analysts warn that even with a quick ceasefire, oil will face a lasting "security tax" from new shipping routes and higher insurance costs. Gas might fall from $4+ to $3.50, not back to $2.80. The relief may be less complete than markets expect — which means the approval bounce could be smaller than assumed, creating an uncomfortable middle ground where neither the crisis nor the relief thesis fully plays out.</div>
+
+<div class="section-label">Monitoring signals</div>
+<div class="invalidation">
+  <span class="inv-tag">Oil futures curve shape (backwardation → contango)</span>
+  <span class="inv-tag">Gas price → approval elasticity & lag</span>
+  <span class="inv-tag">Hormuz shipping insurance premiums</span>
+  <span class="inv-tag">JP Morgan "security tax" thesis</span>
+  <span class="inv-tag">Section 122 expiry timeline</span>
+</div>
+
+</div>
+
+<!-- ═══════════════════ SOURCES ═══════════════════ -->
+<div class="scenario-detail" id="sources-section">
+
+<h2>Data sources — ranked by signal frequency</h2>
+<p class="prose">For systematic tracking, these are the highest-signal sources for monitoring the approval → pivot transmission mechanism. The key actionable number is the week-over-week delta on GOP-specific approval — it determines whether Congressional Republicans feel enough heat to break ranks.</p>
+
+<div class="section-label" style="margin-top:1.5rem">High frequency (weekly / biweekly)</div>
+<div class="sources" style="margin-bottom:1.5rem">
+  <span class="src">Reuters/Ipsos Core Political<span class="src-freq">4-day rolling</span></span>
+  <span class="src">Morning Consult Pro Tracker<span class="src-freq">weekly, 12 issues</span></span>
+  <span class="src">Silver Bulletin (Nate Silver)<span class="src-freq">daily avg</span></span>
+</div>
+
+<div class="section-label">Medium frequency (monthly)</div>
+<div class="sources" style="margin-bottom:1.5rem">
+  <span class="src">Pew Research ATP<span class="src-freq">monthly, 8,500+ sample</span></span>
+  <span class="src">Fox News Poll<span class="src-freq">monthly, base bellwether</span></span>
+</div>
+
+<div class="section-label">Aggregators</div>
+<div class="sources" style="margin-bottom:1.5rem">
+  <span class="src">RealClearPolling — Economy<span class="src-freq">aggregate</span></span>
+  <span class="src">Civiqs — State-level<span class="src-freq">cumulative</span></span>
+</div>
+
+<div class="divider"></div>
+<div class="section-label">Suggested weekly tracking log (for Obsidian)</div>
+<div class="prose">Capture four numbers each week: Reuters/Ipsos econ approval %, Silver Bulletin net econ approval, Republican-specific approval %, and the generic ballot spread. The delta week-over-week on Republican approval is the single most actionable number. The generic ballot spread is the confirmation signal for whether pivot pressure is translating into actual midterm panic.</div>
+
+</div>
+
+<footer>
+  Framework as of March 28, 2026. Data sources: Reuters/Ipsos, Silver Bulletin, Pew Research, RealClearPolling, Morning Consult, BofA FMS, Wells Fargo Equity Strategy, JP Morgan Commodities, Allianz Research, World Gold Council. For research purposes only — not investment advice.
+</footer>
+
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.scenario-detail').forEach(el => el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('#toc a').forEach(a => a.classList.remove('active'));
+  document.querySelector('#toc a[href="#'+id+'"]').classList.add('active');
+  window.scrollTo({top: document.getElementById(id).offsetTop - 70, behavior: 'smooth'});
+}
+</script>
+
+</body>
+</html>

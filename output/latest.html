@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pivot Framework ！ 2026-03-30</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+:root { --bg:#FAF9F6;--card:#FFF;--card-alt:#F3F1EC;--border:#E2DFD6;--text:#1A1A18;--sec:#6B6960;--tert:#9C9A8F;
+  --danger:#B03030;--warning:#9A6B11;--success:#2D7A3A;--info:#2D5A9E;
+  --danger-bg:#FDF0F0;--warning-bg:#FDF6E8;--success-bg:#EDF7EF;--info-bg:#EDF2FA;
+  --font:'DM Sans',-apple-system,sans-serif;--serif:'DM Serif Display',Georgia,serif; }
+* { box-sizing:border-box;margin:0;padding:0 }
+body { font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6 }
+.container { max-width:880px;margin:0 auto;padding:2rem 1.5rem 4rem }
+header h1 { font-family:var(--serif);font-size:24px;font-weight:400 }
+header p { font-size:12px;color:var(--tert);margin-top:2px }
+.divider { height:1px;background:var(--border);margin:1.5rem 0 }
+.section-label { font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--tert);margin-bottom:10px }
+.gauge-row { display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem }
+.gauge { background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px }
+.gauge-label { font-size:11px;color:var(--sec) }
+.gauge-val { font-size:22px;font-weight:600;margin-top:2px }
+.gauge-sub { font-size:10px;color:var(--tert);margin-top:2px }
+.market-row { display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem }
+.mkt { background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px }
+.mkt-label { font-size:10px;color:var(--tert);text-transform:uppercase;letter-spacing:0.05em }
+.mkt-val { font-size:16px;font-weight:600;margin-top:2px }
+.headline-box { background:var(--info-bg);border-radius:10px;padding:14px 18px;margin-bottom:1.5rem }
+.headline-box .hl { font-size:14px;font-weight:500;color:var(--info) }
+.headline-box .pos { font-size:12px;color:var(--sec);margin-top:6px;line-height:1.5 }
+.alerts { display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.5rem }
+.alert-tag { font-size:11px;padding:4px 10px;border-radius:6px;background:var(--danger-bg);color:var(--danger) }
+.scenario-row { display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem }
+.sc { background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:border-color .15s }
+.sc:hover { border-color:var(--info) }
+.sc-tag { display:inline-block;font-size:10px;font-weight:600;text-transform:uppercase;padding:2px 8px;border-radius:5px;margin-bottom:6px }
+.sc h3 { font-size:14px;font-weight:600;margin-bottom:2px }
+.sc .prob { font-size:20px;font-weight:600 }
+.sc .dir { font-size:11px;margin-top:2px }
+.sc .signal { font-size:11px;color:var(--sec);margin-top:6px;line-height:1.4 }
+.elab-section { background:var(--card-alt);border-radius:10px;padding:18px;margin-bottom:1.5rem }
+.elab-section h3 { font-size:15px;font-weight:600;margin-bottom:10px }
+.elab-content { font-size:13px;color:var(--sec);line-height:1.7 }
+.elab-content p { margin-bottom:12px }
+.elab-content b { color:var(--text);font-weight:600 }
+.chart-box { background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:1.5rem }
+.chart-box h3 { font-size:13px;font-weight:600;margin-bottom:10px }
+footer { font-size:10px;color:var(--tert);margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border) }
+@media(max-width:600px) { .gauge-row,.scenario-row,.market-row { grid-template-columns:1fr } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>Pivot framework</h1>
+  <p>Updated: 2026-03-30</p>
+</header>
+<div class="divider"></div>
+
+<div class="section-label">Key readings</div>
+<div class="gauge-row">
+  <div class="gauge"><div class="gauge-label">Economic approval</div><div class="gauge-val" style="color:var(--danger)">29%</div><div class="gauge-sub">Reuters/Ipsos</div></div>
+  <div class="gauge"><div class="gauge-label">GOP approval</div><div class="gauge-val" style="color:var(--warning)">82%</div><div class="gauge-sub">Reuters/Ipsos among Republicans</div></div>
+  <div class="gauge"><div class="gauge-label">Generic ballot</div><div class="gauge-val" style="color:var(--danger)">D+6</div><div class="gauge-sub">2026 midterms</div></div>
+</div>
+
+<div class="section-label">Market context</div>
+<div class="market-row">
+  <div class="mkt"><div class="mkt-label">VIX</div><div class="mkt-val">31</div></div>
+  <div class="mkt"><div class="mkt-label">Gold</div><div class="mkt-val">$4,495</div></div>
+  <div class="mkt"><div class="mkt-label">WTI crude</div><div class="mkt-val">$102</div></div>
+  <div class="mkt"><div class="mkt-label">Gas avg</div><div class="mkt-val">$3.96</div></div>
+</div>
+
+
+        <div class="headline-box">
+          <div class="hl">Oil surged past $100 as Iran formalized Hormuz toll booth; S1 stagflation lock-in probability rising to 30%.</div>
+          <div class="pos">The oil surge past $100 strengthens S1's stagflation thesis and weakens S3's ceasefire trap. Increase gold and steepener exposure. Gas accelerating ~$0.24/week per EIA ！ if it crosses $4.50 without Congressional action, S2 defection math should accelerate rapidly.</div>
+        </div>
+
+<div class="alerts"><span class="alert-tag">CRITICAL: Econ approval (29%) below Biden all-time low (32%)</span><span class="alert-tag">CRITICAL: WTI ($102) crossed $100 critical threshold</span><span class="alert-tag">WARNING: GOP approval (82%) approaching 80% danger zone</span><span class="alert-tag">WARNING: VIX (31) in elevated uncertainty zone</span><span class="alert-tag">WARNING: Gas price ($3.96) accelerating toward $4.00+ (West Coast already $5.26)</span></div>
+
+<div class="divider"></div>
+
+<div class="section-label">Scenario probabilities ！ click to expand</div>
+<div class="scenario-row">
+        <div class="sc" onclick="showElaboration('s1')">
+          <div class="sc-tag" style="background:#FDF0F0;color:#B03030">No pivot</div>
+          <h3>S1: Stagflation lock-in</h3>
+          <div class="prob">30%</div>
+          <div class="dir" style="color:#2D7A3A">&#x2191; strengthening</div>
+          <div class="signal">WTI surged past $100 to $102; Iran formalizing Hormuz chokehold strengthens the dual supply shock thesis.</div>
+        </div>
+        <div class="sc" style="border:2px solid #2D5A9E" onclick="showElaboration('s2')">
+          <div class="sc-tag" style="background:#EDF2FA;color:#2D5A9E">Base case</div>
+          <h3>S2: Tariff rollback</h3>
+          <div class="prob">45%</div>
+          <div class="dir" style="color:#9C9A8F">&#x2192; stable</div>
+          <div class="signal">Farm state fertilizer shortage adds pressure but no new Republican defections; generic ballot narrowed to D+6.</div>
+        </div>
+        <div class="sc" onclick="showElaboration('s3')">
+          <div class="sc-tag" style="background:#FDF6E8;color:#9A6B11">Trap</div>
+          <h3>S3: Oil trap</h3>
+          <div class="prob">25%</div>
+          <div class="dir" style="color:#B03030">&#x2193; weakening</div>
+          <div class="signal">Oil surging past $100 and Iran's Hormuz toll booth contradict the ceasefire-driven oil drop thesis.</div>
+        </div></div>
+
+
+
+<div class="section-label">Historical trend</div>
+<div class="chart-box">
+  <h3>Approval readings over time</h3>
+  <canvas id="approvalChart" height="160"></canvas>
+</div>
+<div class="chart-box">
+  <h3>Scenario probability over time</h3>
+  <canvas id="scenarioChart" height="160"></canvas>
+</div>
+
+<div class="divider"></div>
+<div style="font-size:12px;color:var(--sec);line-height:1.5;margin-bottom:1rem">
+  <b>Iran status:</b> War continues. Iran formalizing Hormuz toll booth. Pakistan to host US-Iran talks. Houthis struck Israel. No ceasefire.
+</div>
+<div style="font-size:12px;color:var(--sec);line-height:1.5">
+  <b>Notes:</b> Only 2 days since baseline ！ polling data largely unchanged (same Reuters/Ipsos 3/20-3/22 period). Key moves: WTI $94★$102 (+9%), Brent $104★$109 (+4%). Iran formalized Hormuz toll booth regime. Pakistan FM says will 'soon host' US-Iran talks. Yemen Houthis claimed first missile attack on Israel since war started. China opened investigations into US trade practices. USMCA renegotiation starting Monday. Section 122 replacing SCOTUS-struck IEEPA tariffs. Generic ballot narrowed from D+9 to D+6 (RCP avg) ！ driven by pollster mix, not necessarily real shift. West Coast gas already $5.26/gal per EIA. 'No Kings' protests drew large crowds in 3,000+ cities (March 29). S&P 500 in longest losing streak since 2022.
+</div>
+
+<footer>
+  Sources: Reuters/Ipsos, Silver Bulletin, Pew Research, RealClearPolling, Morning Consult, Wells Fargo, JP Morgan, Allianz. Not investment advice.
+</footer>
+
+</div>
+
+<script>
+function showElaboration(key) {
+  document.querySelectorAll('.elab-section').forEach(el => el.style.display = 'none');
+  const el = document.getElementById('elab-' + key);
+  if (el) el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+
+const labels = ["2026-03-28", "2026-03-30"];
+if (labels.length > 1) {
+  new Chart(document.getElementById('approvalChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Econ approval %', data: [29, 29], borderColor: '#B03030', borderWidth: 1.5, pointRadius: 3, tension: 0.3 },
+        { label: 'GOP approval %', data: [82, 82], borderColor: '#9A6B11', borderWidth: 1.5, pointRadius: 3, tension: 0.3 }
+      ]
+    },
+    options: { responsive: true, plugins: { legend: { labels: { font: { family: "'DM Sans'" } } } },
+      scales: { y: { beginAtZero: false } } }
+  });
+  new Chart(document.getElementById('scenarioChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'S1: No pivot', data: [25, 30], borderColor: '#B03030', borderWidth: 1.5, pointRadius: 3, tension: 0.3 },
+        { label: 'S2: Rollback', data: [45, 45], borderColor: '#2D5A9E', borderWidth: 1.5, pointRadius: 3, tension: 0.3 },
+        { label: 'S3: Oil trap', data: [30, 25], borderColor: '#9A6B11', borderWidth: 1.5, pointRadius: 3, tension: 0.3 }
+      ]
+    },
+    options: { responsive: true, plugins: { legend: { labels: { font: { family: "'DM Sans'" } } } },
+      scales: { y: { min: 0, max: 100, ticks: { callback: v => v + '%' } } } }
+  });
+}
+</script>
+</body>
+</html>

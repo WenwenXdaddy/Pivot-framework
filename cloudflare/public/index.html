@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trump Approval Rating Pivot Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAF9F6;
+      --card: #FFF;
+      --card-alt: #F3F1EC;
+      --border: #E2DFD6;
+      --text: #1A1A18;
+      --sec: #6B6960;
+      --tert: #9C9A8F;
+      --danger: #B03030;
+      --warning: #9A6B11;
+      --success: #2D7A3A;
+      --info: #2D5A9E;
+      --danger-bg: #FDF0F0;
+      --warning-bg: #FDF6E8;
+      --success-bg: #EDF7EF;
+      --info-bg: #EDF2FA;
+      --font: 'DM Sans', -apple-system, sans-serif;
+      --serif: 'DM Serif Display', Georgia, serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      zoom: 1.4;
+    }
+
+    header {
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    header div h1 {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+    }
+
+    header div p {
+      font-size: 12px;
+      color: var(--tert);
+      margin-top: 2px;
+    }
+
+    .lang-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .lang-toggle button {
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 500;
+      font-family: var(--font);
+      background: transparent;
+      color: var(--sec);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lang-toggle button.active {
+      background: var(--text);
+      color: #fff;
+    }
+
+    .lang-toggle button:hover:not(.active) {
+      background: var(--card-alt);
+    }
+
+    .refresh-btn {
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: var(--font);
+      background: var(--text);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .refresh-btn:hover {
+      opacity: 0.85;
+    }
+
+    .refresh-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .status {
+      font-size: 11px;
+      color: var(--tert);
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid var(--tert);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 1.5rem 0;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--tert);
+      margin-bottom: 10px;
+    }
+
+    .gauge-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .gauge {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .gauge-label {
+      font-size: 11px;
+      color: var(--sec);
+    }
+
+    .gauge-val {
+      font-size: 22px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .gauge-sub {
+      font-size: 10px;
+      color: var(--tert);
+      margin-top: 2px;
+    }
+
+    .scenario-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .sc {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .sc:hover {
+      border-color: var(--info);
+    }
+
+    .sc-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 5px;
+      margin-bottom: 6px;
+    }
+
+    .sc h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .sc .prob {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .sc .dir {
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    .sc .signal {
+      font-size: 11px;
+      color: var(--sec);
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    .headline-box {
+      background: var(--info-bg);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 1.5rem;
+    }
+
+    .headline-box .hl {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--info);
+    }
+
+    .headline-box .pos {
+      font-size: 12px;
+      color: var(--sec);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .alerts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 1.5rem;
+    }
+
+    .alert-tag {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .detail-panel {
+      display: none;
+      background: var(--card-alt);
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 1.5rem;
+      animation: panelSlideIn 0.3s ease;
+    }
+
+    @keyframes panelSlideIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .detail-panel.active {
+      display: block;
+    }
+
+    .detail-panel .detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .detail-panel .detail-header h3 {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .detail-panel .detail-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--sec);
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .detail-panel .detail-close:hover {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+
+    .detail-panel .analysis {
+      font-size: 13px;
+      color: var(--sec);
+      line-height: 1.65;
+    }
+
+    .detail-panel .analysis .dp-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .detail-panel .analysis .dp-section-title {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--tert);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .detail-panel .analysis .dp-section-title .dp-icon {
+      font-size: 13px;
+    }
+
+    .detail-panel .analysis h1,
+    .detail-panel .analysis h2,
+    .detail-panel .analysis h3,
+    .detail-panel .analysis h4 {
+      color: var(--text);
+      font-family: var(--font);
+      font-weight: 600;
+      margin-top: 1.2em;
+      margin-bottom: 0.4em;
+      line-height: 1.35;
+    }
+
+    .detail-panel .analysis h1 { font-size: 17px; }
+    .detail-panel .analysis h2 { font-size: 15px; }
+    .detail-panel .analysis h3 { font-size: 14px; }
+    .detail-panel .analysis h4 { font-size: 13px; }
+
+    .detail-panel .analysis p {
+      margin-bottom: 0.75em;
+    }
+
+    .detail-panel .analysis strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .detail-panel .analysis em {
+      font-style: italic;
+    }
+
+    .detail-panel .analysis ul,
+    .detail-panel .analysis ol {
+      margin: 0.5em 0 0.75em 1.4em;
+      padding: 0;
+    }
+
+    .detail-panel .analysis li {
+      margin-bottom: 0.35em;
+    }
+
+    .detail-panel .analysis blockquote {
+      border-left: 3px solid var(--border);
+      padding-left: 12px;
+      margin: 0.75em 0;
+      color: var(--tert);
+      font-style: italic;
+    }
+
+    .detail-panel .analysis hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 1em 0;
+    }
+
+    .detail-panel .analysis code {
+      background: var(--card);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: 'SF Mono', Menlo, monospace;
+    }
+
+    .detail-panel .analysis .dp-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .detail-panel .analysis .dp-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+
+    .detail-panel .analysis .dp-card-label {
+      font-size: 10px;
+      color: var(--tert);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .detail-panel .analysis .dp-card-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .detail-panel .analysis .dp-catalyst-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .detail-panel .analysis .dp-catalyst-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--sec);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .detail-panel .analysis .dp-catalyst-list li:last-child {
+      border-bottom: none;
+    }
+
+    .detail-panel .analysis .dp-catalyst-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    .detail-panel .loading {
+      color: var(--tert);
+      font-size: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .detail-panel .analysis .dp-grid { grid-template-columns: 1fr; }
+    }
+
+    .market-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .mkt {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .mkt-label {
+      font-size: 10px;
+      color: var(--tert);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .mkt-val {
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    footer {
+      font-size: 10px;
+      color: var(--tert);
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 600px) {
+
+      .gauge-row,
+      .scenario-row,
+      .market-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    .history-section {
+      margin-top: 2rem;
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .chart-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .chart-card .chart-title {
+      font-size: 11px;
+      color: var(--sec);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .chart-card canvas {
+      width: 100%;
+      height: 120px;
+      display: block;
+    }
+
+    .history-empty {
+      font-size: 12px;
+      color: var(--tert);
+      text-align: center;
+      padding: 2rem;
+    }
+
+    @media (max-width: 600px) {
+      .chart-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <header>
+      <div>
+        <h1 data-i18n="title">Trump Approval Rating Pivot Framework</h1>
+        <p id="last-update" data-i18n="lastUpdate">Last updated: —</p>
+      </div>
+      <div style="text-align:right">
+        <div class="lang-toggle" id="lang-toggle">
+          <button class="active" onclick="setLang('en')">EN</button>
+          <button onclick="setLang('cn')">中文</button>
+        </div>
+        <button class="refresh-btn" id="refresh-btn" onclick="refreshData()" data-i18n="refreshBtn">Refresh analysis</button>
+        <div class="status" id="status"></div>
+        <div style="font-size:10px;color:var(--tert);margin-top:2px" id="provider-info"></div>
+      </div>
+    </header>
+
+    <!-- IMPORTANT: Set your Worker URL here -->
+    <script>
+      // After deploying the Cloudflare Worker, replace this with your Worker URL
+      // e.g. 'https://pivot-framework-api.your-subdomain.workers.dev'
+      const WORKER_URL = 'https://pivot-framework-api.xuejiadi.workers.dev';
+    </script>
+
+    <div class="section-label" data-i18n="keyReadings">Key readings</div>
+    <div class="gauge-row">
+      <div class="gauge">
+        <div class="gauge-label" data-i18n="econApproval">Economic approval</div>
+        <div class="gauge-val" id="g-econ" style="color:var(--danger)">—</div>
+        <div class="gauge-sub" id="g-econ-sub"></div>
+      </div>
+      <div class="gauge">
+        <div class="gauge-label" data-i18n="gopApproval">GOP approval</div>
+        <div class="gauge-val" id="g-gop" style="color:var(--warning)">—</div>
+        <div class="gauge-sub" id="g-gop-sub"></div>
+      </div>
+      <div class="gauge">
+        <div class="gauge-label" data-i18n="genericBallot">Generic ballot</div>
+        <div class="gauge-val" id="g-ballot" style="color:var(--danger)">—</div>
+        <div class="gauge-sub" id="g-ballot-sub"></div>
+      </div>
+    </div>
+
+    <div class="section-label" data-i18n="marketContext">Market context</div>
+    <div class="market-row">
+      <div class="mkt">
+        <div class="mkt-label">VIX</div>
+        <div class="mkt-val" id="m-vix">—</div>
+      </div>
+      <div class="mkt">
+        <div class="mkt-label" data-i18n="gold">Gold</div>
+        <div class="mkt-val" id="m-gold">—</div>
+      </div>
+      <div class="mkt">
+        <div class="mkt-label" data-i18n="wtiCrude">WTI crude</div>
+        <div class="mkt-val" id="m-wti">—</div>
+      </div>
+      <div class="mkt">
+        <div class="mkt-label" data-i18n="gasAvg">Gas avg</div>
+        <div class="mkt-val" id="m-gas">—</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="headline-box" id="headline-box" style="display:none">
+      <div class="hl" id="headline"></div>
+      <div class="pos" id="positioning"></div>
+    </div>
+
+    <div class="alerts" id="alerts"></div>
+
+    <div class="section-label" data-i18n="scenarioProb">Scenario probabilities</div>
+    <div class="scenario-row">
+      <div class="sc" id="sc1" onclick="elaborate(1)">
+        <div class="sc-tag" style="background:var(--danger-bg);color:var(--danger)" data-i18n="noPivot">No pivot</div>
+        <h3 data-i18n="s1Name">S1: Stagflation lock-in</h3>
+        <div class="prob" id="s1-prob">—</div>
+        <div class="dir" id="s1-dir"></div>
+        <div class="signal" id="s1-signal"></div>
+      </div>
+      <div class="sc" id="sc2" onclick="elaborate(2)">
+        <div class="sc-tag" style="background:var(--info-bg);color:var(--info)" data-i18n="baseCase">Base case</div>
+        <h3 data-i18n="s2Name">S2: Tariff rollback</h3>
+        <div class="prob" id="s2-prob">—</div>
+        <div class="dir" id="s2-dir"></div>
+        <div class="signal" id="s2-signal"></div>
+      </div>
+      <div class="sc" id="sc3" onclick="elaborate(3)">
+        <div class="sc-tag" style="background:var(--warning-bg);color:var(--warning)" data-i18n="trap">Trap</div>
+        <h3 data-i18n="s3Name">S3: Oil trap</h3>
+        <div class="prob" id="s3-prob">—</div>
+        <div class="dir" id="s3-dir"></div>
+        <div class="signal" id="s3-signal"></div>
+      </div>
+    </div>
+
+    <div class="detail-panel" id="detail-panel">
+      <div class="detail-header">
+        <h3 id="detail-title">Scenario detail</h3>
+        <button class="detail-close" onclick="closeDetail()">✕</button>
+      </div>
+      <div class="analysis" id="detail-analysis"></div>
+    </div>
+
+    <div id="iran-status" style="font-size:12px;color:var(--sec);margin-bottom:1rem"></div>
+
+    <div class="divider"></div>
+
+    <div class="history-section" id="history-section" style="display:none">
+      <div class="section-label" data-i18n="historicalTrends">Historical trends</div>
+      <div class="chart-grid">
+        <div class="chart-card">
+          <div class="chart-title" data-i18n="chartEcon">Economic Approval %</div>
+          <canvas id="chart-econ"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">VIX</div>
+          <canvas id="chart-vix"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title" data-i18n="chartGold">Gold (USD)</div>
+          <canvas id="chart-gold"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title" data-i18n="chartWti">WTI Crude (USD)</div>
+          <canvas id="chart-wti"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title" data-i18n="chartS1">S1: No Pivot %</div>
+          <canvas id="chart-s1"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title" data-i18n="chartS2">S2: Tariff Rollback %</div>
+          <canvas id="chart-s2"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <footer data-i18n="footer">
+      Framework sources: Reuters/Ipsos, Silver Bulletin, Pew Research, RealClearPolling, Morning Consult, Wells Fargo,
+      JP Morgan, Allianz. Not investment advice.
+    </footer>
+
+  </div>
+
+  <script>
+    const I18N = {
+      en: {
+        title: 'Trump Approval Rating Pivot Framework',
+        lastUpdate: 'Last updated: —',
+        refreshBtn: 'Refresh analysis',
+        keyReadings: 'Key readings',
+        econApproval: 'Economic approval',
+        gopApproval: 'GOP approval',
+        genericBallot: 'Generic ballot',
+        marketContext: 'Market context',
+        gold: 'Gold', wtiCrude: 'WTI crude', gasAvg: 'Gas avg',
+        scenarioProb: 'Scenario probabilities',
+        noPivot: 'No pivot', baseCase: 'Base case', trap: 'Trap',
+        s1Name: 'S1: Stagflation lock-in', s2Name: 'S2: Tariff rollback', s3Name: 'S3: Oil trap',
+        historicalTrends: 'Historical trends',
+        chartEcon: 'Economic Approval %', chartGold: 'Gold (USD)',
+        chartWti: 'WTI Crude (USD)', chartS1: 'S1: No Pivot %', chartS2: 'S2: Tariff Rollback %',
+        footer: 'Framework sources: Reuters/Ipsos, Silver Bulletin, Pew Research, RealClearPolling, Morning Consult, Wells Fargo, JP Morgan, Allianz. Not investment advice.',
+        detailTitles: { 1: 'S1: No pivot — deep dive', 2: 'S2: Tariff rollback — deep dive', 3: 'S3: Oil trap — deep dive' },
+        analyzing: 'Analyzing scenario',
+      },
+      cn: {
+        title: '特朗普支持率政策转向框架',
+        lastUpdate: '最近更新：—',
+        refreshBtn: '刷新分析',
+        keyReadings: '关键数据',
+        econApproval: '经济支持率',
+        gopApproval: '共和党支持率',
+        genericBallot: '国会选情',
+        marketContext: '市场环境',
+        gold: '黄金', wtiCrude: 'WTI原油', gasAvg: '汽油均价',
+        scenarioProb: '情景概率',
+        noPivot: '不转向', baseCase: '基准情景', trap: '陷阱',
+        s1Name: 'S1：滞胀锁定', s2Name: 'S2：关税回撤', s3Name: 'S3：石油陷阱',
+        historicalTrends: '历史趋势',
+        chartEcon: '经济支持率 %', chartGold: '黄金 (美元)',
+        chartWti: 'WTI原油 (美元)', chartS1: 'S1：不转向 %', chartS2: 'S2：关税回撤 %',
+        footer: '数据来源：路透/益普索、Silver Bulletin、皮尤研究中心、RealClearPolling、Morning Consult、富国银行、摩根大通、安联。本页面不构成投资建议。',
+        detailTitles: { 1: 'S1：不转向 — 深度分析', 2: 'S2：关税回撤 — 深度分析', 3: 'S3：石油陷阱 — 深度分析' },
+        analyzing: '正在分析情景',
+      }
+    };
+    let currentLang = 'en';
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('#lang-toggle button').forEach(b => {
+        b.classList.toggle('active', b.textContent.trim() === (lang === 'en' ? 'EN' : '中文'));
+      });
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (I18N[lang][key]) el.textContent = I18N[lang][key];
+      });
+      // Re-set last-update with stored date
+      const dateEl = document.getElementById('last-update');
+      if (dateEl._date) dateEl.textContent = (lang === 'cn' ? '最近更新：' : 'Last updated: ') + dateEl._date;
+    }
+
+    function closeDetail() {
+      document.getElementById('detail-panel').classList.remove('active');
+    }
+
+    function setStatus(msg, loading) {
+      const el = document.getElementById('status');
+      el.innerHTML = loading ? '<span class="spinner"></span>' + msg : msg;
+    }
+
+    function populateDashboard(data) {
+      if (!data || data.empty) return;
+      const r = data.readings || {};
+      document.getElementById('g-econ').textContent = r.econ_approval ? r.econ_approval + '%' : '—';
+      document.getElementById('g-gop').textContent = r.gop_approval ? r.gop_approval + '%' : '—';
+      document.getElementById('g-ballot').textContent = r.generic_ballot || '—';
+      document.getElementById('m-vix').textContent = r.vix || '—';
+      document.getElementById('m-gold').textContent = r.gold ? '$' + r.gold.toLocaleString() : '—';
+      document.getElementById('m-wti').textContent = r.wti ? '$' + r.wti : '—';
+      document.getElementById('m-gas').textContent = r.gas_price ? '$' + r.gas_price.toFixed(2) : '—';
+      const s = data.scenarios || {};
+      for (const [key, sc] of Object.entries(s)) {
+        const num = key.replace('s', '');
+        document.getElementById('s' + num + '-prob').textContent = Math.round(sc.prob * 100) + '%';
+        const dirColors = { strengthening: 'var(--success)', weakening: 'var(--danger)', stable: 'var(--tert)' };
+        const dirArrows = { strengthening: '↑', weakening: '↓', stable: '→' };
+        document.getElementById('s' + num + '-dir').innerHTML =
+          '<span style="color:' + (dirColors[sc.direction] || 'var(--tert)') + '">' +
+          (dirArrows[sc.direction] || '→') + ' ' + (sc.direction || 'stable') + '</span>';
+        document.getElementById('s' + num + '-signal').textContent = sc.key_signal || '';
+      }
+      if (data.headline) {
+        document.getElementById('headline-box').style.display = 'block';
+        document.getElementById('headline').textContent = data.headline;
+        document.getElementById('positioning').textContent = data.positioning_update || '';
+      }
+      const alertsEl = document.getElementById('alerts');
+      alertsEl.innerHTML = '';
+      (data.threshold_alerts || []).forEach(a => {
+        const tag = document.createElement('span');
+        tag.className = 'alert-tag';
+        tag.textContent = a;
+        alertsEl.appendChild(tag);
+      });
+      if (r.iran_status) document.getElementById('iran-status').textContent = 'Iran: ' + r.iran_status;
+      const dateEl = document.getElementById('last-update');
+      dateEl._date = data.date || '—';
+      dateEl.textContent = (currentLang === 'cn' ? '最近更新：' : 'Last updated: ') + dateEl._date;
+    }
+
+    // ── Auto-load on page open ──
+    (async () => {
+      try {
+        const res = await fetch(WORKER_URL + '/api/provider');
+        const info = await res.json();
+        document.getElementById('provider-info').textContent = info.active + ' / ' + info.model + (info.hasSearch ? ' + search' : '');
+      } catch (e) {}
+      try {
+        setStatus('Loading cached data...', true);
+        const res = await fetch(WORKER_URL + '/api/latest');
+        const data = await res.json();
+        if (!data.empty) { populateDashboard(data); setStatus('Cached · ' + (data.date || ''), false); }
+        else { setStatus('No cached data — click Refresh', false); }
+      } catch (e) { setStatus('', false); }
+      loadHistory();
+    })();
+
+    async function refreshData() {
+      const btn = document.getElementById('refresh-btn');
+      btn.disabled = true;
+      setStatus('Searching latest data...', true);
+      try {
+        const res = await fetch(WORKER_URL + '/api/refresh', { method: 'POST' });
+        const data = await res.json();
+        if (data.error) { setStatus('Error: ' + data.error, false); btn.disabled = false; return; }
+        populateDashboard(data);
+        setStatus('Updated', false);
+        loadHistory();
+      } catch (e) { setStatus('Failed: ' + e.message, false); }
+      btn.disabled = false;
+    }
+
+    // ── Canvas sparkline chart ──
+    function drawChart(canvasId, labels, values, color) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas || values.filter(v => v != null).length < 2) return;
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      const W = rect.width, H = rect.height;
+      const pad = { top: 18, bottom: 22, left: 6, right: 6 };
+      const plotW = W - pad.left - pad.right, plotH = H - pad.top - pad.bottom;
+      const valid = values.filter(v => v != null);
+      const min = Math.min(...valid), max = Math.max(...valid), range = max - min || 1;
+      function x(i) { return pad.left + (i / (values.length - 1)) * plotW; }
+      function y(v) { return pad.top + plotH - ((v - min) / range) * plotH; }
+      // Grid
+      ctx.strokeStyle = '#E2DFD6'; ctx.lineWidth = 0.5;
+      for (let i = 0; i <= 2; i++) { const gy = pad.top + (plotH / 2) * i; ctx.beginPath(); ctx.moveTo(pad.left, gy); ctx.lineTo(W - pad.right, gy); ctx.stroke(); }
+      // Area fill
+      ctx.beginPath(); ctx.moveTo(x(0), y(values[0] ?? min));
+      values.forEach((v, i) => { if (v != null) ctx.lineTo(x(i), y(v)); });
+      ctx.lineTo(x(values.length - 1), pad.top + plotH); ctx.lineTo(x(0), pad.top + plotH); ctx.closePath();
+      ctx.fillStyle = color + '18'; ctx.fill();
+      // Line
+      ctx.beginPath(); let started = false;
+      values.forEach((v, i) => { if (v == null) return; if (!started) { ctx.moveTo(x(i), y(v)); started = true; } else ctx.lineTo(x(i), y(v)); });
+      ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineJoin = 'round'; ctx.stroke();
+      // Dots
+      values.forEach((v, i) => { if (v == null) return; ctx.beginPath(); ctx.arc(x(i), y(v), 3, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill(); });
+      // Date labels
+      ctx.fillStyle = '#9C9A8F'; ctx.font = '9px DM Sans, sans-serif'; ctx.textAlign = 'center';
+      const step = Math.max(1, Math.floor(labels.length / 5));
+      labels.forEach((l, i) => { if (i % step === 0 || i === labels.length - 1) ctx.fillText(l.slice(5), x(i), H - 4); });
+      // Latest value
+      const last = values[values.length - 1];
+      if (last != null) { ctx.fillStyle = '#1A1A18'; ctx.font = '10px DM Sans, sans-serif'; ctx.textAlign = 'right'; ctx.fillText(typeof last === 'number' ? last.toLocaleString() : last, W - pad.right, pad.top - 4); }
+    }
+
+    async function loadHistory() {
+      try {
+        const res = await fetch(WORKER_URL + '/api/history');
+        const data = await res.json();
+        const entries = (data.entries || []).slice(0, 30).reverse();
+        if (entries.length < 2) return;
+        document.getElementById('history-section').style.display = 'block';
+        const labels = entries.map(e => e.date);
+        drawChart('chart-econ', labels, entries.map(e => e.readings?.econ_approval ?? null), '#B03030');
+        drawChart('chart-vix', labels, entries.map(e => e.readings?.vix ?? null), '#2D5A9E');
+        drawChart('chart-gold', labels, entries.map(e => e.readings?.gold ?? null), '#9A6B11');
+        drawChart('chart-wti', labels, entries.map(e => e.readings?.wti ?? null), '#6B6960');
+        drawChart('chart-s1', labels, entries.map(e => e.scenarios?.s1?.prob != null ? Math.round(e.scenarios.s1.prob * 100) : null), '#B03030');
+        drawChart('chart-s2', labels, entries.map(e => e.scenarios?.s2?.prob != null ? Math.round(e.scenarios.s2.prob * 100) : null), '#2D5A9E');
+      } catch (e) {}
+    }
+
+    function renderMarkdown(md) {
+      if (!md) return '';
+      let html = md
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/^#### (.+)$/gm, '<h4>$1</h4>').replace(/^### (.+)$/gm, '<h3>$1</h3>')
+        .replace(/^## (.+)$/gm, '<h2>$1</h2>').replace(/^# (.+)$/gm, '<h1>$1</h1>')
+        .replace(/^---+$/gm, '<hr>')
+        .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        .replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+      html = html.replace(/(^\d+\. .+(?:\n\d+\. .+)*)/gm, function(block) {
+        return '<ol>' + block.split('\n').map(l => '<li>' + l.replace(/^\d+\.\s*/, '') + '</li>').join('') + '</ol>';
+      });
+      html = html.replace(/(^- .+(?:\n- .+)*)/gm, function(block) {
+        return '<ul>' + block.split('\n').map(l => '<li>' + l.replace(/^- /, '') + '</li>').join('') + '</ul>';
+      });
+      html = html.split('\n\n').map(b => { b = b.trim(); if (!b) return ''; if (/^<(h[1-4]|ul|ol|blockquote|hr|li|p)/.test(b)) return b; return '<p>' + b.replace(/\n/g, '<br>') + '</p>'; }).join('\n');
+      return html;
+    }
+
+    const SECTION_ICONS = {
+      'evidence': '📊', 'current': '📊', 'data': '📊', 'assessment': '📊',
+      'catalyst': '🎯', 'watch': '🎯', 'trigger': '🎯',
+      'market': '📈', 'positioning': '📈', 'trade': '📈', 'rate': '📈', 'equit': '📈', 'commodit': '📈',
+      'probability': '🎲', 'scenario': '🎲', 'change': '🎲', 'outlook': '🎲',
+      'risk': '⚠️', 'warning': '⚠️', 'concern': '⚠️',
+    };
+
+    function getIconForTitle(title) {
+      const lower = title.toLowerCase();
+      for (const [key, icon] of Object.entries(SECTION_ICONS)) {
+        if (lower.includes(key)) return icon;
+      }
+      return '📋';
+    }
+
+    function renderStyledAnalysis(md) {
+      if (!md) return '';
+      // Split by h2/h3 headers to create card sections
+      const sections = md.split(/^(?=#{1,3} )/m).filter(s => s.trim());
+      if (sections.length <= 1) {
+        // No clear sections — wrap in a single card
+        return '<div class="dp-section">' + renderMarkdown(md) + '</div>';
+      }
+      let out = '';
+      for (const sec of sections) {
+        const headerMatch = sec.match(/^#{1,3} (.+)$/m);
+        if (headerMatch) {
+          const title = headerMatch[1].replace(/\*+/g, '').trim();
+          const icon = getIconForTitle(title);
+          const body = sec.replace(/^#{1,3} .+$/m, '').trim();
+          const bodyHtml = renderMarkdown(body);
+          // Check if body is mostly bullet points — use catalyst style
+          const bulletCount = (body.match(/^- /gm) || []).length;
+          if (bulletCount >= 3 && bulletCount > body.split('\n\n').length) {
+            const items = body.split('\n').filter(l => l.startsWith('- ')).map(l => l.replace(/^- /, ''));
+            const colors = ['var(--info)', 'var(--warning)', 'var(--success)', 'var(--danger)', 'var(--tert)'];
+            out += '<div class="dp-section">';
+            out += '<div class="dp-section-title"><span class="dp-icon">' + icon + '</span> ' + title + '</div>';
+            out += '<ul class="dp-catalyst-list">';
+            items.forEach((item, i) => {
+              let processed = item
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.+?)\*/g, '<em>$1</em>');
+              out += '<li><span class="dp-catalyst-dot" style="background:' + colors[i % colors.length] + '"></span><span>' + processed + '</span></li>';
+            });
+            out += '</ul></div>';
+          } else {
+            out += '<div class="dp-section">';
+            out += '<div class="dp-section-title"><span class="dp-icon">' + icon + '</span> ' + title + '</div>';
+            out += bodyHtml;
+            out += '</div>';
+          }
+        } else {
+          out += '<div class="dp-section">' + renderMarkdown(sec) + '</div>';
+        }
+      }
+      return out;
+    }
+
+    async function elaborate(scenario) {
+      const panel = document.getElementById('detail-panel');
+      const titles = I18N[currentLang].detailTitles;
+      document.getElementById('detail-title').textContent = titles[scenario];
+      const analyzingText = I18N[currentLang].analyzing;
+      document.getElementById('detail-analysis').innerHTML = '<span class="loading"><span class="spinner"></span> ' + analyzingText + ' ' + scenario + '...</span>';
+      panel.classList.add('active');
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      try {
+        const res = await fetch(WORKER_URL + '/api/elaborate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ scenario }) });
+        const data = await res.json();
+        document.getElementById('detail-analysis').innerHTML = renderStyledAnalysis(data.analysis) || '<p>No analysis returned.</p>';
+      } catch (e) { document.getElementById('detail-analysis').innerHTML = '<div class="dp-section"><p style="color:var(--danger)">Error: ' + e.message + '</p></div>'; }
+    }
+  </script>
+</body>
+
+</html>

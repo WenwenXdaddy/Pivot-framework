@@ -1,0 +1,15 @@
+.env
+.env.*
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+
+# Wrangler local cache
+.wrangler/
+
+# Claude Code local settings
+.claude/
+
+# Test files
+test_refresh.json

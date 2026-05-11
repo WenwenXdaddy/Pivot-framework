@@ -1,0 +1,16 @@
+name = "pivot-framework-api"
+main = "src/worker.js"
+compatibility_date = "2024-12-01"
+
+# Secrets (set via wrangler secret put):
+# API_KEY        — DeepSeek API key
+# TAVILY_API_KEY — Tavily search API key
+
+# KV namespace for caching dashboard data + history
+[[kv_namespaces]]
+binding = "CACHE"
+id = "8ee7609e840f40afb8cbc5ffbebd8d6b"
+
+# Daily auto-refresh: UTC 22:00 = Beijing 06:00
+[triggers]
+crons = ["0 22 * * *"]

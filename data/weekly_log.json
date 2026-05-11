@@ -1,0 +1,99 @@
+{
+  "entries": [
+    {
+      "date": "2026-03-28",
+      "readings": {
+        "econ_approval": 29,
+        "gop_approval": 82,
+        "generic_ballot": "D+9",
+        "silver_bulletin_net": -21.3,
+        "silver_bulletin_inflation_net": -32.7,
+        "overall_approval": 36,
+        "vix": 31,
+        "gold": 4493,
+        "wti": 94,
+        "brent": 104,
+        "gas_price": 4.0,
+        "iran_status": "15-point plan rejected by Iran. Hormuz partially closed. Ceasefire talks via Pakistan."
+      },
+      "scenario_probs": {
+        "s1_no_pivot": 0.25,
+        "s2_tariff_rollback": 0.45,
+        "s3_oil_trap": 0.3
+      },
+      "threshold_alerts": [
+        "CRITICAL: Econ approval (29%) below Biden all-time low (32%)",
+        "WARNING: GOP approval (82%) approaching 80% danger zone",
+        "WARNING: VIX (31) in elevated uncertainty zone"
+      ],
+      "notes": "Initial framework baseline. Iran 15-point plan on table but rejected by Tehran. 6 House Rs voted against Canada tariffs in Feb. SCOTUS struck down IEEPA tariffs Feb 20. Trump reimposed 10-15% via Section 122. WF tariff-relief basket +20% since SCOTUS hearing. Dec 2026 WTI futures at $69 vs spot $94 (market pricing ceasefire).",
+      "headline": "GOP approval dropped 6 points in 3 weeks while Iran rejected the 15-point ceasefire plan.",
+      "positioning_update": "S2 remains base case but S3 is gaining \u2014 watch the oil futures curve for contango flip as the key tell. Reduce tariff-relief basket if gas drops below $3.50 without Congressional action.",
+      "scenarios": {
+        "s1": {
+          "direction": "stable",
+          "key_signal": "Fed paralysis and tariff status quo persist, but oil volatility prevents the grind-down equilibrium S1 needs."
+        },
+        "s2": {
+          "direction": "strengthening",
+          "key_signal": "GOP approval at 82% and falling; Johnson admits tariff consensus is a challenge; 6 Rs already voted against."
+        },
+        "s3": {
+          "direction": "strengthening",
+          "key_signal": "Dec WTI futures at $69 vs spot $94 implies market pricing ceasefire; 15-point plan on the table."
+        }
+      },
+      "elaborations": {
+        "s1": "<p><b>Premise and current conditions.</b> Economic approval sits at 29%, below Biden all-time low of 32%. GOP approval has fallen to 82%, down from 88% three weeks ago, but remains above the 80% defection danger zone. The administration shows no signs of flexibility on tariffs \u2014 Trump warned Republicans that voting against tariffs would have consequences come election time.</p><p><b>Rates \u2014 curve steepener thesis.</b> The Fed is trapped: cannot cut due to tariff-driven inflation running at 3.6% core PPI, cannot hike due to softening labor data. The long end reprices higher as the SCOTUS tariff ruling means lost tariff revenue requires more Treasury issuance. This creates a steepener setup in 2s10s and 2s30s. Key expression: short TLT / long SOFR futures. Stress threshold: 10Y above 5%.</p><p><b>Gold \u2014 structural bid.</b> This is gold's ideal regime: negative real rates from stagflation, JP Morgan forecasts 585 tonnes per quarter of central bank buying, de-dollarization flows persist, and no credible policy relief valve. Gold consolidates around $4,500-5,000 with the path to the all-time high of $5,595 supported. The key risk: BofA FMS flagged gold as the most crowded trade (50% of fund managers), meaning forced liquidation in cash-conversion episodes can temporarily crush gold alongside everything else.</p><p><b>Equity vol \u2014 elevated floor with dispersion.</b> VIX at 31 with record put demand creates a structural floor. The put-buying feedback loop keeps implied vol supported even on relief rallies. The real story is under the surface: the S&P 500 has drawn down 7% from highs, but the average Nasdaq member is down 31%. This rotation-and-churn dynamic favors dispersion trades: long single-stock vol, short index vol.</p><p><b>Meta-point.</b> Under S1, no single catalyst resolves uncertainty. It is a grind, not a crash \u2014 favoring carry-and-hedge over directional bets. Key invalidation signals: Iran ceasefire, GOP defections accelerating past 6 Rs, AI productivity offsetting tariff drag, Fed capitulating with a cut despite inflation.</p>",
+        "s2": "<p><b>The defection math.</b> Six House Republicans voted to overturn Canada tariffs in February 2026. Three Rs (Bacon, Kiley, Massie) broke the procedural shield blocking tariff votes. Rep. Bacon suggested as many as 30 Republicans privately agree. The razor-thin majority means just 3-5 more defections can extract tariff exemptions from any must-pass legislation. The SCOTUS ruling striking down IEEPA tariffs makes every Congressional vote consequential \u2014 these are no longer symbolic gestures.</p><p><b>The legislative vehicle.</b> Speaker Johnson acknowledged it will be \"a challenge to find consensus on tariffs.\" The OBBBA reconciliation package and Section 122 renewal are the likely vehicles. Farm state Rs face a fertilizer shortage from the Iran war; swing-district Rs face consumer cost pressure. This coalition \u2014 agricultural + suburban \u2014 is the natural formation for extracting tariff exemptions.</p><p><b>Rally anatomy.</b> Phase 1 (1-3 days): sentiment snap \u2014 VIX compresses 5-8 points, import-heavy names gap up 5-10%. Phase 2 (4-8 weeks): earnings re-rate \u2014 Wells Fargo estimates +2.4% S&P 500 EBIT uplift, the tariff-relief basket has already risen 20% since the November SCOTUS hearing vs 1% for the index. Phase 3 (2-4 quarters): restocking cycle \u2014 retailers and industrials rebuild depleted inventories, transport benefits.</p><p><b>Sector ranking.</b> Highest sensitivity: consumer durables/apparel (Nike, Deckers, UA, Crocs \u2014 heaviest China import exposure, mid-single digit EBITDA uplift plus $170B IEEPA refund), staples retail (Costco, Amazon, TJX, Target), home furnishings (Wayfair, Williams-Sonoma, RH). Medium: industrials (CAT, DE \u2014 largest refund windfall), autos (Ford booked $800M tariff hit in one quarter), financials (indirect via credit quality), transport (lags by 1-2 quarters).</p><p><b>Cross-asset.</b> USD weakens as exceptionalism premium deflates. Rates are mixed \u2014 inflation expectations ease but growth recovery complicates the Fed's cut path. Gold corrects 5-10% as the stagflation premium compresses, but structural central bank buying limits downside. The key distinction from S1: a tariff rollback simultaneously eases inflation AND boosts growth \u2014 the opposite of stagflation.</p>",
+        "s3": "<p><b>The ceasefire path.</b> Trump's 15-point peace plan has been delivered to Iran via Pakistan. Pakistan, Egypt, and Turkey have been pressing for an Islamabad meeting. Iran publicly rejected direct talks, but the futures market tells a different story: December 2026 WTI trades at $69 versus spot $94, implying the market overwhelmingly expects resolution. Allianz's baseline projects a deal within 4 weeks with Brent ending 2026 at ~$70. The EIA projects Brent dropping from $95+ to $70 by year-end if the Strait reopens.</p><p><b>The approval bounce mechanism.</b> Gas prices are the primary driver of approval erosion \u2014 Silver Bulletin attributes \"much of the recent decline\" directly to gas prices. If gas falls from $4+ to $3.50, the most acute voter pain lifts. GOP approval would likely recover 4-6 points, stabilizing at 84-86% \u2014 comfortably above the 80% defection danger zone. The defection math from S2 stalls.</p><p><b>Why this is underpriced.</b> Most positioning is a binary bet: crisis (S1: long gold, long vol) or relief (S2: tariff-relief basket, cyclicals). S3 punishes both books. The ceasefire kills the crisis premium. But without gas pressure, S2's tariff rollback catalyst never materializes. The market conflates \"oil relief\" with \"tariff relief\" \u2014 these are fundamentally different things. You end up in a muddle: moderate growth, sticky inflation, tariffs grinding margins.</p><p><b>Positioning for the trap.</b> Sell vol: ceasefire compresses VIX from 31 to ~20 as the vol risk premium mean-reverts. Long domestic quality: healthcare, domestic software, utilities \u2014 companies that don't need tariff rollback to grow. Fade tariff-relief basket: WF's 28 stocks already +20% on anticipation. Gold: tactical short (war premium unwinds -5 to -10%), then reload at $4,500-4,700 \u2014 the structural bid from central bank buying and de-dollarization persists.</p><p><b>The JP Morgan security tax.</b> Even with a ceasefire, oil faces a lasting \"security tax\" from rerouted shipping and higher insurance costs. Gas might fall to $3.50, not $2.80. If the bounce is smaller than expected, S3's trap is weaker \u2014 the political pressure may not fully dissipate. Monitor Hormuz insurance premiums and the oil futures curve shape (backwardation to contango flip is the key signal).</p>"
+      }
+    },
+    {
+      "date": "2026-03-30",
+      "readings": {
+        "econ_approval": 29,
+        "gop_approval": 82,
+        "generic_ballot": "D+6",
+        "silver_bulletin_net": -21.0,
+        "overall_approval": 36,
+        "vix": 31,
+        "gold": 4495,
+        "wti": 102,
+        "brent": 109,
+        "gas_price": 3.96,
+        "iran_status": "War continues. Iran formalizing Hormuz toll booth. Pakistan to host US-Iran talks. Houthis struck Israel. No ceasefire."
+      },
+      "scenario_probs": {
+        "s1_no_pivot": 0.30,
+        "s2_tariff_rollback": 0.45,
+        "s3_oil_trap": 0.25
+      },
+      "scenarios": {
+        "s1": {
+          "direction": "strengthening",
+          "key_signal": "WTI surged past $100 to $102; Iran formalizing Hormuz chokehold strengthens the dual supply shock thesis."
+        },
+        "s2": {
+          "direction": "stable",
+          "key_signal": "Farm state fertilizer shortage adds pressure but no new Republican defections; generic ballot narrowed to D+6."
+        },
+        "s3": {
+          "direction": "weakening",
+          "key_signal": "Oil surging past $100 and Iran's Hormuz toll booth contradict the ceasefire-driven oil drop thesis."
+        }
+      },
+      "threshold_alerts": [
+        "CRITICAL: Econ approval (29%) below Biden all-time low (32%)",
+        "CRITICAL: WTI ($102) crossed $100 critical threshold",
+        "WARNING: GOP approval (82%) approaching 80% danger zone",
+        "WARNING: VIX (31) in elevated uncertainty zone",
+        "WARNING: Gas price ($3.96) accelerating toward $4.00+ (West Coast already $5.26)"
+      ],
+      "headline": "Oil surged past $100 as Iran formalized Hormuz toll booth; S1 stagflation lock-in probability rising to 30%.",
+      "positioning_update": "The oil surge past $100 strengthens S1's stagflation thesis and weakens S3's ceasefire trap. Increase gold and steepener exposure. Gas accelerating ~$0.24/week per EIA — if it crosses $4.50 without Congressional action, S2 defection math should accelerate rapidly.",
+      "elaborations": {},
+      "notes": "Only 2 days since baseline — polling data largely unchanged (same Reuters/Ipsos 3/20-3/22 period). Key moves: WTI $94→$102 (+9%), Brent $104→$109 (+4%). Iran formalized Hormuz toll booth regime. Pakistan FM says will 'soon host' US-Iran talks. Yemen Houthis claimed first missile attack on Israel since war started. China opened investigations into US trade practices. USMCA renegotiation starting Monday. Section 122 replacing SCOTUS-struck IEEPA tariffs. Generic ballot narrowed from D+9 to D+6 (RCP avg) — driven by pollster mix, not necessarily real shift. West Coast gas already $5.26/gal per EIA. 'No Kings' protests drew large crowds in 3,000+ cities (March 29). S&P 500 in longest losing streak since 2022."
+    }
+  ]
+}

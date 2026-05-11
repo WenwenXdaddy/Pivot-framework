@@ -40,7 +40,7 @@ pivot-framework/
    ```
    update the framework
    ```
-   Claude Code reads CLAUDE.md, searches the web for latest data, re-evaluates 
+   Claude Code reads CLAUDE.md, searches the web for latest data, re-evaluates
    all three scenarios, updates the weekly log, and regenerates the dashboard.
 
 ### Usage
@@ -66,7 +66,7 @@ Every weekend (or whenever you want a refresh):
 
 ### Connecting to Obsidian
 
-The `obsidian` command generates a note at `output/weekly_note.md` with YAML 
+The `obsidian` command generates a note at `output/weekly_note.md` with YAML
 frontmatter matching your vault's property schema. Copy it to your vault:
 
 ```bash
@@ -154,26 +154,26 @@ In Cloudflare Pages dashboard → Custom domains → Add your domain.
 
 ### Why two paths?
 
-**Path A** gives you Opus-quality analysis depth and integrates with your 
+**Path A** gives you Opus-quality analysis depth and integrates with your
 existing Claude Code workflow. It's the research tool.
 
-**Path B** gives you a live URL you can check from your phone, share with 
+**Path B** gives you a live URL you can check from your phone, share with
 colleagues, and set up on a schedule. It's the monitoring tool.
 
-They complement each other: use Path A for deep weekly analysis, Path B for 
+They complement each other: use Path A for deep weekly analysis, Path B for
 quick daily checks.
 
 ### Extending the framework
 
-**Add a new scenario:** Edit the "Three Scenarios" section in CLAUDE.md. Add 
-strengthen/weaken conditions and positioning. Claude Code will automatically 
+**Add a new scenario:** Edit the "Three Scenarios" section in CLAUDE.md. Add
+strengthen/weaken conditions and positioning. Claude Code will automatically
 include it in re-evaluations.
 
-**Add a new data source:** Add it to the "Commands > update" section in 
+**Add a new data source:** Add it to the "Commands > update" section in
 CLAUDE.md with the search query. Claude Code will search for it on each update.
 
-**Add charts:** The dashboard template uses vanilla Chart.js. Add a `<canvas>` 
-element and a Chart.js initialization in the template to visualize historical 
+**Add charts:** The dashboard template uses vanilla Chart.js. Add a `<canvas>`
+element and a Chart.js initialization in the template to visualize historical
 data from weekly_log.json.
 
 **Add cron scheduling (Path B):** Add a cron trigger to the Worker:
@@ -182,11 +182,11 @@ data from weekly_log.json.
 [triggers]
 crons = ["0 14 * * 1"]  # Every Monday at 2pm UTC
 ```
-Then add a `scheduled` handler in worker.js that calls handleRefresh and stores 
+Then add a `scheduled` handler in worker.js that calls handleRefresh and stores
 the result in KV.
 
 ### Security
 
 - Path A: No API keys exposed — Claude Code handles auth.
-- Path B: API key stored as a Cloudflare Worker secret (encrypted, never in 
+- Path B: API key stored as a Cloudflare Worker secret (encrypted, never in
   code). The Worker acts as a proxy so the key never reaches the browser.

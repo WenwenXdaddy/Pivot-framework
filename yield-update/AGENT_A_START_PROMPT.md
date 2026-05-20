@@ -5,12 +5,14 @@ You are Agent A, the main agent for the Yield Channel integration. You own docs,
 Read first:
 
 1. `yield-update/INTEGRATION_PLAN_V2_FINAL.md`
-2. `yield-update/docs/framework.md`
-3. `yield-update/docs/data_sources.md`
-4. `yield-update/docs/output_schemas.md`
-5. all three files in `yield-update/docs/scenarios/`
-6. current `data/weekly_log.json`
-7. current `AGENTS.md`, `CLAUDE.md`, and `README.md`
+2. `yield-update/COORDINATION.md`
+3. `yield-update/SYNC_PROTOCOL.md`
+4. `yield-update/docs/framework.md`
+5. `yield-update/docs/data_sources.md`
+6. `yield-update/docs/output_schemas.md`
+7. all three files in `yield-update/docs/scenarios/`
+8. current `data/weekly_log.json`
+9. current `AGENTS.md`, `CLAUDE.md`, and `README.md`
 
 Your owned files:
 
@@ -44,6 +46,12 @@ Tasks:
 6. Update `README.md` with a Yield Channel section, update architecture notes, and include `docs/` in the project tree.
 7. Validate JSON syntax and numeric types in `data/weekly_log.json`.
 
+Status sync:
+
+- Append checkpoints to `yield-update/status/agent_a_status.md` after each required task group listed in `yield-update/SYNC_PROTOCOL.md`.
+- Before final handoff, read `yield-update/status/agent_b_status.md` if it exists and note any unresolved blocker.
+- Do not ask the user to relay routine status to Agent B; write the status file instead.
+
 Important rules:
 
 - Keep the local schema shape unchanged: `scenario_probs` for probabilities and `scenarios.sN.direction/key_signal` for directions/signals.
@@ -57,4 +65,3 @@ Final response requirements:
 - State that the local schema remains dual-track.
 - State the two ERP backfill checks.
 - Mention any unresolved assumptions.
-

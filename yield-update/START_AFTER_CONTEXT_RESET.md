@@ -26,10 +26,11 @@ Continue the Yield Channel integration from the prepared handoff. Read:
 1. yield-update/START_AFTER_CONTEXT_RESET.md
 2. yield-update/INTEGRATION_PLAN_V2_FINAL.md
 3. yield-update/COORDINATION.md
-4. yield-update/AGENT_A_START_PROMPT.md
-5. yield-update/AGENT_B_START_PROMPT.md
+4. yield-update/SYNC_PROTOCOL.md
+5. yield-update/AGENT_A_START_PROMPT.md
+6. yield-update/AGENT_B_START_PROMPT.md
 
-Then start the implementation. Agent A is the main agent and owns docs/data/project descriptions. Agent B owns code/frontend/template. Preserve the file ownership boundaries and merge Agent A first, then Agent B.
+Then start the implementation. Agent A is the main agent and owns docs/data/project descriptions. Agent B owns code/frontend/template. Preserve the file ownership boundaries, use the status files defined in SYNC_PROTOCOL.md for checkpoint alignment, and merge Agent A first, then Agent B.
 ```
 
 ## Implementation Order
@@ -49,3 +50,4 @@ Then start the implementation. Agent A is the main agent and owns docs/data/proj
 - `2026-03-28` ERP backfill is `0.33`, not negative.
 - Do not describe 4.75% as fixed ERP-zero. It is a warning zone.
 - Preserve Chinese localization and elaboration caching in Cloudflare files.
+- Do not rely on the user to relay routine status; use `yield-update/status/agent_a_status.md` and `yield-update/status/agent_b_status.md`.

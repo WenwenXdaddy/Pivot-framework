@@ -10,10 +10,12 @@ You must start from the post-preflight commit that contains the existing Chinese
 Read first:
 
 1. `yield-update/INTEGRATION_PLAN_V2_FINAL.md`
-2. current `scripts/generate_reports.py`
-3. current `cloudflare/src/worker.js`
-4. current `cloudflare/public/index.html`
-5. current `templates/dashboard_template.html`
+2. `yield-update/COORDINATION.md`
+3. `yield-update/SYNC_PROTOCOL.md`
+4. current `scripts/generate_reports.py`
+5. current `cloudflare/src/worker.js`
+6. current `cloudflare/public/index.html`
+7. current `templates/dashboard_template.html`
 
 Your owned files:
 
@@ -72,6 +74,12 @@ Tasks:
      - S2: yield-driven second catalyst, REITs/housing, yield-amplified rally.
      - S3: oil-yield divergence, yield persistence, duration/bonds nuance.
 
+Status sync:
+
+- Append checkpoints to `yield-update/status/agent_b_status.md` after each required task group listed in `yield-update/SYNC_PROTOCOL.md`.
+- Before final verification, read `yield-update/status/agent_a_status.md` if it exists and note any unresolved blocker or assumption.
+- Do not ask the user to relay routine status to Agent A; write the status file instead.
+
 Important rules:
 
 - Keep the Worker API schema shape unchanged: `scenarios.sN.prob` remains in the API response.
@@ -91,4 +99,3 @@ Final response requirements:
 - State how ERP and 2s10s are computed.
 - State that Chinese localization and elaboration caching were preserved.
 - Mention any verification commands run and any limitations.
-

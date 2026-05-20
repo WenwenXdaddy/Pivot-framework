@@ -6,6 +6,8 @@ Agent A is the main agent. It owns the data contract, docs, historical data, and
 
 Agent B owns code and UI implementation. Agent B should work from the post-preflight commit and must preserve the existing Cloudflare localization/caching changes.
 
+Routine status should be coordinated through `yield-update/SYNC_PROTOCOL.md`, not by asking the user to relay messages. Each agent writes only its own status file under `yield-update/status/`.
+
 ## Branch and Merge Order
 
 1. Commit current Cloudflare work on `main`.
@@ -63,3 +65,16 @@ Recommended manual checks:
 - Review `cloudflare/src/worker.js` for deterministic ERP and spread calculations.
 - Review `cloudflare/public/index.html` for English/Chinese yield labels.
 
+## Status Sync
+
+Read `yield-update/SYNC_PROTOCOL.md` before starting agent work.
+
+Agent A status file:
+
+- `yield-update/status/agent_a_status.md`
+
+Agent B status file:
+
+- `yield-update/status/agent_b_status.md`
+
+The orchestrating Codex instance reads both files at checkpoints and routes blockers between agents. The user should not need to manually carry routine status between agents.

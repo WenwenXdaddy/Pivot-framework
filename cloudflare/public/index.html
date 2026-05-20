@@ -767,6 +767,7 @@
       }
     };
     let currentLang = 'en';
+    let _cachedData = null;
 
     function setLang(lang) {
       currentLang = lang;
@@ -777,9 +778,22 @@
         const key = el.getAttribute('data-i18n');
         if (I18N[lang][key]) el.textContent = I18N[lang][key];
       });
-      // Re-set last-update with stored date
-      const dateEl = document.getElementById('last-update');
-      if (dateEl._date) dateEl.textContent = (lang === 'cn' ? '最近更新：' : 'Last updated: ') + dateEl._date;
+      // Fetch data in the new language
+      fetchLatestData();
+      // Close detail panel (will re-fetch on next click)
+      closeDetail();
+    }
+
+    async function fetchLatestData() {
+      try {
+        const langParam = currentLang === 'cn' ? '?lang=cn' : '';
+        const res = await fetch(WORKER_URL + '/api/latest' + langParam);
+        const data = await res.json();
+        if (!data.empty) {
+          populateDashboard(data);
+          setStatus((currentLang === 'cn' ? '缓存 · ' : 'Cached · ') + (data.date || ''), false);
+        }
+      } catch (e) {}
     }
 
     function closeDetail() {
@@ -793,6 +807,7 @@
 
     function populateDashboard(data) {
       if (!data || data.empty) return;
+      _cachedData = data;
       const r = data.readings || {};
       document.getElementById('g-econ').textContent = r.econ_approval ? r.econ_approval + '%' : '—';
       document.getElementById('g-gop').textContent = r.gop_approval ? r.gop_approval + '%' : '—';
@@ -802,6 +817,9 @@
       document.getElementById('m-wti').textContent = r.wti ? '$' + r.wti : '—';
       document.getElementById('m-gas').textContent = r.gas_price ? '$' + r.gas_price.toFixed(2) : '—';
       const s = data.scenarios || {};
+      const dirLabels = currentLang === 'cn'
+        ? { strengthening: '增强', weakening: '减弱', stable: '稳定' }
+        : { strengthening: 'strengthening', weakening: 'weakening', stable: 'stable' };
       for (const [key, sc] of Object.entries(s)) {
         const num = key.replace('s', '');
         document.getElementById('s' + num + '-prob').textContent = Math.round(sc.prob * 100) + '%';
@@ -809,7 +827,7 @@
         const dirArrows = { strengthening: '↑', weakening: '↓', stable: '→' };
         document.getElementById('s' + num + '-dir').innerHTML =
           '<span style="color:' + (dirColors[sc.direction] || 'var(--tert)') + '">' +
-          (dirArrows[sc.direction] || '→') + ' ' + (sc.direction || 'stable') + '</span>';
+          (dirArrows[sc.direction] || '→') + ' ' + (dirLabels[sc.direction] || sc.direction) + '</span>';
         document.getElementById('s' + num + '-signal').textContent = sc.key_signal || '';
       }
       if (data.headline) {
@@ -825,7 +843,10 @@
         tag.textContent = a;
         alertsEl.appendChild(tag);
       });
-      if (r.iran_status) document.getElementById('iran-status').textContent = 'Iran: ' + r.iran_status;
+      if (r.iran_status) {
+        const label = currentLang === 'cn' ? '伊朗局势：' : 'Iran: ';
+        document.getElementById('iran-status').textContent = label + r.iran_status;
+      }
       const dateEl = document.getElementById('last-update');
       dateEl._date = data.date || '—';
       dateEl.textContent = (currentLang === 'cn' ? '最近更新：' : 'Last updated: ') + dateEl._date;
@@ -838,13 +859,8 @@
         const info = await res.json();
         document.getElementById('provider-info').textContent = info.active + ' / ' + info.model + (info.hasSearch ? ' + search' : '');
       } catch (e) {}
-      try {
-        setStatus('Loading cached data...', true);
-        const res = await fetch(WORKER_URL + '/api/latest');
-        const data = await res.json();
-        if (!data.empty) { populateDashboard(data); setStatus('Cached · ' + (data.date || ''), false); }
-        else { setStatus('No cached data — click Refresh', false); }
-      } catch (e) { setStatus('', false); }
+      setStatus('Loading cached data...', true);
+      await fetchLatestData();
       loadHistory();
     })();
 
@@ -960,19 +976,21 @@
 
     function renderStyledAnalysis(md) {
       if (!md) return '';
-      // Split by h2/h3 headers to create card sections
-      const sections = md.split(/^(?=#{1,3} )/m).filter(s => s.trim());
+      // Convert standalone bold lines (e.g. **Section Title**) to h3 for consistent splitting
+      md = md.replace(/^\*\*([^*]+)\*\*\s*$/gm, '### $1');
+      // Split by h2/h3/h4 headers to create card sections
+      const sections = md.split(/^(?=#{1,4} )/m).filter(s => s.trim());
       if (sections.length <= 1) {
         // No clear sections — wrap in a single card
         return '<div class="dp-section">' + renderMarkdown(md) + '</div>';
       }
       let out = '';
       for (const sec of sections) {
-        const headerMatch = sec.match(/^#{1,3} (.+)$/m);
+        const headerMatch = sec.match(/^#{1,4} (.+)$/m);
         if (headerMatch) {
           const title = headerMatch[1].replace(/\*+/g, '').trim();
           const icon = getIconForTitle(title);
-          const body = sec.replace(/^#{1,3} .+$/m, '').trim();
+          const body = sec.replace(/^#{1,4} .+$/m, '').trim();
           const bodyHtml = renderMarkdown(body);
           // Check if body is mostly bullet points — use catalyst style
           const bulletCount = (body.match(/^- /gm) || []).length;
@@ -1006,14 +1024,30 @@
       const panel = document.getElementById('detail-panel');
       const titles = I18N[currentLang].detailTitles;
       document.getElementById('detail-title').textContent = titles[scenario];
-      const analyzingText = I18N[currentLang].analyzing;
-      document.getElementById('detail-analysis').innerHTML = '<span class="loading"><span class="spinner"></span> ' + analyzingText + ' ' + scenario + '...</span>';
       panel.classList.add('active');
       panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      const langParam = currentLang === 'cn' ? '?lang=cn' : '';
+
       try {
-        const res = await fetch(WORKER_URL + '/api/elaborate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ scenario }) });
-        const data = await res.json();
-        document.getElementById('detail-analysis').innerHTML = renderStyledAnalysis(data.analysis) || '<p>No analysis returned.</p>';
+        // Try cached elaboration first
+        let analysis = null;
+        try {
+          const cacheRes = await fetch(WORKER_URL + '/api/elaboration/' + scenario + langParam);
+          const cacheData = await cacheRes.json();
+          analysis = cacheData.analysis;
+        } catch (_) {}
+
+        // Fallback to on-demand generation if no cache
+        if (!analysis) {
+          const analyzingText = I18N[currentLang].analyzing;
+          document.getElementById('detail-analysis').innerHTML = '<span class="loading"><span class="spinner"></span> ' + analyzingText + ' ' + scenario + '...</span>';
+          const res = await fetch(WORKER_URL + '/api/elaborate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ scenario }) });
+          const data = await res.json();
+          analysis = data.analysis;
+        }
+
+        document.getElementById('detail-analysis').innerHTML = renderStyledAnalysis(analysis) || '<p>No analysis returned.</p>';
       } catch (e) { document.getElementById('detail-analysis').innerHTML = '<div class="dp-section"><p style="color:var(--danger)">Error: ' + e.message + '</p></div>'; }
     }
   </script>

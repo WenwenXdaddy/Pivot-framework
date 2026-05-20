@@ -271,6 +271,57 @@ const ELABORATE_PROMPTS = {
   3: 'Elaborate on Scenario 3: Iran ceasefire and oil drop removes political pressure for a structural policy pivot. Why is this underpriced? Use the provided recent data.',
 };
 
+const TRANSLATE_SYSTEM_PROMPT = `You are a professional translator specializing in financial and investment research. Translate the following English text into Chinese (Simplified).
+
+Rules:
+- Use professional investment research tone and terminology
+- Keep all numbers, percentages, ticker symbols, and dollar amounts as-is
+- Keep company names in English (e.g. Wells Fargo, JP Morgan)
+- Translate financial terms accurately: tariff=关税, stagflation=滞胀, yield curve=收益率曲线, equity vol=股票波动率, generic ballot=国会选情, defection=倒戈
+- Preserve the original markdown heading levels exactly (## stays ##, ### stays ###) — do NOT change heading depths
+- Respond with ONLY the translated text, no explanations or notes`;
+
+async function translateText(env, text) {
+  if (!text || !text.trim()) return text;
+  try {
+    return await callProvider(env, TRANSLATE_SYSTEM_PROMPT, text);
+  } catch (e) {
+    console.error('Translation failed:', e.message);
+    return text; // fallback to English
+  }
+}
+
+async function translateDataFields(env, data) {
+  const translated = JSON.parse(JSON.stringify(data));
+
+  // Translate headline & positioning
+  if (translated.headline) translated.headline = await translateText(env, translated.headline);
+  if (translated.positioning_update) translated.positioning_update = await translateText(env, translated.positioning_update);
+
+  // Translate threshold_alerts
+  if (translated.threshold_alerts?.length) {
+    const alertTexts = translated.threshold_alerts.join('\n');
+    const translatedAlerts = await translateText(env, alertTexts);
+    translated.threshold_alerts = translatedAlerts.split('\n').filter(l => l.trim());
+  }
+
+  // Translate scenario key_signals
+  if (translated.scenarios) {
+    for (const key of Object.keys(translated.scenarios)) {
+      if (translated.scenarios[key].key_signal) {
+        translated.scenarios[key].key_signal = await translateText(env, translated.scenarios[key].key_signal);
+      }
+    }
+  }
+
+  // Translate iran_status
+  if (translated.readings?.iran_status) {
+    translated.readings.iran_status = await translateText(env, translated.readings.iran_status);
+  }
+
+  return translated;
+}
+
 const ELABORATE_SYSTEM_PROMPT = `You are an investment research analyst providing a deep-dive scenario analysis for the Trump economic approval pivot framework.
 
 Respond with a clear, well-structured prose analysis (NOT JSON). Use paragraphs with headers. Cover:
@@ -348,10 +399,61 @@ async function doRefresh(env) {
   return parsed;
 }
 
+const SCENARIO_QUERIES = {
+  1: [
+    { q: 'US interest rates equity volatility today', topic: 'finance' },
+    { q: 'gold price forecast target', topic: 'finance' },
+  ],
+  2: [
+    { q: 'Trump tariff rollback exception news', topic: 'news' },
+    { q: 'market sector performance today', topic: 'finance' },
+  ],
+  3: [
+    { q: 'Iran news update ceasefire', topic: 'news' },
+    { q: 'oil supply demand outlook', topic: 'finance' },
+  ],
+};
+
+async function doElaborate(env, scenario) {
+  const queries = SCENARIO_QUERIES[scenario] || SCENARIO_QUERIES[2];
+  const context = await getSearchContext(queries, env);
+  let prompt = ELABORATE_PROMPTS[scenario] || ELABORATE_PROMPTS[2];
+  if (context) {
+    prompt += '\n\n--- RECENT WEB SEARCH CONTEXT ---\n' + context + '\n---------------------------------';
+  }
+  return await callProvider(env, ELABORATE_SYSTEM_PROMPT, prompt);
+}
+
+async function doElaborateAll(env) {
+  const [s1, s2, s3] = await Promise.all([
+    doElaborate(env, 1),
+    doElaborate(env, 2),
+    doElaborate(env, 3),
+  ]);
+  return { 1: s1, 2: s2, 3: s3 };
+}
+
+async function saveElaborationsToKV(env, elaborations) {
+  await Promise.all([
+    env.CACHE.put('elaboration:1', elaborations[1]),
+    env.CACHE.put('elaboration:2', elaborations[2]),
+    env.CACHE.put('elaboration:3', elaborations[3]),
+  ]);
+
+  // Translate and store Chinese versions (non-blocking)
+  const cnPromises = [1, 2, 3].map(async (n) => {
+    if (elaborations[n]) {
+      const cn = await translateText(env, elaborations[n]);
+      await env.CACHE.put('elaboration:' + n + '_cn', cn);
+    }
+  });
+  await Promise.all(cnPromises);
+}
+
 async function saveToKV(env, data) {
   const dateStr = data.date || new Date().toISOString().split('T')[0];
 
-  // Save as latest
+  // Save English version as latest
   await env.CACHE.put('latest', JSON.stringify(data));
 
   // Save to history by date
@@ -368,6 +470,17 @@ async function saveToKV(env, data) {
   await env.CACHE.put('history:index', JSON.stringify(idx));
 }
 
+// Run all background tasks: data translation + elaboration generation + translation
+async function backgroundWork(env, data) {
+  // Translate main data fields
+  const cnData = await translateDataFields(env, data);
+  await env.CACHE.put('latest_cn', JSON.stringify(cnData));
+
+  // Generate and cache elaborations (English + Chinese)
+  const elabs = await doElaborateAll(env);
+  await saveElaborationsToKV(env, elabs);
+}
+
 // ═══════════════════════════════════════════════════════
 // EXPORT: fetch (HTTP) + scheduled (Cron)
 // ═══════════════════════════════════════════════════════
@@ -377,10 +490,11 @@ export default {
   async scheduled(event, env, ctx) {
     const result = await doRefresh(env);
     await saveToKV(env, result);
+    ctx.waitUntil(backgroundWork(env, result));
   },
 
   // HTTP handler
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const corsHeaders = {
       'Access-Control-Allow-Origin': 'https://pivotframework.wddiscovery.com',
       'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
@@ -394,15 +508,27 @@ export default {
     try {
       // ── GET /api/latest — instant read from KV cache ──
       if (url.pathname === '/api/latest' && request.method === 'GET') {
+        const lang = url.searchParams.get('lang');
+        if (lang === 'cn') {
+          // Try Chinese cache first
+          let cnCached = await env.CACHE.get('latest_cn');
+          if (!cnCached) {
+            // On-demand: translate English data and cache
+            const enCached = await env.CACHE.get('latest');
+            if (enCached) {
+              const cnData = await translateDataFields(env, JSON.parse(enCached));
+              cnCached = JSON.stringify(cnData);
+              ctx.waitUntil(env.CACHE.put('latest_cn', cnCached));
+            }
+          }
+          if (cnCached) return new Response(cnCached, { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+        }
+        // Default: return English
         const cached = await env.CACHE.get('latest');
         if (!cached) {
-          return new Response(JSON.stringify({ empty: true }), {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          });
+          return new Response(JSON.stringify({ empty: true }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
         }
-        return new Response(cached, {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        return new Response(cached, { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
       }
 
       // ── GET /api/history?date=2026-05-11 — history data ──
@@ -452,38 +578,59 @@ export default {
       if (url.pathname === '/api/refresh') {
         const result = await doRefresh(env);
         await saveToKV(env, result);
+        ctx.waitUntil(backgroundWork(env, result));
         return new Response(JSON.stringify(result), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
 
-      // ── POST /api/elaborate — scenario deep dive ──
+      // ── GET /api/elaboration/:n — cached elaboration ──
+      const elabMatch = url.pathname.match(/^\/api\/elaboration\/([123])$/);
+      if (elabMatch && request.method === 'GET') {
+        const scenario = parseInt(elabMatch[1]);
+        const lang = url.searchParams.get('lang');
+        const cnKey = 'elaboration:' + scenario + '_cn';
+        const enKey = 'elaboration:' + scenario;
+
+        if (lang === 'cn') {
+          // Try Chinese cache
+          let cnCached = await env.CACHE.get(cnKey);
+          if (cnCached) {
+            return new Response(JSON.stringify({ scenario, analysis: cnCached }), {
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
+          }
+          // No Chinese cache — return English, kick off background translation
+          let enCached = await env.CACHE.get(enKey);
+          if (!enCached) {
+            enCached = await doElaborate(env, scenario);
+            await env.CACHE.put(enKey, enCached);
+          }
+          // Translate in background, don't block response
+          ctx.waitUntil(
+            translateText(env, enCached).then(cn => env.CACHE.put(cnKey, cn))
+          );
+          return new Response(JSON.stringify({ scenario, analysis: enCached }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+
+        // Default: English
+        let cached = await env.CACHE.get(enKey);
+        if (!cached) {
+          cached = await doElaborate(env, scenario);
+          ctx.waitUntil(env.CACHE.put(enKey, cached));
+        }
+        return new Response(JSON.stringify({ scenario, analysis: cached || null }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      // ── POST /api/elaborate — scenario deep dive (fallback, on-demand) ──
       if (url.pathname === '/api/elaborate') {
         const body = await request.json();
         const scenario = body.scenario || 2;
-        let prompt = ELABORATE_PROMPTS[scenario] || ELABORATE_PROMPTS[2];
-        const dateStr = new Date().toISOString().split('T')[0];
-
-        const scenarioQueries = {
-          1: [
-            { q: 'US interest rates equity volatility today', topic: 'finance' },
-            { q: 'gold price forecast target', topic: 'finance' },
-          ],
-          2: [
-            { q: 'Trump tariff rollback exception news ' + dateStr, topic: 'news' },
-            { q: 'market sector performance today', topic: 'finance' },
-          ],
-          3: [
-            { q: 'Iran news update ceasefire ' + dateStr, topic: 'news' },
-            { q: 'oil supply demand outlook', topic: 'finance' },
-          ],
-        };
-        const context = await getSearchContext(scenarioQueries[scenario] || scenarioQueries[2], env);
-        if (context) {
-          prompt += '\n\n--- RECENT WEB SEARCH CONTEXT ---\n' + context + '\n---------------------------------';
-        }
-
-        const text = await callProvider(env, ELABORATE_SYSTEM_PROMPT, prompt);
+        const text = await doElaborate(env, scenario);
         return new Response(JSON.stringify({ scenario, analysis: text }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });

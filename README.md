@@ -135,15 +135,18 @@ const WORKER_URL = 'https://pivot-framework-api.your-subdomain.workers.dev';
 
 Option A — via Wrangler:
 ```bash
-# From the cloudflare/ directory
-wrangler pages deploy public --project-name=pivot-dashboard
+# From the static frontend directory
+cd cloudflare/public
+wrangler pages deploy . --project-name=pivot-dashboard --branch main
 ```
 
 Option B — via Git (recommended for auto-deploy):
 1. Push the `cloudflare/public/` directory to a GitHub repo
 2. In the Cloudflare dashboard: Pages → Create project → Connect repo
-3. Set build output directory to `/` (no build step needed)
+3. Set root directory to `cloudflare/public`, build command blank, and build output directory to `/` (no build step needed)
 4. Every git push auto-deploys
+
+Keep Worker and Pages configuration separate: `cloudflare/wrangler.toml` is the Worker API config for `pivot-framework-api`, while Pages serves the static frontend from `cloudflare/public/`.
 
 #### 4. Custom domain (optional)
 

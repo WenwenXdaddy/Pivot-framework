@@ -575,10 +575,20 @@ export default {
 
   // HTTP handler
   async fetch(request, env, ctx) {
+    const origin = request.headers.get('Origin') || '';
+    const allowedOrigins = [
+      'https://pivotframework.wddiscovery.com',
+      'https://pivot-dashboard.pages.dev',
+      'https://main.pivot-dashboard.pages.dev',
+    ];
+    const allowOrigin = allowedOrigins.includes(origin) || /^https:\/\/[a-z0-9-]+\.pivot-dashboard\.pages\.dev$/.test(origin)
+      ? origin
+      : allowedOrigins[0];
     const corsHeaders = {
-      'Access-Control-Allow-Origin': 'https://pivotframework.wddiscovery.com',
+      'Access-Control-Allow-Origin': allowOrigin,
       'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
+      'Vary': 'Origin',
     };
 
     if (request.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });

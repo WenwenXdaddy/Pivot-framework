@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pivot Framework ¡ª 2026-03-30</title>
+<title>Pivot Framework â€” 2026-03-30</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <style>
@@ -69,23 +69,32 @@ footer { font-size:10px;color:var(--tert);margin-top:2rem;padding-top:1rem;borde
 
 <div class="section-label">Market context</div>
 <div class="market-row">
-  <div class="mkt"><div class="mkt-label">VIX</div><div class="mkt-val">31</div></div>
+  <div class="mkt"><div class="mkt-label">VIX</div><div class="mkt-val">31.0</div></div>
   <div class="mkt"><div class="mkt-label">Gold</div><div class="mkt-val">$4,495</div></div>
-  <div class="mkt"><div class="mkt-label">WTI crude</div><div class="mkt-val">$102</div></div>
+  <div class="mkt"><div class="mkt-label">WTI crude</div><div class="mkt-val">$102.00</div></div>
   <div class="mkt"><div class="mkt-label">Gas avg</div><div class="mkt-val">$3.96</div></div>
+</div>
+
+<div class="section-label">Rates &amp; yield</div>
+<div class="market-row">
+  <div class="mkt"><div class="mkt-label">10Y yield</div><div class="mkt-val">4.35%</div></div>
+  <div class="mkt"><div class="mkt-label">2s10s</div><div class="mkt-val">+47bp</div></div>
+  <div class="mkt"><div class="mkt-label">30Y yield</div><div class="mkt-val">4.78%</div></div>
+  <div class="mkt"><div class="mkt-label">ERP</div><div class="mkt-val">0.46%</div></div>
+  <div class="mkt"><div class="mkt-label">Fed hike prob</div><div class="mkt-val">8%</div></div>
 </div>
 
 
         <div class="headline-box">
           <div class="hl">Oil surged past $100 as Iran formalized Hormuz toll booth; S1 stagflation lock-in probability rising to 30%.</div>
-          <div class="pos">The oil surge past $100 strengthens S1's stagflation thesis and weakens S3's ceasefire trap. Increase gold and steepener exposure. Gas accelerating ~$0.24/week per EIA ¡ª if it crosses $4.50 without Congressional action, S2 defection math should accelerate rapidly.</div>
+          <div class="pos">The oil surge past $100 strengthens S1's stagflation thesis and weakens S3's ceasefire trap. Increase gold and steepener exposure. Gas accelerating ~$0.24/week per EIA â€” if it crosses $4.50 without Congressional action, S2 defection math should accelerate rapidly.</div>
         </div>
 
 <div class="alerts"><span class="alert-tag">CRITICAL: Econ approval (29%) below Biden all-time low (32%)</span><span class="alert-tag">CRITICAL: WTI ($102) crossed $100 critical threshold</span><span class="alert-tag">WARNING: GOP approval (82%) approaching 80% danger zone</span><span class="alert-tag">WARNING: VIX (31) in elevated uncertainty zone</span><span class="alert-tag">WARNING: Gas price ($3.96) accelerating toward $4.00+ (West Coast already $5.26)</span></div>
 
 <div class="divider"></div>
 
-<div class="section-label">Scenario probabilities ¡ª click to expand</div>
+<div class="section-label">Scenario probabilities â€” click to expand</div>
 <div class="scenario-row">
         <div class="sc" onclick="showElaboration('s1')">
           <div class="sc-tag" style="background:#FDF0F0;color:#B03030">No pivot</div>
@@ -120,13 +129,21 @@ footer { font-size:10px;color:var(--tert);margin-top:2rem;padding-top:1rem;borde
   <h3>Scenario probability over time</h3>
   <canvas id="scenarioChart" height="160"></canvas>
 </div>
+<div class="chart-box">
+  <h3>10Y yield over time</h3>
+  <canvas id="yieldChart" height="160"></canvas>
+</div>
+<div class="chart-box">
+  <h3>Equity risk premium over time</h3>
+  <canvas id="erpChart" height="160"></canvas>
+</div>
 
 <div class="divider"></div>
 <div style="font-size:12px;color:var(--sec);line-height:1.5;margin-bottom:1rem">
   <b>Iran status:</b> War continues. Iran formalizing Hormuz toll booth. Pakistan to host US-Iran talks. Houthis struck Israel. No ceasefire.
 </div>
 <div style="font-size:12px;color:var(--sec);line-height:1.5">
-  <b>Notes:</b> Only 2 days since baseline ¡ª polling data largely unchanged (same Reuters/Ipsos 3/20-3/22 period). Key moves: WTI $94¡ú$102 (+9%), Brent $104¡ú$109 (+4%). Iran formalized Hormuz toll booth regime. Pakistan FM says will 'soon host' US-Iran talks. Yemen Houthis claimed first missile attack on Israel since war started. China opened investigations into US trade practices. USMCA renegotiation starting Monday. Section 122 replacing SCOTUS-struck IEEPA tariffs. Generic ballot narrowed from D+9 to D+6 (RCP avg) ¡ª driven by pollster mix, not necessarily real shift. West Coast gas already $5.26/gal per EIA. 'No Kings' protests drew large crowds in 3,000+ cities (March 29). S&P 500 in longest losing streak since 2022.
+  <b>Notes:</b> Only 2 days since baseline â€” polling data largely unchanged (same Reuters/Ipsos 3/20-3/22 period). Key moves: WTI $94â†’$102 (+9%), Brent $104â†’$109 (+4%). Iran formalized Hormuz toll booth regime. Pakistan FM says will 'soon host' US-Iran talks. Yemen Houthis claimed first missile attack on Israel since war started. China opened investigations into US trade practices. USMCA renegotiation starting Monday. Section 122 replacing SCOTUS-struck IEEPA tariffs. Generic ballot narrowed from D+9 to D+6 (RCP avg) â€” driven by pollster mix, not necessarily real shift. West Coast gas already $5.26/gal per EIA. 'No Kings' protests drew large crowds in 3,000+ cities (March 29). S&P 500 in longest losing streak since 2022.
 </div>
 
 <footer>
@@ -168,6 +185,28 @@ if (labels.length > 1) {
     },
     options: { responsive: true, plugins: { legend: { labels: { font: { family: "'DM Sans'" } } } },
       scales: { y: { min: 0, max: 100, ticks: { callback: v => v + '%' } } } }
+  });
+  new Chart(document.getElementById('yieldChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: '10Y yield %', data: [4.43, 4.35], borderColor: '#2D5A9E', borderWidth: 1.5, pointRadius: 3, tension: 0.3 }
+      ]
+    },
+    options: { responsive: true, plugins: { legend: { labels: { font: { family: "'DM Sans'" } } } },
+      scales: { y: { beginAtZero: false, ticks: { callback: v => v + '%' } } } }
+  });
+  new Chart(document.getElementById('erpChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'ERP %', data: [0.33, 0.46], borderColor: '#9A6B11', borderWidth: 1.5, pointRadius: 3, tension: 0.3 }
+      ]
+    },
+    options: { responsive: true, plugins: { legend: { labels: { font: { family: "'DM Sans'" } } } },
+      scales: { y: { beginAtZero: false, ticks: { callback: v => v + '%' } } } }
   });
 }
 </script>

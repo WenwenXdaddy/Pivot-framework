@@ -223,14 +223,71 @@ function extractJSON(text) {
   }
 }
 
+function toNumber(value) {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : null;
+  if (typeof value === 'string') {
+    const parsed = Number(value.replace(/[%,$,+bp\s]/g, ''));
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  return null;
+}
+
+function normalizeProbability(value) {
+  const parsed = toNumber(value);
+  if (parsed == null) return null;
+  if (parsed > 1) return Math.round((parsed / 100) * 10000) / 10000;
+  return Math.round(parsed * 10000) / 10000;
+}
+
+function normalizeReadings(data) {
+  const r = data.readings || {};
+  const numericFields = [
+    'econ_approval',
+    'gop_approval',
+    'overall_approval',
+    'silver_bulletin_net',
+    'vix',
+    'gold',
+    'wti',
+    'brent',
+    'gas_price',
+    'yield_10y',
+    'yield_2y',
+    'yield_30y',
+    'sp500_forward_pe',
+  ];
+  for (const field of numericFields) {
+    if (r[field] !== undefined) r[field] = toNumber(r[field]);
+  }
+  r.fed_hike_prob = normalizeProbability(r.fed_hike_prob);
+  r.fed_cut_prob = normalizeProbability(r.fed_cut_prob);
+
+  if (r.yield_10y != null && r.yield_2y != null) {
+    r.spread_2s10s = Math.round((r.yield_10y - r.yield_2y) * 100) / 100;
+  } else if (r.spread_2s10s !== undefined) {
+    r.spread_2s10s = toNumber(r.spread_2s10s);
+  }
+
+  if (r.yield_10y != null && r.sp500_forward_pe) {
+    r.erp = Math.round(((1 / r.sp500_forward_pe) * 100 - r.yield_10y) * 100) / 100;
+  } else if (r.erp !== undefined) {
+    r.erp = toNumber(r.erp);
+  }
+
+  data.readings = r;
+  return data;
+}
+
 const SYSTEM_PROMPT = `You are an investment research analyst updating a political-economic framework. 
 
-Your task: Use the provided recent search context to get the latest data on Trump's economic approval ratings, GOP approval, generic ballot, VIX, gold, oil prices, gas prices, and Iran war status. Then re-evaluate three scenarios and assign probabilities. Ensure your numbers reflect the realities in the context.
+Your task: Use the provided recent search context to get the latest data on Trump's economic approval ratings, GOP approval, generic ballot, VIX, gold, oil prices, gas prices, Treasury yields, Fed hike/cut probabilities, S&P 500 forward P/E, and Iran war status. Then re-evaluate three scenarios and assign probabilities. Ensure your numbers reflect the realities in the context.
 
 FRAMEWORK:
-- Scenario 1 (No Pivot): Admin maintains tariffs despite low approval. Stagflation persists.
-- Scenario 2 (Tariff Rollback — base case): GOP defections force selective rollback Q2-Q3 2026.
-- Scenario 3 (Oil Trap): Iran ceasefire removes gas pressure, approval bounces, tariffs stay.
+- Channel 1: Gas price -> approval -> GOP defections -> policy pivot.
+- Channel 2: Yields -> mortgage and borrowing costs -> affordability pain -> GOP defections -> policy pivot.
+- Scenario 1 (No Pivot): Admin maintains tariffs despite low approval. Stagflation persists; high yields compress ERP and duration-sensitive assets.
+- Scenario 2 (Tariff Rollback — base case): GOP defections force selective rollback Q2-Q3 2026; high yields can become a second catalyst for relief.
+- Scenario 3 (Oil Trap): Iran ceasefire removes gas pressure, approval bounces, tariffs stay; persistent yields keep affordability pain alive even if oil falls.
 
 KEY THRESHOLDS:
 - Econ approval: warning < 30%, critical < 25%
@@ -238,6 +295,11 @@ KEY THRESHOLDS:
 - Generic ballot: warning D+7 or wider, critical D+12 or wider
 - VIX: warning > 30, critical > 40
 - WTI: warning > $100, critical > $120
+- 10Y yield: warning > 4.50%, stress > 4.75%, crisis > 5.00%
+- 30Y yield: warning > 5.00%, stress > 5.25%
+- 2s10s: bear steepening above +50bp increases affordability and fiscal pressure
+- ERP: warning below 0.50%, critical below 0.00%. ERP is computed after extraction; do not estimate it.
+- Fed hike probability: warning > 25%, critical > 40%
 
 OUTPUT FORMAT — respond ONLY with this JSON, no other text:
 {
@@ -253,6 +315,13 @@ OUTPUT FORMAT — respond ONLY with this JSON, no other text:
     "wti": <number>,
     "brent": <number>,
     "gas_price": <number>,
+    "yield_10y": <number>,
+    "yield_2y": <number>,
+    "yield_30y": <number>,
+    "spread_2s10s": <number>,
+    "fed_hike_prob": <0-1>,
+    "fed_cut_prob": <0-1>,
+    "sp500_forward_pe": <number>,
     "iran_status": "<1-2 sentence summary>"
   },
   "scenarios": {
@@ -266,9 +335,9 @@ OUTPUT FORMAT — respond ONLY with this JSON, no other text:
 }`;
 
 const ELABORATE_PROMPTS = {
-  1: 'Elaborate on Scenario 1: approval stabilizes with no policy pivot. What are the positioning implications for rates, gold, and equity vol? Use the provided recent data to support your analysis.',
-  2: 'Elaborate on Scenario 2: GOP defections force selective tariff rollback in Q2-Q3 2026. What would the rally look like and which sectors benefit most? Use the provided recent data.',
-  3: 'Elaborate on Scenario 3: Iran ceasefire and oil drop removes political pressure for a structural policy pivot. Why is this underpriced? Use the provided recent data.',
+  1: 'Elaborate on Scenario 1: approval stabilizes with no policy pivot while yields remain elevated. Discuss ERP compression, bear steepening, duration rotation, gold, and equity vol. Use the provided recent data to support your analysis.',
+  2: 'Elaborate on Scenario 2: GOP defections force selective tariff rollback in Q2-Q3 2026, with high yields as a second affordability catalyst. What would the yield-amplified rally look like, and which sectors such as REITs, housing, import consumer, and cyclicals benefit most? Use the provided recent data.',
+  3: 'Elaborate on Scenario 3: Iran ceasefire and oil drop removes some political pressure, but persistent yields keep affordability stress alive. Explain the oil-yield divergence, duration/bond nuance, and why this is underpriced. Use the provided recent data.',
 };
 
 const TRANSLATE_SYSTEM_PROMPT = `You are a professional translator specializing in financial and investment research. Translate the following English text into Chinese (Simplified).
@@ -327,7 +396,7 @@ const ELABORATE_SYSTEM_PROMPT = `You are an investment research analyst providin
 Respond with a clear, well-structured prose analysis (NOT JSON). Use paragraphs with headers. Cover:
 1. Current evidence supporting or weakening this scenario (cite recent data)
 2. Key catalysts to watch in the next 2-4 weeks
-3. Market positioning implications (rates, equities, commodities, vol)
+3. Market positioning implications (rates, yield curve, ERP, equities, commodities, vol)
 4. Probability assessment and what would change it
 
 Keep your analysis concise but substantive — roughly 400-600 words. Write in a professional investment research style.`;
@@ -385,6 +454,11 @@ async function doRefresh(env) {
     { q: 'gold price XAU USD today', topic: 'finance' },
     { q: 'WTI crude oil price today', topic: 'finance' },
     { q: 'US gas price average today', topic: 'finance' },
+    { q: 'US 10 year Treasury yield today', topic: 'finance' },
+    { q: 'US 2 year Treasury yield today', topic: 'finance' },
+    { q: 'US 30 year Treasury yield today', topic: 'finance' },
+    { q: 'CME FedWatch probability hike latest', topic: 'finance' },
+    { q: 'S&P 500 12 month forward P/E FactSet latest', topic: 'finance' },
     { q: 'Trump economic approval rating latest poll', topic: 'news' },
     { q: 'Trump generic ballot poll 2026', topic: 'news' },
   ], env);
@@ -396,20 +470,26 @@ async function doRefresh(env) {
   const parsed = extractJSON(text);
   parsed.date = parsed.date || dateStr;
   parsed._refreshedAt = new Date().toISOString();
-  return parsed;
+  return normalizeReadings(parsed);
 }
 
 const SCENARIO_QUERIES = {
   1: [
     { q: 'US interest rates equity volatility today', topic: 'finance' },
+    { q: '10 year Treasury yield term premium bear steepener today', topic: 'finance' },
+    { q: 'S&P 500 equity risk premium latest forward earnings yield', topic: 'finance' },
     { q: 'gold price forecast target', topic: 'finance' },
   ],
   2: [
     { q: 'Trump tariff rollback exception news', topic: 'news' },
+    { q: 'mortgage rates housing affordability Treasury yields latest', topic: 'finance' },
+    { q: 'REITs housing stocks Treasury yields rally latest', topic: 'finance' },
     { q: 'market sector performance today', topic: 'finance' },
   ],
   3: [
     { q: 'Iran news update ceasefire', topic: 'news' },
+    { q: 'oil prices Treasury yields divergence market today', topic: 'finance' },
+    { q: 'long duration bonds yield persistence latest', topic: 'finance' },
     { q: 'oil supply demand outlook', topic: 'finance' },
   ],
 };
@@ -657,4 +737,3 @@ export default {
     }
   },
 };
-

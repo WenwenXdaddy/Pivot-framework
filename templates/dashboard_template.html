@@ -66,6 +66,7 @@ h3 { font-size: 15px; font-weight: 600; margin-bottom: 0.75rem; }
 .chain-arrow { display: flex; align-items: center; justify-content: center; width: 30px; flex-shrink: 0; color: var(--text-tert); font-size: 14px; }
 .chain-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
 .chain-desc { font-size: 11px; color: var(--text-sec); line-height: 1.45; }
+.channel-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tert); margin: 0 0 8px; }
 
 .scenario-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 2rem; }
 .sc-card { border-radius: 12px; padding: 18px; border: 1px solid var(--border-light); background: var(--card); cursor: pointer; transition: all 0.2s; }
@@ -216,10 +217,31 @@ footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--bord
       <div class="gauge-bar"><div class="gauge-fill" style="width:70%;background:var(--danger);opacity:0.55"></div><div class="gauge-marker" style="left:50%;background:var(--text-tert)"></div></div>
     </div>
   </div>
+  <div class="gauge-row">
+    <div class="gauge">
+      <div class="gauge-label">10Y Treasury yield</div>
+      <div class="gauge-val warning">4.67%</div>
+      <div class="gauge-sub">Above 4.50% warning zone</div>
+      <div class="gauge-bar"><div class="gauge-fill" style="width:78%;background:var(--warning);opacity:0.55"></div><div class="gauge-marker" style="left:75%;background:var(--danger)"></div></div>
+    </div>
+    <div class="gauge">
+      <div class="gauge-label">2s10s spread</div>
+      <div class="gauge-val warning">+58bp</div>
+      <div class="gauge-sub">Bear steepening pressure</div>
+      <div class="gauge-bar"><div class="gauge-fill" style="width:68%;background:var(--warning);opacity:0.55"></div><div class="gauge-marker" style="left:58%;background:var(--danger)"></div></div>
+    </div>
+    <div class="gauge">
+      <div class="gauge-label">Equity risk premium</div>
+      <div class="gauge-val danger">-0.50%</div>
+      <div class="gauge-sub">Computed from forward P/E and 10Y</div>
+      <div class="gauge-bar"><div class="gauge-fill" style="width:18%;background:var(--danger);opacity:0.65"></div><div class="gauge-marker" style="left:50%;background:var(--warning)"></div></div>
+    </div>
+  </div>
 </div>
 
 <div class="section">
   <div class="section-label">Transmission mechanism</div>
+  <div class="channel-label">Channel 1: gas and tariff affordability</div>
   <div class="chain">
     <div class="chain-step"><div class="chain-title">Affordability shock</div><div class="chain-desc">Gas prices + tariffs + sticky inflation erode household confidence</div></div>
     <div class="chain-arrow">→</div>
@@ -230,6 +252,18 @@ footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--bord
     <div class="chain-step"><div class="chain-title">Congressional break</div><div class="chain-desc">Vulnerable Rs in OH, NC publicly demand tariff relief</div></div>
     <div class="chain-arrow">→</div>
     <div class="chain-step"><div class="chain-title">Policy pivot</div><div class="chain-desc">Selective tariff rollback, exemptions horse-traded for votes</div></div>
+  </div>
+  <div class="channel-label">Channel 2: yield and financing stress</div>
+  <div class="chain">
+    <div class="chain-step"><div class="chain-title">Yields reprice</div><div class="chain-desc">10Y above the warning zone and a steeper curve tighten financial conditions</div></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step"><div class="chain-title">Borrowing costs rise</div><div class="chain-desc">Mortgage, auto, credit card, and small-business rates keep affordability pressure alive</div></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step"><div class="chain-title">Household pain broadens</div><div class="chain-desc">Rate-sensitive voters feel the squeeze even if gasoline stops rising</div></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step"><div class="chain-title">Intra-GOP fracture</div><div class="chain-desc">Swing-district Republicans respond to housing and credit stress, not just pump prices</div></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step"><div class="chain-title">Policy pivot pressure</div><div class="chain-desc">Tariff relief becomes one of the few visible affordability levers</div></div>
   </div>
 </div>
 
@@ -245,6 +279,7 @@ footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--bord
       <p>Admin accepts midterm losses. Tariff + fiscal stance maintained. Stagflation probability elevated.</p>
       <span class="mtag bull">Gold / commodities</span>
       <span class="mtag bear">Rate-sensitive</span>
+      <span class="mtag bear">Duration rotation</span>
       <span class="mtag bear">Consumer disc.</span>
     </div>
     <div class="sc-card featured" onclick="showSection('s2')">
@@ -253,6 +288,7 @@ footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--bord
       <p>GOP Senate incumbents (OH, NC) demand relief. OBBBA becomes horse-trading vehicle. Q2–Q3 2026 timeline.</p>
       <span class="mtag bull">NDX / SPX rally</span>
       <span class="mtag bull">Import consumer</span>
+      <span class="mtag bull">REITs / housing</span>
       <span class="mtag bear">USD premium</span>
     </div>
     <div class="sc-card" onclick="showSection('s3')">
@@ -261,6 +297,7 @@ footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--bord
       <p>Iran ceasefire removes gas price pressure. Approval recovers mechanically. Tariff status quo persists — most underpriced.</p>
       <span class="mtag bear">Pivot longs</span>
       <span class="mtag bull">Oil vol sellers</span>
+      <span class="mtag bear">Duration stays fragile</span>
       <span class="mtag bear">Tariff-exposed</span>
     </div>
   </div>
@@ -314,6 +351,8 @@ footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--bord
 
 <div class="prose"><strong>Key analytical insight:</strong> Under Scenario 1, there's no single catalyst that resolves the uncertainty. It's a grind, not a crash. That favors carry-and-hedge strategies over directional bets. The steepener thesis is driven by the SCOTUS tariff ruling's fiscal implications — lost tariff revenue means more Treasury issuance, pushing term premium higher even as the Fed considers easing. Gold benefits from the ideal combination of negative real rates, central bank buying, and no credible policy relief valve.</div>
 
+<div class="prose"><strong>Yield channel:</strong> Elevated long-end yields make the no-pivot regime more hostile to equities even without a fresh oil shock. A compressed or inverted ERP means investors are not being paid much for equity risk versus Treasuries, while a bear steepener keeps duration-sensitive sectors under pressure. The practical rotation is away from long-duration growth, housing, REITs, and levered cyclicals, and toward inflation hedges, quality cash-flow compounders, and curve-steepener expressions.</div>
+
 <div class="section-label">Invalidation signals</div>
 <div class="invalidation">
   <span class="inv-tag">Iran ceasefire → oil collapses</span>
@@ -363,6 +402,8 @@ footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--bord
   </div>
 </div>
 
+<div class="prose"><strong>Yield-amplified catalyst:</strong> If the 10Y yield stays in the 4.75-5.00% stress zone, tariffs are no longer the only affordability problem, but they become the most politically adjustable one. Selective rollback would be read as relief for both goods prices and financing stress, lifting REITs, homebuilders, housing-adjacent retail, regional banks, and high-quality cyclicals that have been discounted for higher-for-longer rates.</div>
+
 <div class="divider"></div>
 <div class="section-label">Sector beneficiary ranking</div>
 
@@ -372,6 +413,7 @@ footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--bord
     <tr><td><span class="sn">Consumer durables & apparel</span><br><span class="names">Nike, Deckers, Under Armour, Crocs, American Eagle</span></td><td><span class="stag hi">Highest</span></td><td>Heaviest China import exposure. Mid-single digit EBITDA uplift. + $170B IEEPA refund liquidity injection.</td></tr>
     <tr><td><span class="sn">Staples distribution & retail</span><br><span class="names">Costco, Amazon, TJX, Target, Best Buy</span></td><td><span class="stag hi">Highest</span></td><td>Margin normalization + consumer confidence recovery. TJX benefits from excess inventory clearing.</td></tr>
     <tr><td><span class="sn">Home furnishings</span><br><span class="names">Wayfair, Williams-Sonoma, RH</span></td><td><span class="stag hi">High</span></td><td>Near-total import dependence. Wayfair unit economics flip from negative to viable.</td></tr>
+    <tr><td><span class="sn">REITs / housing complex</span><br><span class="names">Homebuilders, residential REITs, building products</span></td><td><span class="stag hi">High</span></td><td>Benefits from a double relief impulse: fewer tariff-driven input costs and lower perceived policy risk around mortgage-rate pressure.</td></tr>
     <tr><td><span class="sn">Industrials / machinery</span><br><span class="names">Caterpillar, Deere, Stanley Black & Decker</span></td><td><span class="stag md">Medium</span></td><td>Input cost relief on imported components. Largest refund windfall for CAT/DE.</td></tr>
     <tr><td><span class="sn">Autos</span><br><span class="names">Toyota, GM, Ford, Stellantis</span></td><td><span class="stag md">Medium</span></td><td>Overlapping tariffs on steel/aluminum/components. Ford booked $800M tariff hit in one quarter.</td></tr>
     <tr><td><span class="sn">Financials / banks</span><br><span class="names">Regional + money center banks</span></td><td><span class="stag md">Medium</span></td><td>Indirect via consumer confidence and credit quality improvement.</td></tr>
@@ -422,6 +464,8 @@ footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--bord
   <div class="trap-card"><div class="trap-title">What markets are missing</div><div class="trap-desc">The ceasefire removes the catalyst for both the bearish AND the bullish scenario. No oil shock = no stagflation crisis. But no oil shock also = no political pressure for tariff rollback. You're left in a muddle: moderate growth, sticky inflation, and tariffs grinding on margins — the worst environment for directional bets.</div></div>
 </div>
 
+<div class="prose"><strong>Oil-yield divergence:</strong> The trap is sharper when oil falls but yields do not. Gasoline relief can lift approval at the margin, while mortgage rates and credit costs keep the household affordability problem unresolved. That divergence argues for nuance in duration and bonds: ceasefire can compress risk premium, but persistent long-end yields limit the clean bull-steepening or broad duration-rally thesis.</div>
+
 <div class="section-label">Three things that get hurt</div>
 <div class="hurt-row">
   <div class="hurt-card"><div class="hurt-lbl">Hurt</div><div class="hurt-title">Pivot longs</div><div class="hurt-desc">WF's 28-stock tariff-relief basket (+20% since Nov) is priced for a rollback that doesn't come. Consumer/import names give back the anticipation premium.</div></div>
@@ -437,6 +481,7 @@ footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--bord
   <div class="pos-card"><div class="pos-dir" style="color:var(--success)">Favored</div><div class="pos-name">Domestic-facing quality</div><div class="pos-rat">Companies with pricing power, low import exposure, and domestic revenue bases. Healthcare, domestic software, regulated utilities. They don't need a tariff rollback to grow.</div><div class="pos-expr"><strong>Expression:</strong> Long domestic quality factor / short tariff-relief basket</div></div>
   <div class="pos-card"><div class="pos-dir" style="color:var(--danger)">Fade</div><div class="pos-name">Tariff-relief anticipation</div><div class="pos-rat">WF's basket already up 20% on SCOTUS anticipation. If political pressure evaporates with falling gas prices, these names are priced for a catalyst that doesn't arrive.</div><div class="pos-expr"><strong>Expression:</strong> Reduce/hedge consumer import + apparel overweights</div></div>
   <div class="pos-card"><div class="pos-dir" style="color:var(--warning)">Nuanced</div><div class="pos-name">Gold — tactical short, structural long</div><div class="pos-rat">Ceasefire unwinds war premium (-5 to -10%). But central bank buying (585t/qtr), fiscal deficits, and de-dollarization persist. The correction is a dip to buy, not a regime change.</div><div class="pos-expr"><strong>Expression:</strong> Reduce tactical gold pre-ceasefire; rebuild on pullback to $4,500-4,700</div></div>
+  <div class="pos-card"><div class="pos-dir" style="color:var(--warning)">Nuanced</div><div class="pos-name">Duration / bonds</div><div class="pos-rat">Oil relief helps inflation expectations, but sticky term premium and fiscal supply can keep the long end heavy. Avoid treating ceasefire as an automatic all-clear for long-duration assets.</div><div class="pos-expr"><strong>Expression:</strong> Prefer defined-risk duration longs or curve trades over unhedged TLT beta</div></div>
 </div>
 
 <div class="prose"><strong>Key analytical insight:</strong> JP Morgan analysts warn that even with a quick ceasefire, oil will face a lasting "security tax" from new shipping routes and higher insurance costs. Gas might fall from $4+ to $3.50, not back to $2.80. The relief may be less complete than markets expect — which means the approval bounce could be smaller than assumed, creating an uncomfortable middle ground where neither the crisis nor the relief thesis fully plays out.</div>

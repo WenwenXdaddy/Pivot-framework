@@ -1,6 +1,6 @@
-# Trump Economic Approval → Policy Pivot Framework
+# Trump Economic Approval → Dual-Channel Gas + Yield Policy Pivot Framework
 
-Track economic approval ratings as leading indicators for policy pivots. Three scenarios map political dynamics to market positioning.
+Track economic approval ratings, gas prices, and Treasury yields as leading indicators for policy pivots. Three scenarios map the gas-price and yield-pressure channels into political dynamics and market positioning.
 
 ## Commands
 

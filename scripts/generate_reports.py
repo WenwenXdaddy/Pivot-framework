@@ -36,8 +36,67 @@ def arrow_for_direction(d):
     return {"strengthening": "&#x2191;", "weakening": "&#x2193;", "stable": "&#x2192;"}.get(d, "&#x2192;")
 
 
+def to_float(value):
+    if value is None or value == "":
+        return None
+    if isinstance(value, (int, float)):
+        return float(value)
+    if isinstance(value, str):
+        cleaned = value.replace("%", "").replace("$", "").replace(",", "").replace("+", "").replace("bp", "").strip()
+        try:
+            return float(cleaned)
+        except ValueError:
+            return None
+    return None
+
+
+def fmt_num(value, digits=1, suffix="", prefix=""):
+    num = to_float(value)
+    if num is None:
+        return "&mdash;"
+    if digits == 0:
+        return f"{prefix}{num:,.0f}{suffix}"
+    return f"{prefix}{num:,.{digits}f}{suffix}"
+
+
+def fmt_money(value, digits=0):
+    return fmt_num(value, digits=digits, prefix="$")
+
+
+def fmt_pct(value, digits=1):
+    return fmt_num(value, digits=digits, suffix="%")
+
+
+def fmt_bp(value):
+    num = to_float(value)
+    if num is None:
+        return "&mdash;"
+    return f"{num * 100:+.0f}bp"
+
+
+def fmt_prob(value):
+    num = to_float(value)
+    if num is None:
+        return "&mdash;"
+    if num > 1:
+        num = num / 100
+    return f"{num * 100:.0f}%"
+
+
+def recompute_derived_readings(readings):
+    r = dict(readings or {})
+    y10 = to_float(r.get("yield_10y"))
+    y2 = to_float(r.get("yield_2y"))
+    pe = to_float(r.get("sp500_forward_pe"))
+    if r.get("spread_2s10s") is None and y10 is not None and y2 is not None:
+        r["spread_2s10s"] = round(y10 - y2, 2)
+    if r.get("erp") is None and y10 is not None and pe:
+        r["erp"] = round((1 / pe) * 100 - y10, 2)
+    return r
+
+
 def generate_html(entry):
-    r = entry.get("readings", {})
+    r = recompute_derived_readings(entry.get("readings", {}))
     s = entry.get("scenario_probs", {})
     scenarios = entry.get("scenarios", {})
     alerts = entry.get("threshold_alerts", [])
@@ -109,6 +168,8 @@ def generate_html(entry):
     chart_labels = json.dumps([e["date"] for e in all_entries])
     chart_econ = json.dumps([e.get("readings", {}).get("econ_approval", None) for e in all_entries])
     chart_gop = json.dumps([e.get("readings", {}).get("gop_approval", None) for e in all_entries])
+    chart_y10 = json.dumps([recompute_derived_readings(e.get("readings", {})).get("yield_10y", None) for e in all_entries])
+    chart_erp = json.dumps([recompute_derived_readings(e.get("readings", {})).get("erp", None) for e in all_entries])
     chart_s1 = json.dumps([round(e.get("scenario_probs", {}).get("s1_no_pivot", 0)*100) for e in all_entries])
     chart_s2 = json.dumps([round(e.get("scenario_probs", {}).get("s2_tariff_rollback", 0)*100) for e in all_entries])
     chart_s3 = json.dumps([round(e.get("scenario_probs", {}).get("s3_oil_trap", 0)*100) for e in all_entries])
@@ -177,17 +238,26 @@ footer {{ font-size:10px;color:var(--tert);margin-top:2rem;padding-top:1rem;bord
 
 <div class="section-label">Key readings</div>
 <div class="gauge-row">
-  <div class="gauge"><div class="gauge-label">Economic approval</div><div class="gauge-val" style="color:var(--danger)">{r.get('econ_approval','—')}%</div><div class="gauge-sub">Reuters/Ipsos</div></div>
-  <div class="gauge"><div class="gauge-label">GOP approval</div><div class="gauge-val" style="color:var(--warning)">{r.get('gop_approval','—')}%</div><div class="gauge-sub">Reuters/Ipsos among Republicans</div></div>
-  <div class="gauge"><div class="gauge-label">Generic ballot</div><div class="gauge-val" style="color:var(--danger)">{r.get('generic_ballot','—')}</div><div class="gauge-sub">2026 midterms</div></div>
+  <div class="gauge"><div class="gauge-label">Economic approval</div><div class="gauge-val" style="color:var(--danger)">{fmt_pct(r.get('econ_approval'), 0)}</div><div class="gauge-sub">Reuters/Ipsos</div></div>
+  <div class="gauge"><div class="gauge-label">GOP approval</div><div class="gauge-val" style="color:var(--warning)">{fmt_pct(r.get('gop_approval'), 0)}</div><div class="gauge-sub">Reuters/Ipsos among Republicans</div></div>
+  <div class="gauge"><div class="gauge-label">Generic ballot</div><div class="gauge-val" style="color:var(--danger)">{r.get('generic_ballot') or '&mdash;'}</div><div class="gauge-sub">2026 midterms</div></div>
 </div>
 
 <div class="section-label">Market context</div>
 <div class="market-row">
-  <div class="mkt"><div class="mkt-label">VIX</div><div class="mkt-val">{r.get('vix','—')}</div></div>
-  <div class="mkt"><div class="mkt-label">Gold</div><div class="mkt-val">${r.get('gold','—'):,}</div></div>
-  <div class="mkt"><div class="mkt-label">WTI crude</div><div class="mkt-val">${r.get('wti','—')}</div></div>
-  <div class="mkt"><div class="mkt-label">Gas avg</div><div class="mkt-val">${r.get('gas_price','—')}</div></div>
+  <div class="mkt"><div class="mkt-label">VIX</div><div class="mkt-val">{fmt_num(r.get('vix'), 1)}</div></div>
+  <div class="mkt"><div class="mkt-label">Gold</div><div class="mkt-val">{fmt_money(r.get('gold'), 0)}</div></div>
+  <div class="mkt"><div class="mkt-label">WTI crude</div><div class="mkt-val">{fmt_money(r.get('wti'), 2)}</div></div>
+  <div class="mkt"><div class="mkt-label">Gas avg</div><div class="mkt-val">{fmt_money(r.get('gas_price'), 2)}</div></div>
+</div>
+
+<div class="section-label">Rates &amp; yield</div>
+<div class="market-row">
+  <div class="mkt"><div class="mkt-label">10Y yield</div><div class="mkt-val">{fmt_pct(r.get('yield_10y'), 2)}</div></div>
+  <div class="mkt"><div class="mkt-label">2s10s</div><div class="mkt-val">{fmt_bp(r.get('spread_2s10s'))}</div></div>
+  <div class="mkt"><div class="mkt-label">30Y yield</div><div class="mkt-val">{fmt_pct(r.get('yield_30y'), 2)}</div></div>
+  <div class="mkt"><div class="mkt-label">ERP</div><div class="mkt-val">{fmt_pct(r.get('erp'), 2)}</div></div>
+  <div class="mkt"><div class="mkt-label">Fed hike prob</div><div class="mkt-val">{fmt_prob(r.get('fed_hike_prob'))}</div></div>
 </div>
 
 {headline_html}
@@ -209,6 +279,14 @@ footer {{ font-size:10px;color:var(--tert);margin-top:2rem;padding-top:1rem;bord
 <div class="chart-box">
   <h3>Scenario probability over time</h3>
   <canvas id="scenarioChart" height="160"></canvas>
+</div>
+<div class="chart-box">
+  <h3>10Y yield over time</h3>
+  <canvas id="yieldChart" height="160"></canvas>
+</div>
+<div class="chart-box">
+  <h3>Equity risk premium over time</h3>
+  <canvas id="erpChart" height="160"></canvas>
 </div>
 
 <div class="divider"></div>
@@ -259,6 +337,28 @@ if (labels.length > 1) {{
     options: {{ responsive: true, plugins: {{ legend: {{ labels: {{ font: {{ family: "'DM Sans'" }} }} }} }},
       scales: {{ y: {{ min: 0, max: 100, ticks: {{ callback: v => v + '%' }} }} }} }}
   }});
+  new Chart(document.getElementById('yieldChart'), {{
+    type: 'line',
+    data: {{
+      labels,
+      datasets: [
+        {{ label: '10Y yield %', data: {chart_y10}, borderColor: '#2D5A9E', borderWidth: 1.5, pointRadius: 3, tension: 0.3 }}
+      ]
+    }},
+    options: {{ responsive: true, plugins: {{ legend: {{ labels: {{ font: {{ family: "'DM Sans'" }} }} }} }},
+      scales: {{ y: {{ beginAtZero: false, ticks: {{ callback: v => v + '%' }} }} }} }}
+  }});
+  new Chart(document.getElementById('erpChart'), {{
+    type: 'line',
+    data: {{
+      labels,
+      datasets: [
+        {{ label: 'ERP %', data: {chart_erp}, borderColor: '#9A6B11', borderWidth: 1.5, pointRadius: 3, tension: 0.3 }}
+      ]
+    }},
+    options: {{ responsive: true, plugins: {{ legend: {{ labels: {{ font: {{ family: "'DM Sans'" }} }} }} }},
+      scales: {{ y: {{ beginAtZero: false, ticks: {{ callback: v => v + '%' }} }} }} }}
+  }});
 }}
 </script>
 </body>
@@ -278,7 +378,7 @@ def generate_pdf(entry):
         print("reportlab not installed. Run: pip install reportlab --break-system-packages")
         return False
 
-    r = entry.get("readings", {})
+    r = recompute_derived_readings(entry.get("readings", {}))
     s = entry.get("scenario_probs", {})
     scenarios = entry.get("scenarios", {})
     alerts = entry.get("threshold_alerts", [])
@@ -323,9 +423,9 @@ def generate_pdf(entry):
     # Gauges table
     gd = [
         [Paragraph("<b>Economic Approval</b>", styles['CT']), Paragraph("<b>GOP Approval</b>", styles['CT']), Paragraph("<b>Generic Ballot</b>", styles['CT'])],
-        [Paragraph(f"<font color='#B03030' size='16'><b>{r.get('econ_approval','—')}%</b></font>", styles['CB']),
-         Paragraph(f"<font color='#9A6B11' size='16'><b>{r.get('gop_approval','—')}%</b></font>", styles['CB']),
-         Paragraph(f"<font color='#B03030' size='16'><b>{r.get('generic_ballot','—')}</b></font>", styles['CB'])],
+        [Paragraph(f"<font color='#B03030' size='16'><b>{fmt_pct(r.get('econ_approval'), 0)}</b></font>", styles['CB']),
+         Paragraph(f"<font color='#9A6B11' size='16'><b>{fmt_pct(r.get('gop_approval'), 0)}</b></font>", styles['CB']),
+         Paragraph(f"<font color='#B03030' size='16'><b>{r.get('generic_ballot') or '&mdash;'}</b></font>", styles['CB'])],
     ]
     gt = Table(gd, colWidths=cw3)
     gt.setStyle(TableStyle([
@@ -339,7 +439,10 @@ def generate_pdf(entry):
 
     # Market context
     story.append(Paragraph(
-        f"<b>Market context:</b> VIX {r.get('vix','—')} | Gold ${r.get('gold','—'):,} | WTI ${r.get('wti','—')} | Brent ${r.get('brent','—')} | Gas ${r.get('gas_price','—')}",
+        f"<b>Market context:</b> VIX {fmt_num(r.get('vix'), 1)} | Gold {fmt_money(r.get('gold'), 0)} | WTI {fmt_money(r.get('wti'), 2)} | Brent {fmt_money(r.get('brent'), 2)} | Gas {fmt_money(r.get('gas_price'), 2)}",
+        styles['B']))
+    story.append(Paragraph(
+        f"<b>Rates &amp; yield:</b> 10Y {fmt_pct(r.get('yield_10y'), 2)} | 2s10s {fmt_bp(r.get('spread_2s10s'))} | 30Y {fmt_pct(r.get('yield_30y'), 2)} | ERP {fmt_pct(r.get('erp'), 2)} | Fed hike probability {fmt_prob(r.get('fed_hike_prob'))}",
         styles['B']))
 
     # Headline
@@ -430,7 +533,7 @@ def main():
 
     # HTML
     html = generate_html(entry)
-    with open(HTML_OUT, "w") as f:
+    with open(HTML_OUT, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"  HTML → {HTML_OUT}")
 

@@ -14,6 +14,14 @@
         "wti": 94,
         "brent": 104,
         "gas_price": 4.0,
+        "yield_10y": 4.43,
+        "yield_2y": 3.92,
+        "yield_30y": 4.82,
+        "spread_2s10s": 0.51,
+        "fed_hike_prob": 0.08,
+        "fed_cut_prob": 0.25,
+        "sp500_forward_pe": 21.0,
+        "erp": 0.33,
         "iran_status": "15-point plan rejected by Iran. Hormuz partially closed. Ceasefire talks via Pakistan."
       },
       "scenario_probs": {
@@ -62,6 +70,14 @@
         "wti": 102,
         "brent": 109,
         "gas_price": 3.96,
+        "yield_10y": 4.35,
+        "yield_2y": 3.88,
+        "yield_30y": 4.78,
+        "spread_2s10s": 0.47,
+        "fed_hike_prob": 0.08,
+        "fed_cut_prob": 0.28,
+        "sp500_forward_pe": 20.8,
+        "erp": 0.46,
         "iran_status": "War continues. Iran formalizing Hormuz toll booth. Pakistan to host US-Iran talks. Houthis struck Israel. No ceasefire."
       },
       "scenario_probs": {

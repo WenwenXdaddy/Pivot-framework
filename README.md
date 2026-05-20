@@ -1,6 +1,6 @@
-# Trump Economic Approval → Policy Pivot Framework
+# Trump Economic Approval → Dual-Channel Gas + Yield Policy Pivot Framework
 
-A reusable analytical framework that tracks economic approval ratings as leading indicators for policy pivots, with scenario analysis mapping political dynamics to market positioning.
+A reusable analytical framework that tracks economic approval ratings, gas prices, and Treasury yields as leading indicators for policy pivots, with scenario analysis mapping political dynamics to market positioning.
 
 ## Project Structure
 
@@ -8,6 +8,11 @@ A reusable analytical framework that tracks economic approval ratings as leading
 pivot-framework/
 ├── CLAUDE.md                          # Framework definition (Path A brain)
 ├── README.md                          # This file
+├── docs/
+│   ├── framework.md                   # Thresholds, transmission mechanism, probability rubric
+│   ├── data_sources.md                # Required searches and source ranking
+│   ├── output_schemas.md              # JSON, HTML, PDF, and Obsidian output contracts
+│   └── scenarios/                     # Scenario conditions and elaboration templates
 ├── templates/
 │   └── dashboard_template.html        # HTML dashboard template
 ├── output/
@@ -53,6 +58,15 @@ pivot-framework/
 | `elaborate on scenario 3` | Deep dive on the oil trap underpricing |
 | `log` | Show historical readings and trend |
 | `obsidian` | Generate a vault-ready markdown note |
+
+### Yield Channel
+
+The framework now tracks two parallel pressure channels:
+
+- **Gas channel:** oil shock → gas prices rise → economic approval falls → GOP defections → policy pivot
+- **Yield channel:** inflation and fiscal stress → 10Y/30Y yields rise → mortgage and borrowing costs tighten → affordability pain broadens → GOP defections → policy pivot
+
+Yield readings live in `readings` alongside the existing political and commodity fields: `yield_10y`, `yield_2y`, `yield_30y`, `spread_2s10s`, `fed_hike_prob`, `fed_cut_prob`, `sp500_forward_pe`, and `erp`. ERP is computed deterministically as `(1 / sp500_forward_pe) * 100 - yield_10y`; the 4.75% 10Y level is a warning zone, not a fixed ERP-zero threshold.
 
 ### Weekly Ritual
 
@@ -155,13 +169,16 @@ In Cloudflare Pages dashboard → Custom domains → Add your domain.
 ### Why two paths?
 
 **Path A** gives you Opus-quality analysis depth and integrates with your
-existing Claude Code workflow. It's the research tool.
+existing Claude Code workflow. It's the research tool, using `docs/` as the
+source of truth for searches, thresholds, scenarios, and output schemas.
 
 **Path B** gives you a live URL you can check from your phone, share with
 colleagues, and set up on a schedule. It's the monitoring tool.
 
 They complement each other: use Path A for deep weekly analysis, Path B for
-quick daily checks.
+quick daily checks. Both paths preserve a dual-track data contract: local
+reports use `scenario_probs` plus `scenarios.sN.direction/key_signal`, while
+the Worker API can expose probabilities inside `scenarios.sN.prob`.
 
 ### Extending the framework
 
@@ -169,8 +186,8 @@ quick daily checks.
 strengthen/weaken conditions and positioning. Claude Code will automatically
 include it in re-evaluations.
 
-**Add a new data source:** Add it to the "Commands > update" section in
-CLAUDE.md with the search query. Claude Code will search for it on each update.
+**Add a new data source:** Add it to `docs/data_sources.md` with the search
+query. Claude Code will search for it on each update.
 
 **Add charts:** The dashboard template uses vanilla Chart.js. Add a `<canvas>`
 element and a Chart.js initialization in the template to visualize historical

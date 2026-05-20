@@ -490,7 +490,7 @@
 
     .market-row {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 10px;
       margin-bottom: 1.5rem;
     }
@@ -640,6 +640,30 @@
       </div>
     </div>
 
+    <div class="section-label" data-i18n="ratesContext">Rates &amp; yield</div>
+    <div class="market-row">
+      <div class="mkt">
+        <div class="mkt-label" data-i18n="yield10y">10Y yield</div>
+        <div class="mkt-val" id="m-yield-10y">—</div>
+      </div>
+      <div class="mkt">
+        <div class="mkt-label" data-i18n="spread2s10s">2s10s</div>
+        <div class="mkt-val" id="m-spread-2s10s">—</div>
+      </div>
+      <div class="mkt">
+        <div class="mkt-label" data-i18n="yield30y">30Y yield</div>
+        <div class="mkt-val" id="m-yield-30y">—</div>
+      </div>
+      <div class="mkt">
+        <div class="mkt-label" data-i18n="erp">ERP</div>
+        <div class="mkt-val" id="m-erp">—</div>
+      </div>
+      <div class="mkt">
+        <div class="mkt-label" data-i18n="fedHikeProb">Fed hike prob</div>
+        <div class="mkt-val" id="m-fed-hike">—</div>
+      </div>
+    </div>
+
     <div class="divider"></div>
 
     <div class="headline-box" id="headline-box" style="display:none">
@@ -706,6 +730,14 @@
           <canvas id="chart-wti"></canvas>
         </div>
         <div class="chart-card">
+          <div class="chart-title" data-i18n="chartYield10y">10Y yield %</div>
+          <canvas id="chart-yield-10y"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title" data-i18n="chartErp">ERP %</div>
+          <canvas id="chart-erp"></canvas>
+        </div>
+        <div class="chart-card">
           <div class="chart-title" data-i18n="chartS1">S1: No Pivot %</div>
           <canvas id="chart-s1"></canvas>
         </div>
@@ -734,13 +766,17 @@
         gopApproval: 'GOP approval',
         genericBallot: 'Generic ballot',
         marketContext: 'Market context',
+        ratesContext: 'Rates & yield',
         gold: 'Gold', wtiCrude: 'WTI crude', gasAvg: 'Gas avg',
+        yield10y: '10Y yield', spread2s10s: '2s10s', yield30y: '30Y yield',
+        erp: 'ERP', fedHikeProb: 'Fed hike prob',
         scenarioProb: 'Scenario probabilities',
         noPivot: 'No pivot', baseCase: 'Base case', trap: 'Trap',
         s1Name: 'S1: Stagflation lock-in', s2Name: 'S2: Tariff rollback', s3Name: 'S3: Oil trap',
         historicalTrends: 'Historical trends',
         chartEcon: 'Economic Approval %', chartGold: 'Gold (USD)',
-        chartWti: 'WTI Crude (USD)', chartS1: 'S1: No Pivot %', chartS2: 'S2: Tariff Rollback %',
+        chartWti: 'WTI Crude (USD)', chartYield10y: '10Y yield %', chartErp: 'ERP %',
+        chartS1: 'S1: No Pivot %', chartS2: 'S2: Tariff Rollback %',
         footer: 'Framework sources: Reuters/Ipsos, Silver Bulletin, Pew Research, RealClearPolling, Morning Consult, Wells Fargo, JP Morgan, Allianz. Not investment advice.',
         detailTitles: { 1: 'S1: No pivot — deep dive', 2: 'S2: Tariff rollback — deep dive', 3: 'S3: Oil trap — deep dive' },
         analyzing: 'Analyzing scenario',
@@ -754,13 +790,17 @@
         gopApproval: '共和党支持率',
         genericBallot: '国会选情',
         marketContext: '市场环境',
+        ratesContext: '利率与收益率',
         gold: '黄金', wtiCrude: 'WTI原油', gasAvg: '汽油均价',
+        yield10y: '10Y收益率', spread2s10s: '期限利差', yield30y: '30Y收益率',
+        erp: '股权风险溢价', fedHikeProb: '加息概率',
         scenarioProb: '情景概率',
         noPivot: '不转向', baseCase: '基准情景', trap: '陷阱',
         s1Name: 'S1：滞胀锁定', s2Name: 'S2：关税回撤', s3Name: 'S3：石油陷阱',
         historicalTrends: '历史趋势',
         chartEcon: '经济支持率 %', chartGold: '黄金 (美元)',
-        chartWti: 'WTI原油 (美元)', chartS1: 'S1：不转向 %', chartS2: 'S2：关税回撤 %',
+        chartWti: 'WTI原油 (美元)', chartYield10y: '10Y收益率 %', chartErp: '股权风险溢价 %',
+        chartS1: 'S1：不转向 %', chartS2: 'S2：关税回撤 %',
         footer: '数据来源：路透/益普索、Silver Bulletin、皮尤研究中心、RealClearPolling、Morning Consult、富国银行、摩根大通、安联。本页面不构成投资建议。',
         detailTitles: { 1: 'S1：不转向 — 深度分析', 2: 'S2：关税回撤 — 深度分析', 3: 'S3：石油陷阱 — 深度分析' },
         analyzing: '正在分析情景',
@@ -805,17 +845,70 @@
       el.innerHTML = loading ? '<span class="spinner"></span>' + msg : msg;
     }
 
+    function asNumber(value) {
+      if (typeof value === 'number' && Number.isFinite(value)) return value;
+      if (typeof value === 'string') {
+        const parsed = Number(value.replace(/[%,$,+bp\s]/g, ''));
+        return Number.isFinite(parsed) ? parsed : null;
+      }
+      return null;
+    }
+
+    function fmtNumber(value, digits = 1, prefix = '', suffix = '') {
+      const n = asNumber(value);
+      if (n == null) return '—';
+      return prefix + n.toLocaleString(undefined, {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      }) + suffix;
+    }
+
+    function fmtPercent(value, digits = 1) {
+      return fmtNumber(value, digits, '', '%');
+    }
+
+    function fmtProbability(value) {
+      const n = asNumber(value);
+      if (n == null) return '—';
+      return Math.round((n > 1 ? n : n * 100)) + '%';
+    }
+
+    function fmtBp(value) {
+      const n = asNumber(value);
+      if (n == null) return '—';
+      return (n >= 0 ? '+' : '') + Math.round(n * 100) + 'bp';
+    }
+
+    function derivedReadings(readings) {
+      const r = { ...(readings || {}) };
+      const y10 = asNumber(r.yield_10y);
+      const y2 = asNumber(r.yield_2y);
+      const pe = asNumber(r.sp500_forward_pe);
+      if (r.spread_2s10s == null && y10 != null && y2 != null) {
+        r.spread_2s10s = Math.round((y10 - y2) * 100) / 100;
+      }
+      if (r.erp == null && y10 != null && pe) {
+        r.erp = Math.round(((1 / pe) * 100 - y10) * 100) / 100;
+      }
+      return r;
+    }
+
     function populateDashboard(data) {
       if (!data || data.empty) return;
       _cachedData = data;
-      const r = data.readings || {};
-      document.getElementById('g-econ').textContent = r.econ_approval ? r.econ_approval + '%' : '—';
-      document.getElementById('g-gop').textContent = r.gop_approval ? r.gop_approval + '%' : '—';
+      const r = derivedReadings(data.readings);
+      document.getElementById('g-econ').textContent = r.econ_approval != null ? fmtPercent(r.econ_approval, 0) : '—';
+      document.getElementById('g-gop').textContent = r.gop_approval != null ? fmtPercent(r.gop_approval, 0) : '—';
       document.getElementById('g-ballot').textContent = r.generic_ballot || '—';
-      document.getElementById('m-vix').textContent = r.vix || '—';
-      document.getElementById('m-gold').textContent = r.gold ? '$' + r.gold.toLocaleString() : '—';
-      document.getElementById('m-wti').textContent = r.wti ? '$' + r.wti : '—';
-      document.getElementById('m-gas').textContent = r.gas_price ? '$' + r.gas_price.toFixed(2) : '—';
+      document.getElementById('m-vix').textContent = fmtNumber(r.vix, 1);
+      document.getElementById('m-gold').textContent = fmtNumber(r.gold, 0, '$');
+      document.getElementById('m-wti').textContent = fmtNumber(r.wti, 2, '$');
+      document.getElementById('m-gas').textContent = fmtNumber(r.gas_price, 2, '$');
+      document.getElementById('m-yield-10y').textContent = fmtPercent(r.yield_10y, 2);
+      document.getElementById('m-spread-2s10s').textContent = fmtBp(r.spread_2s10s);
+      document.getElementById('m-yield-30y').textContent = fmtPercent(r.yield_30y, 2);
+      document.getElementById('m-erp').textContent = fmtPercent(r.erp, 2);
+      document.getElementById('m-fed-hike').textContent = fmtProbability(r.fed_hike_prob);
       const s = data.scenarios || {};
       const dirLabels = currentLang === 'cn'
         ? { strengthening: '增强', weakening: '减弱', stable: '稳定' }
@@ -931,6 +1024,8 @@
         drawChart('chart-vix', labels, entries.map(e => e.readings?.vix ?? null), '#2D5A9E');
         drawChart('chart-gold', labels, entries.map(e => e.readings?.gold ?? null), '#9A6B11');
         drawChart('chart-wti', labels, entries.map(e => e.readings?.wti ?? null), '#6B6960');
+        drawChart('chart-yield-10y', labels, entries.map(e => derivedReadings(e.readings).yield_10y ?? null), '#2D7A3A');
+        drawChart('chart-erp', labels, entries.map(e => derivedReadings(e.readings).erp ?? null), '#9A6B11');
         drawChart('chart-s1', labels, entries.map(e => e.scenarios?.s1?.prob != null ? Math.round(e.scenarios.s1.prob * 100) : null), '#B03030');
         drawChart('chart-s2', labels, entries.map(e => e.scenarios?.s2?.prob != null ? Math.round(e.scenarios.s2.prob * 100) : null), '#2D5A9E');
       } catch (e) {}

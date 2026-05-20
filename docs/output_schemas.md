@@ -49,7 +49,7 @@ Each entry appended to `data/weekly_log.json` must follow this exact structure:
   },
   "threshold_alerts": [
     "CRITICAL: Econ approval (29%) below Biden all-time low (32%)",
-    "WARNING: 10Y yield (4.67%) approaching 4.75% ERP compression warning zone"
+    "WARNING: 10Y yield (4.67%) crossed 4.60% ERP compression warning zone"
   ],
   "headline": "One sentence: what changed most since last entry.",
   "positioning_update": "2-3 sentences: what to do differently this week based on the data shift.",

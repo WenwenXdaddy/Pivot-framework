@@ -18,7 +18,7 @@ Administration maintains tariffs despite record-low economic approval. GOP appro
 - [ ] No additional House Rs vote against tariffs beyond the original 6
 - [ ] Consumer sentiment continues declining
 - [ ] Earnings revisions negative for import-exposed sectors
-- [ ] **10Y yield above 4.75% and rising (ERP compressed toward zero)**
+- [ ] **10Y yield above 4.60% and rising (ERP compressed toward zero)**
 - [ ] **2s10s spread above +75bp (bear steepener regime confirmed)**
 - [ ] **Fed hike probability above 30% (market pricing tightening, not easing)**
 

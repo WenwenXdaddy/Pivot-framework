@@ -66,7 +66,7 @@ The framework now tracks two parallel pressure channels:
 - **Gas channel:** oil shock → gas prices rise → economic approval falls → GOP defections → policy pivot
 - **Yield channel:** inflation and fiscal stress → 10Y/30Y yields rise → mortgage and borrowing costs tighten → affordability pain broadens → GOP defections → policy pivot
 
-Yield readings live in `readings` alongside the existing political and commodity fields: `yield_10y`, `yield_2y`, `yield_30y`, `spread_2s10s`, `fed_hike_prob`, `fed_cut_prob`, `sp500_forward_pe`, and `erp`. ERP is computed deterministically as `(1 / sp500_forward_pe) * 100 - yield_10y`; the 4.75% 10Y level is a warning zone, not a fixed ERP-zero threshold.
+Yield readings live in `readings` alongside the existing political and commodity fields: `yield_10y`, `yield_2y`, `yield_30y`, `spread_2s10s`, `fed_hike_prob`, `fed_cut_prob`, `sp500_forward_pe`, and `erp`. ERP is computed deterministically as `(1 / sp500_forward_pe) * 100 - yield_10y`; the 4.60% 10Y level is a warning zone, not a fixed ERP-zero threshold.
 
 ### Weekly Ritual
 

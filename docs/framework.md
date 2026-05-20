@@ -36,7 +36,7 @@ The actionable signal remains the **rate of GOP-specific erosion** — but now y
 | VIX | > 30 | > 40 | Elevated floor vs crisis regime |
 | WTI crude | > $100 | > $120 | Hormuz supply shock escalation |
 | Gas price avg | > $4.00 | > $5.00 | Voter pain threshold — primary approval driver (Channel 1) |
-| **10Y yield** | **> 4.75%** | **> 5.00%** | **4.75% = warning zone where ERP is likely compressed or inverted depending on S&P 500 forward P/E. 5.00% = financial conditions tightening independently of Fed. Triggers Channel 2 voter pain via mortgage/borrowing costs.** |
+| **10Y yield** | **> 4.60%** | **> 5.00%** | **4.60% = warning zone where ERP is likely compressed or inverted depending on S&P 500 forward P/E. 5.00% = financial conditions tightening independently of Fed. Triggers Channel 2 voter pain via mortgage/borrowing costs.** |
 | **2s10s spread** | **> +75bp** | **> +100bp** | **Bear steepener = term premium driven (fiscal/inflation), not growth. Worst regime for risk assets. Signals fiscal stress from tariff revenue shortfall.** |
 | **30Y yield** | **> 5.25%** | **> 5.50%** | **Mortgage rate proxy. Above 5.5% = housing market freeze, direct voter pain independent of gas prices.** |
 | **Fed hike probability** | **> 30%** | **> 50%** | **Above 50% = market pricing a hike as base case. Bearish for all duration-sensitive assets. Transforms the macro regime from "higher for longer" to "higher still."** |
@@ -54,7 +54,7 @@ For each scenario:
 6. All three probabilities MUST sum to 1.0
 7. Compare to prior entry in weekly_log.json for delta
 
-**Yield-aware weighting:** When the 10Y is above 4.75%, give extra weight (+0.05 probability) to whichever scenario the yield dynamics most support. Typically this strengthens S1 (stagflation intensifies) and S2 (affordability pressure broadens) while weakening S3 (yields don't normalize with oil).
+**Yield-aware weighting:** When the 10Y is above 4.60%, give extra weight (+0.05 probability) to whichever scenario the yield dynamics most support. Typically this strengthens S1 (stagflation intensifies) and S2 (affordability pressure broadens) while weakening S3 (yields don't normalize with oil).
 
 ## Cross-scenario logic
 
@@ -65,7 +65,7 @@ The three scenarios are **mutually exclusive outcomes of the same transmission m
 
 Key dependency: **S3 breaks S2's catalyst.** If gas prices fall from a ceasefire, the political urgency that drives Republican defections evaporates.
 
-**NEW: Yield complication for S3.** The yield channel partially compensates for the loss of gas price pressure. If 10Y stays above 4.75% even after a ceasefire — because tariff inflation and fiscal deficits persist — Channel 2 keeps the affordability pain alive. This makes S3 less stable than originally modeled: the "trap" may spring open if yields stay elevated long enough to sustain defection pressure through a different affordability channel.
+**NEW: Yield complication for S3.** The yield channel partially compensates for the loss of gas price pressure. If 10Y stays above 4.60% even after a ceasefire — because tariff inflation and fiscal deficits persist — Channel 2 keeps the affordability pain alive. This makes S3 less stable than originally modeled: the "trap" may spring open if yields stay elevated long enough to sustain defection pressure through a different affordability channel.
 
 ## The 10Y as equity valuation governor
 
@@ -83,6 +83,6 @@ ERP = S&P 500 earnings yield - 10Y yield
 | 0-100bp | Critical | Capital rotates mechanically into bonds. Duration-sensitive equities (tech, REITs) under structural pressure |
 | < 0bp | Inverted | Equities are "expensive" relative to risk-free. Only earnings growth can justify holding. Bear market risk elevated |
 
-The zero-ERP 10Y level is dynamic: `erp_zero_yield = (1 / sp500_forward_pe) * 100`. If forward P/E is 24, zero ERP is approximately 4.17%; if forward P/E is 21, zero ERP is approximately 4.76%. Track `sp500_forward_pe`, `yield_10y`, and computed `erp` together rather than treating 4.75% as a fixed zero-ERP boundary.
+The zero-ERP 10Y level is dynamic: `erp_zero_yield = (1 / sp500_forward_pe) * 100`. If forward P/E is 24, zero ERP is approximately 4.17%; if forward P/E is 21, zero ERP is approximately 4.76%. Track `sp500_forward_pe`, `yield_10y`, and computed `erp` together rather than treating 4.60% as a fixed zero-ERP boundary.
 
 At current levels (S&P earnings yield ~4.2%, 10Y at 4.67%), the ERP is approximately -47bp — already inverted. This is the quantitative backbone of the S1 "slow grind" thesis.

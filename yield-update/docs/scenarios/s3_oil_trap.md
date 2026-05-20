@@ -29,7 +29,7 @@ Iran ceasefire or Hormuz reopening removes gas price pressure. Approval bounces 
 - [ ] Tariff pressure compounds independently of oil (farm state, consumer goods)
 - [ ] GOP defections continue regardless of gas price improvement
 - [ ] JP Morgan "security tax" proves larger than expected (oil doesn't normalize)
-- [ ] **10Y yield stays above 4.75% despite oil drop (Channel 2 persists — the trap is unstable)**
+- [ ] **10Y yield stays above 4.60% despite oil drop (Channel 2 persists — the trap is unstable)**
 - [ ] **30Y yield above 5.5% keeps mortgage pain elevated (approval bounce offset)**
 - [ ] **Fed maintains hawkish stance even as oil drops (yield-driven affordability pain continues)**
 

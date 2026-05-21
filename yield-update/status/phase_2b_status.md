@@ -161,3 +161,23 @@ Verification:
 - `node tests/test_worker_helpers.mjs` passed.
 - `node --check cloudflare/src/worker.js` passed.
 - Existing `python -m unittest tests.test_sync_worker_history` still passed.
+
+## 2026-05-21 - Refresh retry/backoff
+
+Status: ready_to_deploy
+Task group: transient network failure hardening
+
+Files touched:
+- cloudflare/src/worker.js
+- tests/test_worker_helpers.mjs
+- yield-update/status/phase_2b_status.md
+
+Done:
+- Added `fetchWithRetry()` around provider and Tavily fetch calls.
+- Retries are limited to transient network errors and retryable HTTP statuses: 408, 409, 425, 429, and 5xx.
+- Added Worker helper test coverage for retryable status classification.
+
+Verification:
+- `node --check cloudflare/src/worker.js` passed.
+- `node tests/test_worker_helpers.mjs` passed.
+- `python -m unittest tests.test_sync_worker_history` passed.

@@ -11,6 +11,7 @@ vm.createContext(sandbox);
 vm.runInContext(
   `${source}
   globalThis.__workerHelpers = {
+    isRetryableStatus,
     parseGenericBallot,
     buildThresholdAlerts,
     normalizeScenarioProbabilities,
@@ -21,6 +22,7 @@ vm.runInContext(
 );
 
 const {
+  isRetryableStatus,
   parseGenericBallot,
   buildThresholdAlerts,
   normalizeScenarioProbabilities,
@@ -48,6 +50,17 @@ function testThresholdAlerts() {
   assert(alerts.includes("WARNING: Generic ballot (D+9) crossed warning threshold"));
   assert(!alerts.some((alert) => alert.includes("30Y yield")), "30Y 5.20 should not cross 5.25 warning");
   assert(alerts.every((alert) => alert.startsWith("WARNING:") || alert.startsWith("CRITICAL:")));
+}
+
+
+function testRetryableStatusClassification() {
+  assert.equal(isRetryableStatus(408), true);
+  assert.equal(isRetryableStatus(429), true);
+  assert.equal(isRetryableStatus(500), true);
+  assert.equal(isRetryableStatus(503), true);
+  assert.equal(isRetryableStatus(400), false);
+  assert.equal(isRetryableStatus(401), false);
+  assert.equal(isRetryableStatus(404), false);
 }
 
 
@@ -127,6 +140,7 @@ function testPostprocessCanonicalizesAndOverridesAlerts() {
 }
 
 
+testRetryableStatusClassification();
 testThresholdAlerts();
 testCriticalAlerts();
 testGenericBallotParsing();

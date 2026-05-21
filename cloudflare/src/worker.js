@@ -155,6 +155,33 @@ const ACTIVE_PROVIDER = 'deepseek';
 // PROVIDER-AGNOSTIC LAYER — nothing below needs editing
 // ═══════════════════════════════════════════════════════
 
+function isRetryableStatus(status) {
+  return status === 408 || status === 409 || status === 425 || status === 429 || status >= 500;
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function fetchWithRetry(url, options, label, attempts = 3) {
+  let lastError = null;
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      const response = await fetch(url, options);
+      if (response.ok || !isRetryableStatus(response.status) || attempt === attempts) {
+        return response;
+      }
+      console.warn(`${label} attempt ${attempt} returned ${response.status}; retrying`);
+    } catch (e) {
+      lastError = e;
+      if (attempt === attempts) throw e;
+      console.warn(`${label} attempt ${attempt} failed: ${e.message}; retrying`);
+    }
+    await sleep(400 * attempt);
+  }
+  throw lastError || new Error(label + ' failed after retries');
+}
+
 async function callProvider(env, systemPrompt, userMessage) {
   const P = PROVIDERS[ACTIVE_PROVIDER];
   if (!P) throw new Error('Unknown provider: ' + ACTIVE_PROVIDER);
@@ -166,11 +193,11 @@ async function callProvider(env, systemPrompt, userMessage) {
   const tools = P.searchTool ? [P.searchTool] : [];
   const body = P.body(P.model, systemPrompt, messages, tools);
 
-  const response = await fetch(url, {
+  const response = await fetchWithRetry(url, {
     method: 'POST',
     headers: P.headers(env),
     body: JSON.stringify(body),
-  });
+  }, ACTIVE_PROVIDER + ' API');
 
   if (!response.ok) {
     const err = await response.text();
@@ -621,7 +648,7 @@ Rules:
 
 async function fetchTavily(query, env, topic = 'news') {
   try {
-    const response = await fetch('https://api.tavily.com/search', {
+    const response = await fetchWithRetry('https://api.tavily.com/search', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -634,7 +661,7 @@ async function fetchTavily(query, env, topic = 'news') {
         ...(topic === 'news' ? { time_range: 'week' } : {}),
         search_depth: 'basic',
       }),
-    });
+    }, 'Tavily search');
     if (!response.ok) return '';
     const data = await response.json();
     const snippets = (data.results || [])

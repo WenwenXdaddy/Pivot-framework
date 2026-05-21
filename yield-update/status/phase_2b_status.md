@@ -220,3 +220,22 @@ Done:
 
 Verification:
 - `python scripts/run_checks.py` passed.
+
+## 2026-05-21 - Production smoke test script
+
+Status: tested
+Task group: smoke test command consolidation
+
+Files touched:
+- scripts/smoke_worker.mjs
+- README.md
+- yield-update/status/phase_2b_status.md
+
+Done:
+- Added `scripts/smoke_worker.mjs` for read-only production verification of Worker provider/latest/history/elaboration endpoints and deployed dashboard HTML.
+- Documented the smoke test command in README.
+
+Verification:
+- `node --check scripts/smoke_worker.mjs` passed.
+- `python scripts/run_checks.py` passed.
+- `node scripts/smoke_worker.mjs` passed against the deployed Worker and both dashboard URLs.

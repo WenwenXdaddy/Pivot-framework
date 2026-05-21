@@ -87,6 +87,12 @@ Run the local regression checks before committing changes:
 python scripts/run_checks.py
 ```
 
+After deploying the Worker or Pages frontend, run the production smoke test:
+
+```bash
+node scripts/smoke_worker.mjs
+```
+
 ### Yield Channel
 
 The framework now tracks two parallel pressure channels:

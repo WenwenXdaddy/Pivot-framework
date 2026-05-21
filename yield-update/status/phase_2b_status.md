@@ -142,3 +142,22 @@ Done:
 Verification:
 - `python -m unittest tests.test_sync_worker_history` passed with 3 tests.
 - `python -m py_compile scripts/sync_worker_history.py tests/test_sync_worker_history.py` passed.
+
+## 2026-05-21 - Worker helper regression tests
+
+Status: tested
+Task group: Worker threshold and probability helper tests
+
+Files touched:
+- tests/test_worker_helpers.mjs
+- yield-update/status/phase_2b_status.md
+
+Done:
+- Added Node-based regression coverage for Worker helper logic by loading `cloudflare/src/worker.js` in a VM test harness.
+- Covered threshold alerts for GOP approval, 10Y yield, 30Y yield, generic ballot, and Fed hike probability.
+- Covered scenario probability normalization and `postprocessRefreshData()` canonicalization from legacy `scenarios.sN.prob`.
+
+Verification:
+- `node tests/test_worker_helpers.mjs` passed.
+- `node --check cloudflare/src/worker.js` passed.
+- Existing `python -m unittest tests.test_sync_worker_history` still passed.

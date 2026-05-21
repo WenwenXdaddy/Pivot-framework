@@ -22,8 +22,16 @@ CHECKS = [
         "scripts/run_checks.py",
         "tests/test_sync_worker_history.py",
         "tests/test_generate_reports.py",
+        "tests/test_refresh_and_sync.py",
     ],
-    [sys.executable, "-m", "unittest", "tests.test_sync_worker_history", "tests.test_generate_reports"],
+    [
+        sys.executable,
+        "-m",
+        "unittest",
+        "tests.test_sync_worker_history",
+        "tests.test_generate_reports",
+        "tests.test_refresh_and_sync",
+    ],
     ["node", "--check", "cloudflare/src/worker.js"],
     ["node", "tests/test_worker_helpers.mjs"],
 ]

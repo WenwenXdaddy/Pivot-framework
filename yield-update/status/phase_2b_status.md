@@ -261,3 +261,20 @@ Verification:
 - `python scripts/refresh_and_sync.py --help` passed.
 - `python scripts/refresh_and_sync.py` correctly refused to call `/api/refresh` without `--yes`.
 - `python scripts/run_checks.py` passed.
+
+## 2026-05-21 - Refresh runner guard tests
+
+Status: tested
+Task group: refresh safety regression tests
+
+Files touched:
+- tests/test_refresh_and_sync.py
+- scripts/run_checks.py
+- yield-update/status/phase_2b_status.md
+
+Done:
+- Added tests for `scripts/refresh_and_sync.py` help output and the required `--yes` guard.
+- Updated `scripts/run_checks.py` to include the new refresh runner tests.
+
+Verification:
+- `python scripts/run_checks.py` passed with 10 Python tests plus Worker helper tests.

@@ -117,3 +117,23 @@ Public interfaces changed:
 
 Needs from other agents:
 - Agent A should call or preserve `postprocessRefreshData()` after any schema/search updates and avoid assigning `normalizeScenarioProbabilities(data)` directly to `data.scenario_probs` because it returns the mutated data object.
+
+## 2026-05-21 16:07 - Agent B
+
+Status: complete
+Task group: integration recheck
+Files touched:
+- cloudflare/src/worker.js
+- yield-update/status/agent_b_threshold_status.md
+
+Done:
+- Re-read Agent A/C status, confirmed A preserved B helper order, aligned Worker prompt threshold text with `docs/framework.md`, and reran Worker syntax plus B sample checks successfully.
+
+Next:
+- Coordinator can run final end-to-end refresh/deploy checks; no further Agent B changes are pending.
+
+Public interfaces changed:
+- none beyond prior Agent B helper/postprocess contract.
+
+Needs from other agents:
+- none

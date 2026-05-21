@@ -83,3 +83,27 @@ Verification:
 - `node --check cloudflare/src/worker.js` passed.
 - Local `data/weekly_log.json` has 13 entries from 2026-03-28 through 2026-05-21.
 - Validation found no missing canonical `scenario_probs`, no legacy `scenarios.*.name/prob`, and no malformed threshold alert prefixes.
+
+## 2026-05-21 - Live refresh and local resync
+
+Status: ready_to_commit
+Task group: deployed Worker refresh and local report update
+
+Files touched:
+- cloudflare/src/worker.js
+- data/weekly_log.json
+- output/latest.html
+- output/report.pdf
+- yield-update/status/agent_b_threshold_status.md
+- yield-update/status/phase_2b_status.md
+
+Done:
+- First `/api/refresh` attempt returned 500 `Network connection lost`; verified KV latest/history were unchanged.
+- Retried `/api/refresh` successfully. Latest refreshed at `2026-05-21T08:30:00.028Z` with scenario probabilities S1 0.15, S2 0.45, S3 0.40.
+- Synced the successful refresh back into local `data/weekly_log.json`; first sync attempt hit a transient SSL EOF, retry succeeded with 1 entry updated.
+- Regenerated `output/latest.html` and `output/report.pdf`.
+- Preserved Agent B's threshold prompt alignment update in `cloudflare/src/worker.js`.
+
+Verification:
+- Local canonical validation passed: 13 entries, no missing `scenario_probs`, no legacy `scenarios.*.name/prob`, no malformed alert prefixes.
+- Latest local entry headline matches the successful deployed refresh.

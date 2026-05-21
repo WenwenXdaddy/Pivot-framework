@@ -460,11 +460,12 @@ KEY THRESHOLDS:
 - Generic ballot: warning D+7 or wider, critical D+12 or wider
 - VIX: warning > 30, critical > 40
 - WTI: warning > $100, critical > $120
-- 10Y yield: warning > 4.50%, stress > 4.75%, crisis > 5.00%
-- 30Y yield: warning > 5.00%, stress > 5.25%
-- 2s10s: bear steepening above +50bp increases affordability and fiscal pressure
+- Gas price avg: warning > $4.00, critical > $5.00
+- 10Y yield: warning > 4.60%, critical > 5.00%
+- 2s10s spread: warning > +0.75%, critical > +1.00%
+- 30Y yield: warning > 5.25%, critical > 5.50%
 - ERP: warning below 0.50%, critical below 0.00%. ERP is computed after extraction; do not estimate it.
-- Fed hike probability: warning > 25%, critical > 40%
+- Fed hike probability: warning > 30%, critical > 50%
 
 SCHEMA RULES:
 - Respond only with JSON, no markdown fences or extra text.

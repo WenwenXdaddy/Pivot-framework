@@ -582,55 +582,57 @@
       "date": "2026-05-21",
       "readings": {
         "econ_approval": 35,
-        "gop_approval": 80,
-        "generic_ballot": "N/A",
+        "gop_approval": 77,
+        "generic_ballot": "D+9",
         "overall_approval": 35,
         "silver_bulletin_net": 0,
-        "vix": 17.44,
+        "vix": 28.5,
         "gold": 4519.93,
-        "wti": 107.77,
-        "brent": 105.6,
+        "wti": 101.93,
+        "brent": 105.88,
         "gas_price": 4.56,
-        "yield_10y": 4.592,
+        "yield_10y": 4.598,
         "yield_2y": 3.75,
         "yield_30y": 5.12,
-        "spread_2s10s": 0.84,
+        "spread_2s10s": 0.85,
         "fed_hike_prob": 0.53,
-        "fed_cut_prob": 0.1,
-        "sp500_forward_pe": 22.9,
-        "erp": -0.23,
-        "iran_status": "Ceasefire paused most violence after six weeks of US-Israeli airstrikes and Iranian retaliation, but negotiations remain stalled. Iran made a new proposal, but lack of trust is impeding progress. Lebanon and Israel agreed to a 45-day ceasefire extension."
+        "fed_cut_prob": 0.05,
+        "sp500_forward_pe": 18.5,
+        "erp": 0.81,
+        "iran_status": "Ceasefire paused; Iran made new proposal but negotiations stalled. Trump warns Tehran has days to make deal, risk of renewed conflict."
       },
       "scenario_probs": {
-        "s1_no_pivot": 0.2,
-        "s2_tariff_rollback": 0.5,
-        "s3_oil_trap": 0.3
+        "s1_no_pivot": 0.15,
+        "s2_tariff_rollback": 0.45,
+        "s3_oil_trap": 0.4
       },
       "scenarios": {
         "s1": {
           "direction": "weakening",
-          "key_signal": "Approval near all-time low and gas above $4.50 are eroding already weak political capital, making tariff entrenchment increasingly untenable."
+          "key_signal": "Trump approval at 35% and GOP support eroding make it increasingly difficult to maintain tariffs without political backlash."
         },
         "s2": {
           "direction": "strengthening",
-          "key_signal": "Low approval and high gas prices are pressuring GOP defections; a tariff rollback in Q2-Q3 2026 is now the most likely catalyst for relief."
+          "key_signal": "Rising yields, high gas prices, and fed hike odds above 50% create acute economic pressure that may force tariff rollback in H2 2026."
         },
         "s3": {
-          "direction": "stable",
-          "key_signal": "If Iran ceasefire lowers gas prices but yields remain elevated due to inflation fears, affordability pain persists and tariffs stay."
+          "direction": "strengthening",
+          "key_signal": "Iran ceasefire proposal could reduce oil prices and ease gas pressure, allowing Trump to avoid tariff rollback, but yields remain elevated."
         }
       },
       "threshold_alerts": [
-        "WARNING: WTI crude ($107.77) crossed warning threshold",
+        "WARNING: GOP approval (77.00%) crossed warning threshold",
+        "WARNING: WTI crude ($101.93) crossed warning threshold",
         "WARNING: Gas price avg ($4.56) crossed warning threshold",
-        "WARNING: 2s10s spread (0.84%) crossed warning threshold",
-        "CRITICAL: Fed hike probability (0.53) crossed critical threshold"
+        "WARNING: 2s10s spread (0.85%) crossed warning threshold",
+        "CRITICAL: Fed hike probability (0.53) crossed critical threshold",
+        "WARNING: Generic ballot (9) crossed warning threshold"
       ],
-      "headline": "Trump approval sinks to 35% near record low, 30Y yield breaks 5.12%, and rate hike odds top 50% for first time, reinforcing stagflation risks and pressure for a tariff pivot.",
-      "positioning_update": "Maintain underweight duration as bear steepening and rising yield stress persist. Favor cash and short-term Treasuries; avoid long-duration equity sectors. If a tariff rollback seems imminent, tactically overweight consumer discretionary and lagging cyclicals, but wait for confirmation of GOP defections.",
+      "headline": "Trump approval sinks to 35% (Reuters/Ipsos), GOP support erodes; 30Y yield tops 5% for first time since 2007; fed hike odds cross 50%; oil stays above $100; Iran ceasefire proposal stalls.",
+      "positioning_update": "Given elevated yields and rate hike risks, reduce duration in portfolios and increase cash/ultra-short positions. The combination of high gas prices and falling approval suggests a tariff rollback is likely by year-end, but near-term volatility remains high. Consider selective exposure to energy and defense, but avoid long-duration fixed income.",
       "elaborations": {},
-      "notes": "GOP approval rating not directly available from search context; placeholder of 80% used. Generic ballot data also missing. Fed cut probability estimated at 10% given hike odds dominance. Data as of May 20-21, 2026, per context timestamps.",
-      "_refreshedAt": "2026-05-21T02:45:37.856Z"
+      "notes": "Key missing data: VIX exact level not provided; GOP approval estimated at 77% based on 'plummet' language but not explicit; generic ballot not directly polled; fed cut probability estimated at 5%. Overall picture shows stagflationary pressure with political risk rising.",
+      "_refreshedAt": "2026-05-21T08:30:00.028Z"
     }
   ]
 }

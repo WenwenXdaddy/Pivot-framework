@@ -13,6 +13,7 @@ vm.runInContext(
   globalThis.__workerHelpers = {
     isRetryableStatus,
     parseGenericBallot,
+    parseTreasuryYieldCurveXml,
     buildThresholdAlerts,
     normalizeScenarioProbabilities,
     postprocessRefreshData,
@@ -24,6 +25,7 @@ vm.runInContext(
 const {
   isRetryableStatus,
   parseGenericBallot,
+  parseTreasuryYieldCurveXml,
   buildThresholdAlerts,
   normalizeScenarioProbabilities,
   postprocessRefreshData,
@@ -105,6 +107,32 @@ function testProbabilityNormalization() {
   );
 }
 
+function testTreasuryYieldCurveParsing() {
+  const xml = `
+    <feed>
+      <entry><content><m:properties>
+        <d:NEW_DATE m:type="Edm.DateTime">2026-05-19T00:00:00</d:NEW_DATE>
+        <d:BC_2YEAR m:type="Edm.Double">4.01</d:BC_2YEAR>
+        <d:BC_10YEAR m:type="Edm.Double">4.52</d:BC_10YEAR>
+        <d:BC_30YEAR m:type="Edm.Double">5.08</d:BC_30YEAR>
+      </m:properties></content></entry>
+      <entry><content><m:properties>
+        <d:NEW_DATE m:type="Edm.DateTime">2026-05-20T00:00:00</d:NEW_DATE>
+        <d:BC_2YEAR m:type="Edm.Double">4.04</d:BC_2YEAR>
+        <d:BC_10YEAR m:type="Edm.Double">4.57</d:BC_10YEAR>
+        <d:BC_30YEAR m:type="Edm.Double">5.11</d:BC_30YEAR>
+      </m:properties></content></entry>
+    </feed>`;
+
+  assert.deepEqual(plain(parseTreasuryYieldCurveXml(xml)), {
+    treasury_yield_date: "2026-05-20",
+    yield_2y: 4.04,
+    yield_10y: 4.57,
+    yield_30y: 5.11,
+    spread_2s10s: 0.53,
+  });
+}
+
 
 function testPostprocessCanonicalizesAndOverridesAlerts() {
   const data = postprocessRefreshData({
@@ -145,6 +173,7 @@ testThresholdAlerts();
 testCriticalAlerts();
 testGenericBallotParsing();
 testProbabilityNormalization();
+testTreasuryYieldCurveParsing();
 testPostprocessCanonicalizesAndOverridesAlerts();
 
 console.log("worker helper tests passed");

@@ -414,6 +414,43 @@ function normalizeReadings(data) {
   return data;
 }
 
+function parseTreasuryYieldCurveXml(xml) {
+  if (typeof xml !== 'string' || !xml.trim()) return null;
+
+  const entries = xml.match(/<entry>[\s\S]*?<\/entry>/g) || [];
+  const parsedEntries = entries.map((entry) => {
+    const field = (name) => {
+      const match = entry.match(new RegExp(`<d:${name}[^>]*>([^<]+)<\\/d:${name}>`));
+      return match ? match[1] : null;
+    };
+    const date = field('NEW_DATE');
+    const yield_2y = toNumber(field('BC_2YEAR'));
+    const yield_10y = toNumber(field('BC_10YEAR'));
+    const yield_30y = toNumber(field('BC_30YEAR'));
+    if (!date || yield_2y == null || yield_10y == null || yield_30y == null) return null;
+    return {
+      treasury_yield_date: date.slice(0, 10),
+      yield_2y,
+      yield_10y,
+      yield_30y,
+    };
+  }).filter(Boolean);
+
+  parsedEntries.sort((a, b) => a.treasury_yield_date.localeCompare(b.treasury_yield_date));
+  const latest = parsedEntries[parsedEntries.length - 1];
+  if (!latest) return null;
+  latest.spread_2s10s = Math.round((latest.yield_10y - latest.yield_2y) * 100) / 100;
+  return latest;
+}
+
+async function fetchTreasuryYieldCurveReadings(date = new Date()) {
+  const year = date.getUTCFullYear();
+  const url = 'https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_yield_curve&field_tdr_date_value=' + year;
+  const response = await fetchWithRetry(url, {}, 'Treasury yield curve');
+  if (!response.ok) return null;
+  return parseTreasuryYieldCurveXml(await response.text());
+}
+
 function normalizeScenarioEntry(entry) {
   const clean = {};
   const direction = entry?.direction;
@@ -720,6 +757,18 @@ async function doRefresh(env) {
   const parsed = extractJSON(text);
   parsed.date = parsed.date || dateStr;
   parsed._refreshedAt = new Date().toISOString();
+  const treasuryYields = await fetchTreasuryYieldCurveReadings();
+  if (treasuryYields) {
+    parsed.readings = {
+      ...(parsed.readings || {}),
+      ...treasuryYields,
+    };
+    parsed.notes = [
+      `Authoritative Treasury yields: 2Y ${treasuryYields.yield_2y}%, 10Y ${treasuryYields.yield_10y}%, 30Y ${treasuryYields.yield_30y}%, 2s10s ${treasuryYields.spread_2s10s}% as of ${treasuryYields.treasury_yield_date}.`,
+      parsed.notes,
+      'Any model-estimated yield readings are superseded by the U.S. Treasury daily yield curve override.',
+    ].filter(Boolean).join(' ');
+  }
   return postprocessRefreshData(parsed);
 }
 

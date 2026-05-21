@@ -278,3 +278,21 @@ Done:
 
 Verification:
 - `python scripts/run_checks.py` passed with 10 Python tests plus Worker helper tests.
+
+## 2026-05-21 - Agent entrypoint script docs
+
+Status: documented
+Task group: AGENTS/CLAUDE operational script guidance
+
+Files touched:
+- AGENTS.md
+- CLAUDE.md
+- yield-update/status/phase_2b_status.md
+
+Done:
+- Added an "Operational scripts" section to both AGENTS.md and CLAUDE.md.
+- Documented `run_checks.py`, `smoke_worker.mjs`, and guarded `refresh_and_sync.py --yes` usage for future agents.
+- Added the operational scripts to the file map.
+
+Verification:
+- `python scripts/run_checks.py` passed.

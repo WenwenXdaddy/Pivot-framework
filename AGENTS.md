@@ -9,6 +9,12 @@ Track economic approval ratings, gas prices, and Treasury yields as leading indi
 - Local JSON and deployed Worker KV are not automatically synced during normal updates.
 - To merge deployed Worker KV history into the local log, run `python scripts/sync_worker_history.py --write` from the repo root. Omit `--write` for a dry run.
 
+## Operational scripts
+
+- `python scripts/run_checks.py` — local regression checks; run before committing code or data-shape changes.
+- `node scripts/smoke_worker.mjs` — read-only production smoke test for the deployed Worker and dashboards; run after deploys.
+- `python scripts/refresh_and_sync.py --yes` — full online cycle: refresh Worker KV, sync local `weekly_log.json`, regenerate reports, and smoke test. This uses Tavily/model quota and writes KV; do not run it casually. Use `--skip-refresh` to sync/report/smoke without triggering a new refresh.
+
 ## Commands
 
 ### `update`
@@ -69,4 +75,8 @@ Read latest entry from `data/weekly_log.json`. Read `docs/output_schemas.md` for
 | `docs/data_sources.md` | All search queries and polling sources | `update` |
 | `docs/output_schemas.md` | JSON, HTML, PDF, Obsidian format specs | `update`, `obsidian` |
 | `scripts/generate_reports.py` | Reads weekly_log.json, outputs HTML + PDF | `report`, after any update |
+| `scripts/sync_worker_history.py` | Merges deployed Worker history into local weekly_log.json | after deployed refresh, before local reports |
+| `scripts/refresh_and_sync.py` | Full online refresh + local sync + report + smoke cycle | operator-triggered production refresh |
+| `scripts/run_checks.py` | Local regression check runner | before commits |
+| `scripts/smoke_worker.mjs` | Read-only production smoke test | after deploys |
 | `data/weekly_log.json` | Historical data store | All commands |

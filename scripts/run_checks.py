@@ -18,6 +18,7 @@ CHECKS = [
         "py_compile",
         "scripts/generate_reports.py",
         "scripts/sync_worker_history.py",
+        "scripts/refresh_and_sync.py",
         "scripts/run_checks.py",
         "tests/test_sync_worker_history.py",
         "tests/test_generate_reports.py",

@@ -93,6 +93,16 @@ After deploying the Worker or Pages frontend, run the production smoke test:
 node scripts/smoke_worker.mjs
 ```
 
+To run the full online cycle (refresh Worker KV, sync local JSON, regenerate
+reports, then smoke test production), use:
+
+```bash
+python scripts/refresh_and_sync.py --yes
+```
+
+Use `--skip-refresh` to resync/report/smoke without consuming model or Tavily
+quota.
+
 ### Yield Channel
 
 The framework now tracks two parallel pressure channels:

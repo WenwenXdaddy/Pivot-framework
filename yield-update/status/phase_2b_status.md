@@ -239,3 +239,25 @@ Verification:
 - `node --check scripts/smoke_worker.mjs` passed.
 - `python scripts/run_checks.py` passed.
 - `node scripts/smoke_worker.mjs` passed against the deployed Worker and both dashboard URLs.
+
+## 2026-05-21 - Full online refresh runner
+
+Status: tested
+Task group: operational refresh command consolidation
+
+Files touched:
+- scripts/refresh_and_sync.py
+- scripts/run_checks.py
+- README.md
+- yield-update/status/phase_2b_status.md
+
+Done:
+- Added `scripts/refresh_and_sync.py` to orchestrate the full online cycle: POST `/api/refresh`, sync Worker history into local JSON, regenerate reports, and run production smoke tests.
+- Added a required `--yes` guard before triggering refresh because it uses Tavily/model quota and writes KV.
+- Added `--skip-refresh`, `--no-smoke`, and `--no-report` options for safer partial runs.
+- Added the new script to `scripts/run_checks.py` syntax checks and documented the command in README.
+
+Verification:
+- `python scripts/refresh_and_sync.py --help` passed.
+- `python scripts/refresh_and_sync.py` correctly refused to call `/api/refresh` without `--yes`.
+- `python scripts/run_checks.py` passed.

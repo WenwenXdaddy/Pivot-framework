@@ -14,3 +14,9 @@ For the later three-agent repair effort, use:
 - `agent_c_frontend_reports_status.md`
 
 See `yield-update/THREE_AGENT_SYNC_PROTOCOL.md` for the required checkpoint format and sync rules.
+
+For Phase 2B follow-up work, use:
+
+- `phase_2b_status.md`
+
+See `yield-update/PHASE_2B_PLAN.md` and `yield-update/PHASE_2B_START_PROMPT.md`.

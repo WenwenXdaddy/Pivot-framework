@@ -201,3 +201,22 @@ Verification:
 - `python -m unittest tests.test_sync_worker_history tests.test_generate_reports` passed with 8 tests.
 - `python -m py_compile scripts/generate_reports.py scripts/sync_worker_history.py tests/test_sync_worker_history.py tests/test_generate_reports.py` passed.
 - `node tests/test_worker_helpers.mjs` passed.
+
+## 2026-05-21 - Unified local check runner
+
+Status: tested
+Task group: check command consolidation
+
+Files touched:
+- scripts/run_checks.py
+- .github/workflows/ci.yml
+- README.md
+- yield-update/status/phase_2b_status.md
+
+Done:
+- Added `scripts/run_checks.py` to run Python syntax checks, Python unittests, Worker syntax check, and Worker helper tests from one command.
+- Updated CI to call `python scripts/run_checks.py` so local and CI checks stay aligned.
+- Documented the local check command in README.
+
+Verification:
+- `python scripts/run_checks.py` passed.

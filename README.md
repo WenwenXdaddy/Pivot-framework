@@ -81,6 +81,12 @@ Then write the merged history if the preview looks right:
 python scripts/sync_worker_history.py --write
 ```
 
+Run the local regression checks before committing changes:
+
+```bash
+python scripts/run_checks.py
+```
+
 ### Yield Channel
 
 The framework now tracks two parallel pressure channels:

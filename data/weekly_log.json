@@ -36,7 +36,7 @@
       ],
       "notes": "Initial framework baseline. Iran 15-point plan on table but rejected by Tehran. 6 House Rs voted against Canada tariffs in Feb. SCOTUS struck down IEEPA tariffs Feb 20. Trump reimposed 10-15% via Section 122. WF tariff-relief basket +20% since SCOTUS hearing. Dec 2026 WTI futures at $69 vs spot $94 (market pricing ceasefire).",
       "headline": "GOP approval dropped 6 points in 3 weeks while Iran rejected the 15-point ceasefire plan.",
-      "positioning_update": "S2 remains base case but S3 is gaining \u2014 watch the oil futures curve for contango flip as the key tell. Reduce tariff-relief basket if gas drops below $3.50 without Congressional action.",
+      "positioning_update": "S2 remains base case but S3 is gaining — watch the oil futures curve for contango flip as the key tell. Reduce tariff-relief basket if gas drops below $3.50 without Congressional action.",
       "scenarios": {
         "s1": {
           "direction": "stable",
@@ -52,9 +52,9 @@
         }
       },
       "elaborations": {
-        "s1": "<p><b>Premise and current conditions.</b> Economic approval sits at 29%, below Biden all-time low of 32%. GOP approval has fallen to 82%, down from 88% three weeks ago, but remains above the 80% defection danger zone. The administration shows no signs of flexibility on tariffs \u2014 Trump warned Republicans that voting against tariffs would have consequences come election time.</p><p><b>Rates \u2014 curve steepener thesis.</b> The Fed is trapped: cannot cut due to tariff-driven inflation running at 3.6% core PPI, cannot hike due to softening labor data. The long end reprices higher as the SCOTUS tariff ruling means lost tariff revenue requires more Treasury issuance. This creates a steepener setup in 2s10s and 2s30s. Key expression: short TLT / long SOFR futures. Stress threshold: 10Y above 5%.</p><p><b>Gold \u2014 structural bid.</b> This is gold's ideal regime: negative real rates from stagflation, JP Morgan forecasts 585 tonnes per quarter of central bank buying, de-dollarization flows persist, and no credible policy relief valve. Gold consolidates around $4,500-5,000 with the path to the all-time high of $5,595 supported. The key risk: BofA FMS flagged gold as the most crowded trade (50% of fund managers), meaning forced liquidation in cash-conversion episodes can temporarily crush gold alongside everything else.</p><p><b>Equity vol \u2014 elevated floor with dispersion.</b> VIX at 31 with record put demand creates a structural floor. The put-buying feedback loop keeps implied vol supported even on relief rallies. The real story is under the surface: the S&P 500 has drawn down 7% from highs, but the average Nasdaq member is down 31%. This rotation-and-churn dynamic favors dispersion trades: long single-stock vol, short index vol.</p><p><b>Meta-point.</b> Under S1, no single catalyst resolves uncertainty. It is a grind, not a crash \u2014 favoring carry-and-hedge over directional bets. Key invalidation signals: Iran ceasefire, GOP defections accelerating past 6 Rs, AI productivity offsetting tariff drag, Fed capitulating with a cut despite inflation.</p>",
-        "s2": "<p><b>The defection math.</b> Six House Republicans voted to overturn Canada tariffs in February 2026. Three Rs (Bacon, Kiley, Massie) broke the procedural shield blocking tariff votes. Rep. Bacon suggested as many as 30 Republicans privately agree. The razor-thin majority means just 3-5 more defections can extract tariff exemptions from any must-pass legislation. The SCOTUS ruling striking down IEEPA tariffs makes every Congressional vote consequential \u2014 these are no longer symbolic gestures.</p><p><b>The legislative vehicle.</b> Speaker Johnson acknowledged it will be \"a challenge to find consensus on tariffs.\" The OBBBA reconciliation package and Section 122 renewal are the likely vehicles. Farm state Rs face a fertilizer shortage from the Iran war; swing-district Rs face consumer cost pressure. This coalition \u2014 agricultural + suburban \u2014 is the natural formation for extracting tariff exemptions.</p><p><b>Rally anatomy.</b> Phase 1 (1-3 days): sentiment snap \u2014 VIX compresses 5-8 points, import-heavy names gap up 5-10%. Phase 2 (4-8 weeks): earnings re-rate \u2014 Wells Fargo estimates +2.4% S&P 500 EBIT uplift, the tariff-relief basket has already risen 20% since the November SCOTUS hearing vs 1% for the index. Phase 3 (2-4 quarters): restocking cycle \u2014 retailers and industrials rebuild depleted inventories, transport benefits.</p><p><b>Sector ranking.</b> Highest sensitivity: consumer durables/apparel (Nike, Deckers, UA, Crocs \u2014 heaviest China import exposure, mid-single digit EBITDA uplift plus $170B IEEPA refund), staples retail (Costco, Amazon, TJX, Target), home furnishings (Wayfair, Williams-Sonoma, RH). Medium: industrials (CAT, DE \u2014 largest refund windfall), autos (Ford booked $800M tariff hit in one quarter), financials (indirect via credit quality), transport (lags by 1-2 quarters).</p><p><b>Cross-asset.</b> USD weakens as exceptionalism premium deflates. Rates are mixed \u2014 inflation expectations ease but growth recovery complicates the Fed's cut path. Gold corrects 5-10% as the stagflation premium compresses, but structural central bank buying limits downside. The key distinction from S1: a tariff rollback simultaneously eases inflation AND boosts growth \u2014 the opposite of stagflation.</p>",
-        "s3": "<p><b>The ceasefire path.</b> Trump's 15-point peace plan has been delivered to Iran via Pakistan. Pakistan, Egypt, and Turkey have been pressing for an Islamabad meeting. Iran publicly rejected direct talks, but the futures market tells a different story: December 2026 WTI trades at $69 versus spot $94, implying the market overwhelmingly expects resolution. Allianz's baseline projects a deal within 4 weeks with Brent ending 2026 at ~$70. The EIA projects Brent dropping from $95+ to $70 by year-end if the Strait reopens.</p><p><b>The approval bounce mechanism.</b> Gas prices are the primary driver of approval erosion \u2014 Silver Bulletin attributes \"much of the recent decline\" directly to gas prices. If gas falls from $4+ to $3.50, the most acute voter pain lifts. GOP approval would likely recover 4-6 points, stabilizing at 84-86% \u2014 comfortably above the 80% defection danger zone. The defection math from S2 stalls.</p><p><b>Why this is underpriced.</b> Most positioning is a binary bet: crisis (S1: long gold, long vol) or relief (S2: tariff-relief basket, cyclicals). S3 punishes both books. The ceasefire kills the crisis premium. But without gas pressure, S2's tariff rollback catalyst never materializes. The market conflates \"oil relief\" with \"tariff relief\" \u2014 these are fundamentally different things. You end up in a muddle: moderate growth, sticky inflation, tariffs grinding margins.</p><p><b>Positioning for the trap.</b> Sell vol: ceasefire compresses VIX from 31 to ~20 as the vol risk premium mean-reverts. Long domestic quality: healthcare, domestic software, utilities \u2014 companies that don't need tariff rollback to grow. Fade tariff-relief basket: WF's 28 stocks already +20% on anticipation. Gold: tactical short (war premium unwinds -5 to -10%), then reload at $4,500-4,700 \u2014 the structural bid from central bank buying and de-dollarization persists.</p><p><b>The JP Morgan security tax.</b> Even with a ceasefire, oil faces a lasting \"security tax\" from rerouted shipping and higher insurance costs. Gas might fall to $3.50, not $2.80. If the bounce is smaller than expected, S3's trap is weaker \u2014 the political pressure may not fully dissipate. Monitor Hormuz insurance premiums and the oil futures curve shape (backwardation to contango flip is the key signal).</p>"
+        "s1": "<p><b>Premise and current conditions.</b> Economic approval sits at 29%, below Biden all-time low of 32%. GOP approval has fallen to 82%, down from 88% three weeks ago, but remains above the 80% defection danger zone. The administration shows no signs of flexibility on tariffs — Trump warned Republicans that voting against tariffs would have consequences come election time.</p><p><b>Rates — curve steepener thesis.</b> The Fed is trapped: cannot cut due to tariff-driven inflation running at 3.6% core PPI, cannot hike due to softening labor data. The long end reprices higher as the SCOTUS tariff ruling means lost tariff revenue requires more Treasury issuance. This creates a steepener setup in 2s10s and 2s30s. Key expression: short TLT / long SOFR futures. Stress threshold: 10Y above 5%.</p><p><b>Gold — structural bid.</b> This is gold's ideal regime: negative real rates from stagflation, JP Morgan forecasts 585 tonnes per quarter of central bank buying, de-dollarization flows persist, and no credible policy relief valve. Gold consolidates around $4,500-5,000 with the path to the all-time high of $5,595 supported. The key risk: BofA FMS flagged gold as the most crowded trade (50% of fund managers), meaning forced liquidation in cash-conversion episodes can temporarily crush gold alongside everything else.</p><p><b>Equity vol — elevated floor with dispersion.</b> VIX at 31 with record put demand creates a structural floor. The put-buying feedback loop keeps implied vol supported even on relief rallies. The real story is under the surface: the S&P 500 has drawn down 7% from highs, but the average Nasdaq member is down 31%. This rotation-and-churn dynamic favors dispersion trades: long single-stock vol, short index vol.</p><p><b>Meta-point.</b> Under S1, no single catalyst resolves uncertainty. It is a grind, not a crash — favoring carry-and-hedge over directional bets. Key invalidation signals: Iran ceasefire, GOP defections accelerating past 6 Rs, AI productivity offsetting tariff drag, Fed capitulating with a cut despite inflation.</p>",
+        "s2": "<p><b>The defection math.</b> Six House Republicans voted to overturn Canada tariffs in February 2026. Three Rs (Bacon, Kiley, Massie) broke the procedural shield blocking tariff votes. Rep. Bacon suggested as many as 30 Republicans privately agree. The razor-thin majority means just 3-5 more defections can extract tariff exemptions from any must-pass legislation. The SCOTUS ruling striking down IEEPA tariffs makes every Congressional vote consequential — these are no longer symbolic gestures.</p><p><b>The legislative vehicle.</b> Speaker Johnson acknowledged it will be \"a challenge to find consensus on tariffs.\" The OBBBA reconciliation package and Section 122 renewal are the likely vehicles. Farm state Rs face a fertilizer shortage from the Iran war; swing-district Rs face consumer cost pressure. This coalition — agricultural + suburban — is the natural formation for extracting tariff exemptions.</p><p><b>Rally anatomy.</b> Phase 1 (1-3 days): sentiment snap — VIX compresses 5-8 points, import-heavy names gap up 5-10%. Phase 2 (4-8 weeks): earnings re-rate — Wells Fargo estimates +2.4% S&P 500 EBIT uplift, the tariff-relief basket has already risen 20% since the November SCOTUS hearing vs 1% for the index. Phase 3 (2-4 quarters): restocking cycle — retailers and industrials rebuild depleted inventories, transport benefits.</p><p><b>Sector ranking.</b> Highest sensitivity: consumer durables/apparel (Nike, Deckers, UA, Crocs — heaviest China import exposure, mid-single digit EBITDA uplift plus $170B IEEPA refund), staples retail (Costco, Amazon, TJX, Target), home furnishings (Wayfair, Williams-Sonoma, RH). Medium: industrials (CAT, DE — largest refund windfall), autos (Ford booked $800M tariff hit in one quarter), financials (indirect via credit quality), transport (lags by 1-2 quarters).</p><p><b>Cross-asset.</b> USD weakens as exceptionalism premium deflates. Rates are mixed — inflation expectations ease but growth recovery complicates the Fed's cut path. Gold corrects 5-10% as the stagflation premium compresses, but structural central bank buying limits downside. The key distinction from S1: a tariff rollback simultaneously eases inflation AND boosts growth — the opposite of stagflation.</p>",
+        "s3": "<p><b>The ceasefire path.</b> Trump's 15-point peace plan has been delivered to Iran via Pakistan. Pakistan, Egypt, and Turkey have been pressing for an Islamabad meeting. Iran publicly rejected direct talks, but the futures market tells a different story: December 2026 WTI trades at $69 versus spot $94, implying the market overwhelmingly expects resolution. Allianz's baseline projects a deal within 4 weeks with Brent ending 2026 at ~$70. The EIA projects Brent dropping from $95+ to $70 by year-end if the Strait reopens.</p><p><b>The approval bounce mechanism.</b> Gas prices are the primary driver of approval erosion — Silver Bulletin attributes \"much of the recent decline\" directly to gas prices. If gas falls from $4+ to $3.50, the most acute voter pain lifts. GOP approval would likely recover 4-6 points, stabilizing at 84-86% — comfortably above the 80% defection danger zone. The defection math from S2 stalls.</p><p><b>Why this is underpriced.</b> Most positioning is a binary bet: crisis (S1: long gold, long vol) or relief (S2: tariff-relief basket, cyclicals). S3 punishes both books. The ceasefire kills the crisis premium. But without gas pressure, S2's tariff rollback catalyst never materializes. The market conflates \"oil relief\" with \"tariff relief\" — these are fundamentally different things. You end up in a muddle: moderate growth, sticky inflation, tariffs grinding margins.</p><p><b>Positioning for the trap.</b> Sell vol: ceasefire compresses VIX from 31 to ~20 as the vol risk premium mean-reverts. Long domestic quality: healthcare, domestic software, utilities — companies that don't need tariff rollback to grow. Fade tariff-relief basket: WF's 28 stocks already +20% on anticipation. Gold: tactical short (war premium unwinds -5 to -10%), then reload at $4,500-4,700 — the structural bid from central bank buying and de-dollarization persists.</p><p><b>The JP Morgan security tax.</b> Even with a ceasefire, oil faces a lasting \"security tax\" from rerouted shipping and higher insurance costs. Gas might fall to $3.50, not $2.80. If the bounce is smaller than expected, S3's trap is weaker — the political pressure may not fully dissipate. Monitor Hormuz insurance premiums and the oil futures curve shape (backwardation to contango flip is the key signal).</p>"
       }
     },
     {
@@ -81,7 +81,7 @@
         "iran_status": "War continues. Iran formalizing Hormuz toll booth. Pakistan to host US-Iran talks. Houthis struck Israel. No ceasefire."
       },
       "scenario_probs": {
-        "s1_no_pivot": 0.30,
+        "s1_no_pivot": 0.3,
         "s2_tariff_rollback": 0.45,
         "s3_oil_trap": 0.25
       },
@@ -110,6 +110,527 @@
       "positioning_update": "The oil surge past $100 strengthens S1's stagflation thesis and weakens S3's ceasefire trap. Increase gold and steepener exposure. Gas accelerating ~$0.24/week per EIA — if it crosses $4.50 without Congressional action, S2 defection math should accelerate rapidly.",
       "elaborations": {},
       "notes": "Only 2 days since baseline — polling data largely unchanged (same Reuters/Ipsos 3/20-3/22 period). Key moves: WTI $94→$102 (+9%), Brent $104→$109 (+4%). Iran formalized Hormuz toll booth regime. Pakistan FM says will 'soon host' US-Iran talks. Yemen Houthis claimed first missile attack on Israel since war started. China opened investigations into US trade practices. USMCA renegotiation starting Monday. Section 122 replacing SCOTUS-struck IEEPA tariffs. Generic ballot narrowed from D+9 to D+6 (RCP avg) — driven by pollster mix, not necessarily real shift. West Coast gas already $5.26/gal per EIA. 'No Kings' protests drew large crowds in 3,000+ cities (March 29). S&P 500 in longest losing streak since 2022."
+    },
+    {
+      "date": "2026-05-11",
+      "readings": {
+        "econ_approval": 30,
+        "gop_approval": 75,
+        "generic_ballot": "D+8",
+        "overall_approval": 36,
+        "silver_bulletin_net": 0,
+        "vix": 18.25,
+        "gold": 4724.55,
+        "wti": 96.72,
+        "brent": 102.15,
+        "gas_price": 4.52,
+        "iran_status": "Strait of Hormuz tensions persist; no ceasefire agreed. China not challenging US on Iran."
+      },
+      "scenarios": {
+        "s1": {
+          "direction": "weakening",
+          "key_signal": "Trump's approval with GOP at critical 75% all-time low, signaling reduced ability to maintain tariffs without political cost."
+        },
+        "s2": {
+          "direction": "strengthening",
+          "key_signal": "GOP defections increase as generic ballot tilts D+8 and approval falls; selective rollback in Q2-Q3 2026 appears increasingly likely."
+        },
+        "s3": {
+          "direction": "stable",
+          "key_signal": "No Iran ceasefire yet keeps gas prices elevated above $4.50, preventing approval bounce that would allow tariffs to stay."
+        }
+      },
+      "threshold_alerts": [
+        "WARNING: GOP approval (75.00%) crossed warning threshold",
+        "WARNING: Gas price avg ($4.52) crossed warning threshold",
+        "WARNING: Generic ballot (8) crossed warning threshold"
+      ],
+      "headline": "GOP approval hits critical 75% low, while VIX remains subdued below 20 and WTI stays under $100, suggesting markets price in tariff rollback amid political pressure.",
+      "positioning_update": "Maintain underweight equities and overweight cash/gold as political uncertainty rises. If GOP defections accelerate, expect a rally in cyclical stocks and a dip in the dollar; prepare to rotate into risk assets on clear rollback signals.",
+      "_refreshedAt": "2026-05-11T22:00:44.198Z",
+      "scenario_probs": {
+        "s1_no_pivot": 0.3,
+        "s2_tariff_rollback": 0.5,
+        "s3_oil_trap": 0.2
+      },
+      "elaborations": {},
+      "notes": ""
+    },
+    {
+      "date": "2026-05-12",
+      "readings": {
+        "econ_approval": 38,
+        "gop_approval": 78,
+        "generic_ballot": "D+10",
+        "overall_approval": 40,
+        "silver_bulletin_net": -22,
+        "vix": 18,
+        "gold": 4716,
+        "wti": 102.54,
+        "brent": 108,
+        "gas_price": 4.2,
+        "iran_status": "Iran conflict ongoing; no ceasefire in sight. Hormuz tensions persist."
+      },
+      "scenarios": {
+        "s1": {
+          "direction": "stable",
+          "key_signal": "Trump's economic approval at 38% and VIX below 20 suggest limited market panic, but political risk rising."
+        },
+        "s2": {
+          "direction": "strengthening",
+          "key_signal": "Generic ballot at D+10 and GOP approval below 80% increase likelihood of early rollback."
+        },
+        "s3": {
+          "direction": "weakening",
+          "key_signal": "Iran war persists; no diplomatic breakthrough."
+        }
+      },
+      "threshold_alerts": [
+        "WARNING: GOP approval (78.00%) crossed warning threshold",
+        "WARNING: WTI crude ($102.54) crossed warning threshold",
+        "WARNING: Gas price avg ($4.2) crossed warning threshold",
+        "WARNING: Generic ballot (10) crossed warning threshold"
+      ],
+      "headline": "Trump's economic approval drops to 38% as WTI pushes above $100; Iran war persists, gas prices near $4.20.",
+      "positioning_update": "Political pressure for tariff rollback mounts as GOP approval slips and generic ballot widens. Reduce energy exposure; consider adding TIPS and short-duration Treasuries for inflation hedging. Monitor GOP defection signals closely.",
+      "_refreshedAt": "2026-05-12T22:01:16.399Z",
+      "scenario_probs": {
+        "s1_no_pivot": 0.35,
+        "s2_tariff_rollback": 0.4,
+        "s3_oil_trap": 0.25
+      },
+      "elaborations": {},
+      "notes": ""
+    },
+    {
+      "date": "2026-05-13",
+      "readings": {
+        "econ_approval": 30,
+        "gop_approval": 0,
+        "generic_ballot": "",
+        "overall_approval": 36,
+        "silver_bulletin_net": 0,
+        "vix": 17.99,
+        "gold": 0,
+        "wti": 100.77,
+        "brent": 0,
+        "gas_price": 4.56,
+        "iran_status": "No recent developments; ceasefire talks remain stalled per prior context."
+      },
+      "scenarios": {
+        "s1": {
+          "direction": "weakening",
+          "key_signal": "Econ approval at warning threshold (30%); no sign of tariff rollback despite mounting pressure."
+        },
+        "s2": {
+          "direction": "strengthening",
+          "key_signal": "WTI above $100 and gas at $4.56 increase GOP midterm anxiety, raising odds of selective rollback."
+        },
+        "s3": {
+          "direction": "weakening",
+          "key_signal": "No Iran ceasefire progress; oil prices remain elevated, making a relief-driven approval bounce unlikely."
+        }
+      },
+      "threshold_alerts": [
+        "WARNING: WTI crude ($100.77) crossed warning threshold",
+        "WARNING: Gas price avg ($4.56) crossed warning threshold"
+      ],
+      "headline": "Econ approval drops to 30% (warning threshold), overall approval at 36%; WTI tops $100/bbl and gas at $4.56 intensify stagflation fears; missing data on GOP approval, generic ballot, and gold.",
+      "positioning_update": "Maintain defensive tilt with energy and gold exposure. With tariffs still in place and oil elevated, short consumer discretionary and cyclical sectors. Monitor for any GOP-led tariff rollback signals as midterm pressure builds.",
+      "_refreshedAt": "2026-05-13T22:01:36.681Z",
+      "scenario_probs": {
+        "s1_no_pivot": 0.25,
+        "s2_tariff_rollback": 0.55,
+        "s3_oil_trap": 0.2
+      },
+      "elaborations": {},
+      "notes": ""
+    },
+    {
+      "date": "2026-05-14",
+      "readings": {
+        "econ_approval": 34,
+        "gop_approval": 78,
+        "generic_ballot": "D+4",
+        "overall_approval": 36,
+        "silver_bulletin_net": 0,
+        "vix": 17.9,
+        "gold": 4647.49,
+        "wti": 102.1,
+        "brent": 105.5,
+        "gas_price": 4.53,
+        "iran_status": "No ceasefire; tensions persist with no major escalation. US sanctions remain in place, keeping oil supply tight."
+      },
+      "scenarios": {
+        "s1": {
+          "direction": "weakening",
+          "key_signal": "Trump approval stuck at 36% and gas above $4.50 make maintaining tariffs increasingly untenable."
+        },
+        "s2": {
+          "direction": "strengthening",
+          "key_signal": "Low overall approval and high gas prices are pressuring GOP to force selective tariff rollback in Q2-Q3 2026."
+        },
+        "s3": {
+          "direction": "stable",
+          "key_signal": "No Iran ceasefire news; oil prices stay elevated, but a sudden de-escalation could ease gas prices and let tariffs persist."
+        }
+      },
+      "threshold_alerts": [
+        "WARNING: GOP approval (78.00%) crossed warning threshold",
+        "WARNING: WTI crude ($102.1) crossed warning threshold",
+        "WARNING: Gas price avg ($4.53) crossed warning threshold"
+      ],
+      "headline": "Trump approval at 36% with gas above $4.50 and WTI above $100 keep tariff rollback pressure high; VIX remains low at 17.9.",
+      "positioning_update": "Maintain underweight equities and overweight gold (above $4,600) as stagflation risks persist. Watch for GOP defections on tariffs; if rollback signals emerge, consider shifting to cyclical sectors and reducing gold exposure.",
+      "_refreshedAt": "2026-05-14T22:00:25.384Z",
+      "scenario_probs": {
+        "s1_no_pivot": 0.25,
+        "s2_tariff_rollback": 0.5,
+        "s3_oil_trap": 0.25
+      },
+      "elaborations": {},
+      "notes": ""
+    },
+    {
+      "date": "2026-05-15",
+      "readings": {
+        "econ_approval": 33,
+        "gop_approval": 78,
+        "generic_ballot": "D+8",
+        "overall_approval": 36,
+        "silver_bulletin_net": -45,
+        "vix": 18.18,
+        "gold": 4544.4,
+        "wti": 105.67,
+        "brent": 109.33,
+        "gas_price": 4.53,
+        "iran_status": "No ceasefire deal reported; tensions persist, no progress on negotiations."
+      },
+      "scenarios": {
+        "s1": {
+          "direction": "weakening",
+          "key_signal": "Approval at 36% and GOP blame shows cracks."
+        },
+        "s2": {
+          "direction": "strengthening",
+          "key_signal": "High gas prices and low approval increase pressure on GOP to act."
+        },
+        "s3": {
+          "direction": "weakening",
+          "key_signal": "Gas at $4.53 remains elevated, no ceasefire catalyst."
+        }
+      },
+      "threshold_alerts": [
+        "WARNING: GOP approval (78.00%) crossed warning threshold",
+        "WARNING: WTI crude ($105.67) crossed warning threshold",
+        "WARNING: Gas price avg ($4.53) crossed warning threshold",
+        "WARNING: Generic ballot (8) crossed warning threshold"
+      ],
+      "headline": "Trump approval ticks up to 36% from record low, but GOP support eroding and gas prices remain high; no pivot yet.",
+      "positioning_update": "Maintain defensive positioning; watch for GOP defection signals and WTI. Underweight equities, overweight gold and energy. Consider adding to TIPS if oil stays above $100.",
+      "_refreshedAt": "2026-05-15T22:01:25.363Z",
+      "scenario_probs": {
+        "s1_no_pivot": 0.25,
+        "s2_tariff_rollback": 0.55,
+        "s3_oil_trap": 0.2
+      },
+      "elaborations": {},
+      "notes": ""
+    },
+    {
+      "date": "2026-05-16",
+      "readings": {
+        "econ_approval": 29,
+        "gop_approval": 78,
+        "generic_ballot": "D+8",
+        "overall_approval": 36,
+        "silver_bulletin_net": -22,
+        "vix": 18.43,
+        "gold": 4540.08,
+        "wti": 105.66,
+        "brent": 109.26,
+        "gas_price": 4.15,
+        "iran_status": "Iran conflict ongoing with Strait of Hormuz disruptions, keeping oil and gas prices elevated; no ceasefire in sight."
+      },
+      "scenarios": {
+        "s1": {
+          "direction": "weakening",
+          "key_signal": "GOP defections and record-low economic approval make continued tariffs untenable."
+        },
+        "s2": {
+          "direction": "strengthening",
+          "key_signal": "Half of Republicans blame Trump for high gas prices; Congress pressure for selective rollback growing."
+        },
+        "s3": {
+          "direction": "stable",
+          "key_signal": "No ceasefire yet, but oil above $105 raises risk of approval bounce if relief occurs, locking in tariffs."
+        }
+      },
+      "threshold_alerts": [
+        "WARNING: Econ approval (29.00%) crossed warning threshold",
+        "WARNING: GOP approval (78.00%) crossed warning threshold",
+        "WARNING: WTI crude ($105.66) crossed warning threshold",
+        "WARNING: Gas price avg ($4.15) crossed warning threshold",
+        "WARNING: Generic ballot (8) crossed warning threshold"
+      ],
+      "headline": "Trump's approval remains below 40% as oil tops $105 and gas prices stay high, with GOP support eroding.",
+      "positioning_update": "Reduce exposure to consumer discretionary and small caps. Favor energy and defense. Watch for signs of tariff rollback as GOP pressure builds and economic data weakens.",
+      "_refreshedAt": "2026-05-16T22:01:18.182Z",
+      "scenario_probs": {
+        "s1_no_pivot": 0.25,
+        "s2_tariff_rollback": 0.55,
+        "s3_oil_trap": 0.2
+      },
+      "elaborations": {},
+      "notes": ""
+    },
+    {
+      "date": "2026-05-17",
+      "readings": {
+        "econ_approval": 32,
+        "gop_approval": 78,
+        "generic_ballot": "D+6",
+        "overall_approval": 36,
+        "silver_bulletin_net": -15,
+        "vix": 32,
+        "gold": 4550,
+        "wti": 105.66,
+        "brent": 108,
+        "gas_price": 4.15,
+        "iran_status": "Iran conflict continues; Strait of Hormuz remains blocked; no ceasefire in sight."
+      },
+      "scenarios": {
+        "s1": {
+          "direction": "weakening",
+          "key_signal": "Approval remains below 40%, GOP blame for gas prices."
+        },
+        "s2": {
+          "direction": "strengthening",
+          "key_signal": "Gas prices and WTI above $100 increase pressure for rollback."
+        },
+        "s3": {
+          "direction": "stable",
+          "key_signal": "Iran ceasefire remains elusive, preventing approval bounce."
+        }
+      },
+      "threshold_alerts": [
+        "WARNING: GOP approval (78.00%) crossed warning threshold",
+        "WARNING: VIX (32) crossed warning threshold",
+        "WARNING: WTI crude ($105.66) crossed warning threshold",
+        "WARNING: Gas price avg ($4.15) crossed warning threshold"
+      ],
+      "headline": "Oil prices spike above $105, gas at $4.15, Trump approval remains low at 36%, Iran war continues.",
+      "positioning_update": "Given high oil and gas prices and low approval, the probability of tariff rollback increases. Consider positioning for a potential shift in trade policy. Stay short duration on equities until clarity on oil.",
+      "_refreshedAt": "2026-05-17T22:01:02.294Z",
+      "scenario_probs": {
+        "s1_no_pivot": 0.25,
+        "s2_tariff_rollback": 0.55,
+        "s3_oil_trap": 0.2
+      },
+      "elaborations": {},
+      "notes": ""
+    },
+    {
+      "date": "2026-05-18",
+      "readings": {
+        "econ_approval": 33,
+        "gop_approval": 78,
+        "generic_ballot": "D+8",
+        "overall_approval": 37,
+        "silver_bulletin_net": 0,
+        "vix": 18.72,
+        "gold": 4540.7,
+        "wti": 106.27,
+        "brent": 108.86,
+        "gas_price": 4.52,
+        "iran_status": "Iran war ongoing with waning public support; protests and negative polling pressure Trump administration."
+      },
+      "scenarios": {
+        "s1": {
+          "direction": "weakening",
+          "key_signal": "GOP approval below 80% and generic ballot D+8 increase pressure to change course."
+        },
+        "s2": {
+          "direction": "strengthening",
+          "key_signal": "Approval and economic data deteriorate, forcing GOP defections toward selective rollback."
+        },
+        "s3": {
+          "direction": "stable",
+          "key_signal": "Iran ceasefire could reduce gas prices and boost approval, but no deal yet."
+        }
+      },
+      "threshold_alerts": [
+        "WARNING: GOP approval (78.00%) crossed warning threshold",
+        "WARNING: WTI crude ($106.27) crossed warning threshold",
+        "WARNING: Gas price avg ($4.52) crossed warning threshold",
+        "WARNING: Generic ballot (8) crossed warning threshold"
+      ],
+      "headline": "Trump overall approval hits new low of 37%, oil above $100, and gas at $4.52 amplify stagflation risks.",
+      "positioning_update": "Shift more portfolio weight to gold and energy hedges; reduce exposure to consumer discretionary and long-duration bonds as stagflation risks persist. Monitor GOP approval and generic ballot for signs of tariff policy shift.",
+      "_refreshedAt": "2026-05-18T22:01:29.186Z",
+      "scenario_probs": {
+        "s1_no_pivot": 0.25,
+        "s2_tariff_rollback": 0.45,
+        "s3_oil_trap": 0.3
+      },
+      "elaborations": {},
+      "notes": ""
+    },
+    {
+      "date": "2026-05-19",
+      "readings": {
+        "econ_approval": 29,
+        "gop_approval": 78,
+        "generic_ballot": "D+8",
+        "overall_approval": 35,
+        "silver_bulletin_net": 0,
+        "vix": 17.9,
+        "gold": 3980,
+        "wti": 107.77,
+        "brent": 111.38,
+        "gas_price": 4.53,
+        "iran_status": "No ceasefire; conflict ongoing."
+      },
+      "scenarios": {
+        "s1": {
+          "direction": "weakening",
+          "key_signal": "Record low approval makes maintaining tariffs politically unsustainable."
+        },
+        "s2": {
+          "direction": "strengthening",
+          "key_signal": "Falling GOP support increases pressure for tariff rollback."
+        },
+        "s3": {
+          "direction": "stable",
+          "key_signal": "No Iran ceasefire; gas prices remain high, preventing approval rebound."
+        }
+      },
+      "threshold_alerts": [
+        "WARNING: Econ approval (29.00%) crossed warning threshold",
+        "WARNING: GOP approval (78.00%) crossed warning threshold",
+        "WARNING: WTI crude ($107.77) crossed warning threshold",
+        "WARNING: Gas price avg ($4.53) crossed warning threshold",
+        "WARNING: Generic ballot (8) crossed warning threshold"
+      ],
+      "headline": "Trump's approval drops to record low 35% (Reuters) and economic approval hits lowest ever, gas above $4.50, oil above $107, raising stagflation fears.",
+      "positioning_update": "Reduce equity exposure and increase gold holdings as stagflation risks mount. Watch for signs of GOP defections that could trigger tariff rollback, potentially easing inflation expectations.",
+      "_refreshedAt": "2026-05-19T22:00:23.265Z",
+      "scenario_probs": {
+        "s1_no_pivot": 0.3,
+        "s2_tariff_rollback": 0.5,
+        "s3_oil_trap": 0.2
+      },
+      "elaborations": {},
+      "notes": ""
+    },
+    {
+      "date": "2026-05-20",
+      "readings": {
+        "econ_approval": 33,
+        "gop_approval": 73,
+        "generic_ballot": "D+10",
+        "overall_approval": 35,
+        "silver_bulletin_net": 0,
+        "vix": 17.45,
+        "gold": 4532,
+        "wti": 98.32,
+        "brent": 102,
+        "gas_price": 4.56,
+        "yield_10y": 4.577,
+        "yield_2y": 3.75,
+        "yield_30y": 5.12,
+        "spread_2s10s": 0.83,
+        "fed_hike_prob": 0.8,
+        "fed_cut_prob": 0.05,
+        "sp500_forward_pe": 18.5,
+        "iran_status": "The US is engaged in military conflict with Iran, with no ceasefire in sight, contributing to elevated oil prices and economic strain.",
+        "erp": 0.83
+      },
+      "scenarios": {
+        "s1": {
+          "direction": "weakening",
+          "key_signal": "Low GOP approval (73%) and high yields (10y 4.58%, 30y 5.12%) create intense pressure, but admin may resist change."
+        },
+        "s2": {
+          "direction": "strengthening",
+          "key_signal": "GOP approval below critical threshold and generic ballot warning signal imminent defections; tariff rollback likely in coming months."
+        },
+        "s3": {
+          "direction": "stable",
+          "key_signal": "Iran ceasefire remains elusive; if achieved, gas prices could drop, easing approval pressure but persistent yields keep pain alive."
+        }
+      },
+      "threshold_alerts": [
+        "CRITICAL: GOP approval (73.00%) crossed critical threshold",
+        "WARNING: Gas price avg ($4.56) crossed warning threshold",
+        "WARNING: 2s10s spread (0.83%) crossed warning threshold",
+        "CRITICAL: Fed hike probability (0.8) crossed critical threshold",
+        "WARNING: Generic ballot (10) crossed warning threshold"
+      ],
+      "headline": "Trump approval hits new low of 35% as 30-year yield breaches 5% and oil eases slightly, intensifying pressure for a tariff rollback.",
+      "positioning_update": "Increase duration exposure in anticipation of policy pivot as GOP defections mount; reduce commodity exposure given oil pullback; maintain gold as hedge against tail risks from ongoing Iran conflict.",
+      "_refreshedAt": "2026-05-20T22:00:42.957Z",
+      "scenario_probs": {
+        "s1_no_pivot": 0.2,
+        "s2_tariff_rollback": 0.55,
+        "s3_oil_trap": 0.25
+      },
+      "elaborations": {},
+      "notes": ""
+    },
+    {
+      "date": "2026-05-21",
+      "readings": {
+        "econ_approval": 35,
+        "gop_approval": 80,
+        "generic_ballot": "N/A",
+        "overall_approval": 35,
+        "silver_bulletin_net": 0,
+        "vix": 17.44,
+        "gold": 4519.93,
+        "wti": 107.77,
+        "brent": 105.6,
+        "gas_price": 4.56,
+        "yield_10y": 4.592,
+        "yield_2y": 3.75,
+        "yield_30y": 5.12,
+        "spread_2s10s": 0.84,
+        "fed_hike_prob": 0.53,
+        "fed_cut_prob": 0.1,
+        "sp500_forward_pe": 22.9,
+        "erp": -0.23,
+        "iran_status": "Ceasefire paused most violence after six weeks of US-Israeli airstrikes and Iranian retaliation, but negotiations remain stalled. Iran made a new proposal, but lack of trust is impeding progress. Lebanon and Israel agreed to a 45-day ceasefire extension."
+      },
+      "scenario_probs": {
+        "s1_no_pivot": 0.2,
+        "s2_tariff_rollback": 0.5,
+        "s3_oil_trap": 0.3
+      },
+      "scenarios": {
+        "s1": {
+          "direction": "weakening",
+          "key_signal": "Approval near all-time low and gas above $4.50 are eroding already weak political capital, making tariff entrenchment increasingly untenable."
+        },
+        "s2": {
+          "direction": "strengthening",
+          "key_signal": "Low approval and high gas prices are pressuring GOP defections; a tariff rollback in Q2-Q3 2026 is now the most likely catalyst for relief."
+        },
+        "s3": {
+          "direction": "stable",
+          "key_signal": "If Iran ceasefire lowers gas prices but yields remain elevated due to inflation fears, affordability pain persists and tariffs stay."
+        }
+      },
+      "threshold_alerts": [
+        "WARNING: WTI crude ($107.77) crossed warning threshold",
+        "WARNING: Gas price avg ($4.56) crossed warning threshold",
+        "WARNING: 2s10s spread (0.84%) crossed warning threshold",
+        "CRITICAL: Fed hike probability (0.53) crossed critical threshold"
+      ],
+      "headline": "Trump approval sinks to 35% near record low, 30Y yield breaks 5.12%, and rate hike odds top 50% for first time, reinforcing stagflation risks and pressure for a tariff pivot.",
+      "positioning_update": "Maintain underweight duration as bear steepening and rising yield stress persist. Favor cash and short-term Treasuries; avoid long-duration equity sectors. If a tariff rollback seems imminent, tactically overweight consumer discretionary and lagging cyclicals, but wait for confirmation of GOP defections.",
+      "elaborations": {},
+      "notes": "GOP approval rating not directly available from search context; placeholder of 80% used. Generic ballot data also missing. Fed cut probability estimated at 10% given hike odds dominance. Data as of May 20-21, 2026, per context timestamps.",
+      "_refreshedAt": "2026-05-21T02:45:37.856Z"
     }
   ]
 }

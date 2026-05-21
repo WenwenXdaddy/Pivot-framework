@@ -21,6 +21,11 @@ from pathlib import Path
 DEFAULT_BASE_URL = "https://pivot-framework-api.xuejiadi.workers.dev"
 ROOT = Path(__file__).resolve().parents[1]
 LOCAL_LOG = ROOT / "data" / "weekly_log.json"
+SCENARIO_PROB_KEYS = {
+    "s1": "s1_no_pivot",
+    "s2": "s2_tariff_rollback",
+    "s3": "s3_oil_trap",
+}
 
 
 def fetch_json(url: str) -> dict:
@@ -60,13 +65,165 @@ def fetch_json_with_powershell(url: str, original_error: BaseException) -> dict:
     return json.loads(result.stdout)
 
 
+def to_number(value: object) -> float | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, (int, float)):
+        return float(value)
+    if isinstance(value, str):
+        cleaned = (
+            value.replace("%", "")
+            .replace("$", "")
+            .replace(",", "")
+            .replace("+", "")
+            .replace("bp", "")
+            .strip()
+        )
+        if not cleaned:
+            return None
+        try:
+            return float(cleaned)
+        except ValueError:
+            return None
+    return None
+
+
+def normalize_probability(value: object) -> float | None:
+    parsed = to_number(value)
+    if parsed is None:
+        return None
+    if parsed > 1:
+        parsed = parsed / 100
+    return round(parsed, 4)
+
+
+def normalize_scenario_probabilities(entry: dict) -> dict[str, float]:
+    probs = entry.get("scenario_probs") or {}
+    scenarios = entry.get("scenarios") or {}
+    normalized: dict[str, float | None] = {}
+
+    for legacy_key, canonical_key in SCENARIO_PROB_KEYS.items():
+        value = normalize_probability(probs.get(canonical_key))
+        if value is None:
+            value = normalize_probability((scenarios.get(legacy_key) or {}).get("prob"))
+        normalized[canonical_key] = value
+
+    missing = [key for key, value in normalized.items() if value is None]
+    known_total = sum(value for value in normalized.values() if value is not None)
+    if missing:
+        fill = max(0.0, 1.0 - known_total) / len(missing)
+        for key in missing:
+            normalized[key] = fill
+
+    total = sum(normalized.values())
+    if total <= 0:
+        normalized = {
+            "s1_no_pivot": 1 / 3,
+            "s2_tariff_rollback": 1 / 3,
+            "s3_oil_trap": 1 / 3,
+        }
+        total = 1.0
+
+    scaled = {key: round(value / total, 4) for key, value in normalized.items()}
+    drift = round(1.0 - sum(scaled.values()), 4)
+    if drift:
+        last_key = "s3_oil_trap"
+        scaled[last_key] = round(scaled[last_key] + drift, 4)
+    return scaled
+
+
+def parse_generic_ballot(value: object) -> float | None:
+    if not isinstance(value, str):
+        return None
+    text = value.strip().upper().replace(" ", "")
+    if not text:
+        return None
+    sign = 1
+    if text.startswith("D+"):
+        text = text[2:]
+    elif text.startswith("R+"):
+        sign = -1
+        text = text[2:]
+    else:
+        return None
+    parsed = to_number(text)
+    return parsed * sign if parsed is not None else None
+
+
+def format_value(value: float, unit: str = "") -> str:
+    if unit == "$":
+        return f"${value:.2f}".rstrip("0").rstrip(".")
+    if unit == "%":
+        return f"{value:.2f}%".rstrip("0").rstrip(".")
+    return f"{value:.2f}".rstrip("0").rstrip(".")
+
+
+def threshold_alert(metric: str, value: float, warning: float, critical: float, unit: str = "", below: bool = False) -> str | None:
+    if below:
+        if value < critical:
+            return f"CRITICAL: {metric} ({format_value(value, unit)}) crossed critical threshold"
+        if value < warning:
+            return f"WARNING: {metric} ({format_value(value, unit)}) crossed warning threshold"
+        return None
+
+    if value > critical:
+        return f"CRITICAL: {metric} ({format_value(value, unit)}) crossed critical threshold"
+    if value > warning:
+        return f"WARNING: {metric} ({format_value(value, unit)}) crossed warning threshold"
+    return None
+
+
+def build_threshold_alerts(readings: dict) -> list[str]:
+    alerts: list[str] = []
+
+    checks = [
+        ("Econ approval", "econ_approval", 30, 25, "%", True),
+        ("GOP approval", "gop_approval", 80, 75, "%", True),
+        ("VIX", "vix", 30, 40, "", False),
+        ("WTI crude", "wti", 100, 120, "$", False),
+        ("Gas price avg", "gas_price", 4.00, 5.00, "$", False),
+        ("10Y yield", "yield_10y", 4.60, 5.00, "%", False),
+        ("2s10s spread", "spread_2s10s", 0.75, 1.00, "%", False),
+        ("30Y yield", "yield_30y", 5.25, 5.50, "%", False),
+        ("Fed hike probability", "fed_hike_prob", 0.30, 0.50, "", False),
+    ]
+
+    for metric, field, warning, critical, unit, below in checks:
+        value = to_number(readings.get(field))
+        if value is None or value <= 0:
+            continue
+        alert = threshold_alert(metric, value, warning, critical, unit, below)
+        if alert:
+            alerts.append(alert)
+
+    generic_ballot = parse_generic_ballot(readings.get("generic_ballot"))
+    if generic_ballot is not None and generic_ballot > 0:
+        alert = threshold_alert("Generic ballot", generic_ballot, 7, 12, "", False)
+        if alert:
+            alerts.append(alert)
+
+    return alerts
+
+
+def normalize_scenarios(entry: dict) -> dict:
+    scenarios = entry.get("scenarios") or {}
+    normalized = {}
+    for key in ("s1", "s2", "s3"):
+        scenario = scenarios.get(key) or {}
+        normalized[key] = {
+            "direction": scenario.get("direction") or "stable",
+            "key_signal": scenario.get("key_signal") or "",
+        }
+    return normalized
+
+
 def canonicalize_entry(entry: dict) -> dict:
     """Keep the Worker payload shape compatible with docs/output_schemas.md."""
     result = dict(entry)
     result.setdefault("readings", {})
-    result.setdefault("scenario_probs", {})
-    result.setdefault("scenarios", {})
-    result.setdefault("threshold_alerts", [])
+    result["scenario_probs"] = normalize_scenario_probabilities(result)
+    result["scenarios"] = normalize_scenarios(result)
+    result["threshold_alerts"] = build_threshold_alerts(result["readings"])
     result.setdefault("headline", "")
     result.setdefault("positioning_update", "")
     result.setdefault("elaborations", {})

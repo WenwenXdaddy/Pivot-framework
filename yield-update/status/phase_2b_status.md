@@ -181,3 +181,23 @@ Verification:
 - `node --check cloudflare/src/worker.js` passed.
 - `node tests/test_worker_helpers.mjs` passed.
 - `python -m unittest tests.test_sync_worker_history` passed.
+
+## 2026-05-21 - Report generator regression tests
+
+Status: tested
+Task group: local report helper tests
+
+Files touched:
+- tests/test_generate_reports.py
+- .github/workflows/ci.yml
+- yield-update/status/phase_2b_status.md
+
+Done:
+- Added unittest coverage for `scripts/generate_reports.py` helper behavior.
+- Covered canonical `scenario_probs` precedence, legacy `scenarios.sN.prob` fallback, probability formatting, and deterministic 2s10s/ERP recomputation.
+- Updated CI to run the new report generator tests.
+
+Verification:
+- `python -m unittest tests.test_sync_worker_history tests.test_generate_reports` passed with 8 tests.
+- `python -m py_compile scripts/generate_reports.py scripts/sync_worker_history.py tests/test_sync_worker_history.py tests/test_generate_reports.py` passed.
+- `node tests/test_worker_helpers.mjs` passed.

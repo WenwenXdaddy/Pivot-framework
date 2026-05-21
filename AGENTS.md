@@ -2,6 +2,13 @@
 
 Track economic approval ratings, gas prices, and Treasury yields as leading indicators for policy pivots. Three scenarios map the gas-price and yield-pressure channels into political dynamics and market positioning.
 
+## Data source split
+
+- Local commands (`update`, `update and elaborate`, `elaborate`, `report`, `log`, `obsidian`) operate on `data/weekly_log.json`.
+- The deployed Cloudflare dashboard stores its live history in Worker KV through `/api/latest`, `/api/history`, and `/api/elaboration/:n`.
+- Local JSON and deployed Worker KV are not automatically synced during normal updates.
+- To merge deployed Worker KV history into the local log, run `python scripts/sync_worker_history.py --write` from the repo root. Omit `--write` for a dry run.
+
 ## Commands
 
 ### `update`

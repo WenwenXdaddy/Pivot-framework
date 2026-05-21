@@ -519,9 +519,40 @@ OUTPUT FORMAT — respond ONLY with this JSON, no other text:
 }`;
 
 const ELABORATE_PROMPTS = {
-  1: 'Elaborate on Scenario 1: approval stabilizes with no policy pivot while yields remain elevated. Discuss ERP compression, bear steepening, duration rotation, gold, and equity vol. Use the provided recent data to support your analysis.',
-  2: 'Elaborate on Scenario 2: GOP defections force selective tariff rollback in Q2-Q3 2026, with high yields as a second affordability catalyst. What would the yield-amplified rally look like, and which sectors such as REITs, housing, import consumer, and cyclicals benefit most? Use the provided recent data.',
-  3: 'Elaborate on Scenario 3: Iran ceasefire and oil drop removes some political pressure, but persistent yields keep affordability stress alive. Explain the oil-yield divergence, duration/bond nuance, and why this is underpriced. Use the provided recent data.',
+  1: `Elaborate on Scenario 1: No Pivot / Stagflation Lock-in.
+
+Use exactly these 7 markdown section headings, in this order:
+### 1. Premise and current conditions
+### 2. The yield amplification mechanism
+### 3. Rates - curve steepener thesis
+### 4. Gold - structural bid with yield headwind
+### 5. Equity vol - elevated floor with dispersion
+### 6. Duration rotation
+### 7. Meta-point and invalidation
+
+Each section should be 1-2 concise paragraphs. Cite current readings where available: econ approval, GOP approval, oil price, 10Y yield, 2s10s spread, ERP, VIX, and gold. Explain the no-pivot thesis, the GOP defection threshold distance, oil-to-inflation-to-yield transmission, ERP compression math, the 2022 duration parallel, bear steepening, the 5% 10Y regime-shift threshold, gold's structural bid with nominal-yield headwind, vol/dispersion implications, duration-sensitive sectors versus beneficiaries, and 3-4 invalidation signals.`,
+  2: `Elaborate on Scenario 2: GOP Defections / Selective Tariff Rollback.
+
+Use exactly these 6 markdown section headings, in this order:
+### 1. The defection math
+### 2. The yield-driven second catalyst
+### 3. The legislative vehicle
+### 4. Rally anatomy - three phases (yield-amplified)
+### 5. Sector beneficiary ranking
+### 6. Cross-asset implications (yield-aware)
+
+Each section should be 1-2 concise paragraphs. Cite current readings where available: GOP approval, generic ballot, 10Y yield, 30Y yield, gas price, VIX, and tariff/court developments. Cover the number of Republican breaks needed, SCOTUS impact, mortgage and small-business borrowing pressure, how tariff rollback can be reframed as anti-inflation policy, must-pass legislation leverage, sentiment snap, earnings re-rate, restocking, the double-expansion mechanism from lower yields plus higher earnings, top sector beneficiaries including REITs/housing, and USD/rates/gold implications.`,
+  3: `Elaborate on Scenario 3: Oil Drop / Approval Bounce / No Structural Pivot.
+
+Use exactly these 6 markdown section headings, in this order:
+### 1. The ceasefire path
+### 2. The approval bounce mechanism
+### 3. The yield persistence question
+### 4. Why this is underpriced - the binary trap (updated)
+### 5. Positioning for the trap (yield-aware)
+### 6. The JP Morgan security tax wrinkle
+
+Each section should be 1-2 concise paragraphs. Cite current readings where available: Iran/Hormuz status, WTI/Brent, gas price, GOP approval, 10Y yield, 30Y yield, Fed hike probability, and oil futures curve signals. Explain the ceasefire path, gas-price approval elasticity, whether GOP approval can move back above the 80-84% range, the oil-yield divergence indicator, the true-trap versus unstable-trap split, why a ceasefire is not uniformly bullish if yields persist, duration/bond decision rules, and the security-tax wrinkle for oil and bonds.`,
 };
 
 const TRANSLATE_SYSTEM_PROMPT = `You are a professional translator specializing in financial and investment research. Translate the following English text into Chinese (Simplified).
@@ -531,7 +562,7 @@ Rules:
 - Keep all numbers, percentages, ticker symbols, and dollar amounts as-is
 - Keep company names in English (e.g. Wells Fargo, JP Morgan)
 - Translate financial terms accurately: tariff=关税, stagflation=滞胀, yield curve=收益率曲线, equity vol=股票波动率, generic ballot=国会选情, defection=倒戈
-- Preserve the original markdown heading levels exactly (## stays ##, ### stays ###) — do NOT change heading depths
+- Preserve source formatting: keep HTML tags if the source uses HTML, and preserve markdown heading levels exactly if the source uses markdown
 - Respond with ONLY the translated text, no explanations or notes`;
 
 async function translateText(env, text) {
@@ -577,13 +608,15 @@ async function translateDataFields(env, data) {
 
 const ELABORATE_SYSTEM_PROMPT = `You are an investment research analyst providing a deep-dive scenario analysis for the Trump economic approval pivot framework.
 
-Respond with a clear, well-structured prose analysis (NOT JSON). Use paragraphs with headers. Cover:
-1. Current evidence supporting or weakening this scenario (cite recent data)
-2. Key catalysts to watch in the next 2-4 weeks
-3. Market positioning implications (rates, yield curve, ERP, equities, commodities, vol)
-4. Probability assessment and what would change it
+Respond with a clear, well-structured prose analysis (NOT JSON). Follow the exact scenario-specific section headings provided by the user prompt.
 
-Keep your analysis concise but substantive — roughly 400-600 words. Write in a professional investment research style.`;
+Rules:
+- Use markdown section headings exactly as provided so the dashboard can render stable sections.
+- Do not add, remove, or rename sections.
+- Use only concise paragraphs under each section; avoid tables unless the prompt explicitly requires ranking.
+- Ground the analysis in the recent web-search context when it is available.
+- Keep the total analysis substantive but compact, roughly 650-900 words.
+- Write in a professional investment research style.`;
 
 async function fetchTavily(query, env, topic = 'news') {
   try {
@@ -664,22 +697,38 @@ async function doRefresh(env) {
 
 const SCENARIO_QUERIES = {
   1: [
-    { q: 'US interest rates equity volatility today', topic: 'finance' },
-    { q: '10 year Treasury yield term premium bear steepener today', topic: 'finance' },
-    { q: 'S&P 500 equity risk premium latest forward earnings yield', topic: 'finance' },
-    { q: 'gold price forecast target', topic: 'finance' },
+    { q: 'stagflation risk 2026 tariffs inflation outlook', topic: 'news' },
+    { q: 'Federal Reserve rate decision 2026 latest', topic: 'news' },
+    { q: 'Treasury term premium 2026', topic: 'finance' },
+    { q: 'gold price forecast stagflation 2026', topic: 'finance' },
+    { q: 'VIX equity volatility dispersion 2026', topic: 'finance' },
+    { q: 'S&P 500 earnings revisions 2026', topic: 'finance' },
+    { q: '10 year Treasury yield equity risk premium 2026', topic: 'finance' },
+    { q: 'bear steepener yield curve 2026', topic: 'finance' },
+    { q: 'duration equity rotation tech REIT 2026', topic: 'finance' },
   ],
   2: [
-    { q: 'Trump tariff rollback exception news', topic: 'news' },
-    { q: 'mortgage rates housing affordability Treasury yields latest', topic: 'finance' },
-    { q: 'REITs housing stocks Treasury yields rally latest', topic: 'finance' },
-    { q: 'market sector performance today', topic: 'finance' },
+    { q: 'House Republican tariff vote defection 2026', topic: 'news' },
+    { q: 'OBBBA reconciliation bill tariff exemption', topic: 'news' },
+    { q: 'tariff rollback stock market sectors benefit', topic: 'finance' },
+    { q: 'Wells Fargo tariff relief basket stocks', topic: 'finance' },
+    { q: 'IEEPA tariff refund corporate earnings impact', topic: 'finance' },
+    { q: 'consumer discretionary tariff impact 2026', topic: 'finance' },
+    { q: 'farm state fertilizer shortage tariff pressure', topic: 'news' },
+    { q: 'mortgage rates 2026 impact housing', topic: 'finance' },
+    { q: '10 year yield tariff rollback inflation expectations', topic: 'finance' },
+    { q: 'REIT recovery yield drop 2026', topic: 'finance' },
   ],
   3: [
-    { q: 'Iran news update ceasefire', topic: 'news' },
-    { q: 'oil prices Treasury yields divergence market today', topic: 'finance' },
-    { q: 'long duration bonds yield persistence latest', topic: 'finance' },
-    { q: 'oil supply demand outlook', topic: 'finance' },
+    { q: 'Iran ceasefire negotiations 2026 latest', topic: 'news' },
+    { q: 'oil futures curve backwardation contango 2026', topic: 'finance' },
+    { q: 'oil price forecast ceasefire scenario 2026', topic: 'finance' },
+    { q: 'Trump approval rating gas price correlation', topic: 'news' },
+    { q: 'Hormuz shipping insurance premium 2026', topic: 'news' },
+    { q: 'tariff impact without oil shock 2026 outlook', topic: 'news' },
+    { q: 'Treasury yield forecast ceasefire oil drop 2026', topic: 'finance' },
+    { q: 'mortgage rates affordability 2026 impact approval', topic: 'finance' },
+    { q: 'tariff inflation persistent yield 2026', topic: 'finance' },
   ],
 };
 

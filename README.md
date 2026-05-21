@@ -14,7 +14,7 @@ pivot-framework/
 │   ├── output_schemas.md              # JSON, HTML, PDF, and Obsidian output contracts
 │   └── scenarios/                     # Scenario conditions and elaboration templates
 ├── templates/
-│   └── dashboard_template.html        # HTML dashboard template
+│   └── dashboard_template.html        # Legacy/static local HTML template
 ├── output/
 │   └── latest.html                    # Most recent generated dashboard
 ├── data/
@@ -64,6 +64,18 @@ pivot-framework/
 Path A stores its history in `data/weekly_log.json`. The local report generator
 reads that file and writes `output/latest.html` and `output/report.pdf`; it does
 not read from the deployed Worker KV store.
+
+To merge deployed Worker KV history into the local log, run a dry run first:
+
+```bash
+python scripts/sync_worker_history.py
+```
+
+Then write the merged history if the preview looks right:
+
+```bash
+python scripts/sync_worker_history.py --write
+```
 
 ### Yield Channel
 
@@ -168,8 +180,9 @@ In Cloudflare Pages dashboard → Custom domains → Add your domain.
 ### Deployed History
 
 Path B stores deployed dashboard history in Cloudflare Worker KV. That KV
-history is separate from local `data/weekly_log.json`; there is currently no
-automatic KV-to-local or local-to-KV sync step unless one is implemented later.
+history is separate from local `data/weekly_log.json`; normal Path A updates do
+not sync with KV. Use `python scripts/sync_worker_history.py --write` when you
+explicitly want to merge deployed `/api/history` entries into the local log.
 
 ### Cost
 
@@ -205,9 +218,9 @@ include it in re-evaluations.
 **Add a new data source:** Add it to `docs/data_sources.md` with the search
 query. Claude Code will search for it on each update.
 
-**Add charts:** The dashboard template uses vanilla Chart.js. Add a `<canvas>`
-element and a Chart.js initialization in the template to visualize historical
-data from weekly_log.json.
+**Add charts:** The deployed dashboard lives in `cloudflare/public/index.html`.
+The older `templates/dashboard_template.html` file is a legacy/static local
+template and is not part of the current Worker/Pages deployment path.
 
 **Add cron scheduling (Path B):** Add a cron trigger to the Worker:
 ```toml

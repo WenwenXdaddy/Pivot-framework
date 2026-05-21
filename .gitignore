@@ -13,3 +13,8 @@ Thumbs.db
 
 # Test files
 test_refresh.json
+
+# Transient generated artifacts
+output/dashboard-*.png
+output/elab-*.png
+yield-integration-docs.zip

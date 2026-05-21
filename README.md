@@ -65,6 +65,10 @@ Path A stores its history in `data/weekly_log.json`. The local report generator
 reads that file and writes `output/latest.html` and `output/report.pdf`; it does
 not read from the deployed Worker KV store.
 
+`output/latest.html` and `output/report.pdf` are committed as the local report
+artifacts. Temporary dashboard/elaboration screenshots and ad-hoc integration
+zip files are ignored and should not be committed.
+
 To merge deployed Worker KV history into the local log, run a dry run first:
 
 ```bash

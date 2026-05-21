@@ -273,11 +273,33 @@
     }
 
     .alert-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       font-size: 11px;
-      padding: 4px 10px;
+      padding: 5px 10px;
       border-radius: 6px;
       background: var(--danger-bg);
       color: var(--danger);
+      line-height: 1.25;
+    }
+
+    .alert-tag.warning {
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    .alert-tag.critical {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .alert-level {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      opacity: 0.82;
     }
 
     .detail-panel {
@@ -930,6 +952,18 @@
       return r;
     }
 
+    function compactAlertText(alert) {
+      const text = String(alert || '').trim();
+      const match = text.match(/^(WARNING|CRITICAL):\s*(.+?)\s*\(([^)]+)\)\s*crossed\s+(?:warning|critical)\s+threshold/i);
+      if (!match) {
+        return { level: '', body: text };
+      }
+      return {
+        level: match[1].toUpperCase(),
+        body: (match[2] + ' ' + match[3]).trim()
+      };
+    }
+
     function populateDashboard(data) {
       if (!data || data.empty) return;
       _cachedData = data;
@@ -968,9 +1002,19 @@
       const alertsEl = document.getElementById('alerts');
       alertsEl.innerHTML = '';
       (data.threshold_alerts || []).forEach(a => {
+        const parsed = compactAlertText(a);
         const tag = document.createElement('span');
-        tag.className = 'alert-tag';
-        tag.textContent = a;
+        tag.className = 'alert-tag ' + parsed.level.toLowerCase();
+        tag.title = a;
+        if (parsed.level) {
+          const level = document.createElement('span');
+          level.className = 'alert-level';
+          level.textContent = parsed.level;
+          tag.appendChild(level);
+        }
+        const body = document.createElement('span');
+        body.textContent = parsed.body;
+        tag.appendChild(body);
         alertsEl.appendChild(tag);
       });
       if (r.iran_status) {

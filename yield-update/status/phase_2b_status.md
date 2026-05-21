@@ -107,3 +107,21 @@ Done:
 Verification:
 - Local canonical validation passed: 13 entries, no missing `scenario_probs`, no legacy `scenarios.*.name/prob`, no malformed alert prefixes.
 - Latest local entry headline matches the successful deployed refresh.
+
+## 2026-05-21 - Production smoke test
+
+Status: verified_production
+Task group: deployed API and dashboard smoke test
+
+Files touched:
+- yield-update/status/phase_2b_status.md
+
+Done:
+- Verified deployed Worker `/api/provider`, `/api/latest`, `/api/history`, `/api/elaboration/1`, `/api/elaboration/2`, `/api/elaboration/3`, Chinese `/api/latest?lang=cn`, and Chinese `/api/elaboration/1?lang=cn`.
+- Verified deployed dashboard HTML for `https://pivotframework.wddiscovery.com` and `https://pivot-dashboard.pages.dev` contains `chart-s3`, `searchMode`, canonical `scenario_probs`, and the configured Worker URL.
+- Verified scenario elaborations include expected template sections for S1, S2, and S3.
+
+Verification:
+- `/api/latest` returned 2026-05-21 with `_refreshedAt` `2026-05-21T08:30:00.028Z`, scenario probabilities S1 0.15, S2 0.45, S3 0.40, and 6 threshold alerts.
+- `/api/history` returned 11 deployed KV dates.
+- Playwright/browser runtime was not available in the shell environment, so verification used endpoint and deployed HTML checks.

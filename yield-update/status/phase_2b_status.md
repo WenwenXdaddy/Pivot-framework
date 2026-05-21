@@ -125,3 +125,20 @@ Verification:
 - `/api/latest` returned 2026-05-21 with `_refreshedAt` `2026-05-21T08:30:00.028Z`, scenario probabilities S1 0.15, S2 0.45, S3 0.40, and 6 threshold alerts.
 - `/api/history` returned 11 deployed KV dates.
 - Playwright/browser runtime was not available in the shell environment, so verification used endpoint and deployed HTML checks.
+
+## 2026-05-21 - Sync script regression tests
+
+Status: tested
+Task group: sync canonicalization fixture tests
+
+Files touched:
+- tests/test_sync_worker_history.py
+- yield-update/status/phase_2b_status.md
+
+Done:
+- Added unittest coverage for `scripts/sync_worker_history.py` canonicalization.
+- Covered legacy `scenarios.sN.prob` to canonical `scenario_probs`, removal of legacy scenario `name/prob`, deterministic threshold alert prefixes, probability fill/sum behavior, and preservation of the local `{"entries": [...]}` wrapper.
+
+Verification:
+- `python -m unittest tests.test_sync_worker_history` passed with 3 tests.
+- `python -m py_compile scripts/sync_worker_history.py tests/test_sync_worker_history.py` passed.

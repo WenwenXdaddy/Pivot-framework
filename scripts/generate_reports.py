@@ -83,6 +83,25 @@ def fmt_prob(value):
     return f"{num * 100:.0f}%"
 
 
+SCENARIO_PROB_KEYS = {
+    "s1": "s1_no_pivot",
+    "s2": "s2_tariff_rollback",
+    "s3": "s3_oil_trap",
+}
+
+
+def get_scenario_prob(entry, scenario_key):
+    probs = entry.get("scenario_probs", {}) or {}
+    canonical = to_float(probs.get(SCENARIO_PROB_KEYS.get(scenario_key, "")))
+    if canonical is not None:
+        return canonical / 100 if canonical > 1 else canonical
+
+    old_prob = to_float((entry.get("scenarios", {}) or {}).get(scenario_key, {}).get("prob"))
+    if old_prob is not None:
+        return old_prob / 100 if old_prob > 1 else old_prob
+    return None
+
+
 def recompute_derived_readings(readings):
     r = dict(readings or {})
     y10 = to_float(r.get("yield_10y"))
@@ -117,7 +136,7 @@ def generate_html(entry):
 
     sc_cards_html = ""
     for sc in sc_configs:
-        prob = s.get(sc["prob_key"], 0)
+        prob = get_scenario_prob(entry, sc["key"])
         sc_detail = scenarios.get(sc["key"], {})
         direction = sc_detail.get("direction", "stable")
         signal = sc_detail.get("key_signal", "")
@@ -128,7 +147,7 @@ def generate_html(entry):
         <div class="sc"{featured} onclick="showElaboration('{sc['key']}')">
           <div class="sc-tag" style="background:{sc['tag_bg']};color:{sc['tag_color']}">{sc['tag']}</div>
           <h3>{sc['title']}</h3>
-          <div class="prob">{round(prob*100)}%</div>
+          <div class="prob">{fmt_prob(prob)}</div>
           <div class="dir" style="color:{dc}">{arrow} {direction}</div>
           <div class="signal">{signal}</div>
         </div>"""
@@ -170,9 +189,9 @@ def generate_html(entry):
     chart_gop = json.dumps([e.get("readings", {}).get("gop_approval", None) for e in all_entries])
     chart_y10 = json.dumps([recompute_derived_readings(e.get("readings", {})).get("yield_10y", None) for e in all_entries])
     chart_erp = json.dumps([recompute_derived_readings(e.get("readings", {})).get("erp", None) for e in all_entries])
-    chart_s1 = json.dumps([round(e.get("scenario_probs", {}).get("s1_no_pivot", 0)*100) for e in all_entries])
-    chart_s2 = json.dumps([round(e.get("scenario_probs", {}).get("s2_tariff_rollback", 0)*100) for e in all_entries])
-    chart_s3 = json.dumps([round(e.get("scenario_probs", {}).get("s3_oil_trap", 0)*100) for e in all_entries])
+    chart_s1 = json.dumps([round(p * 100) if (p := get_scenario_prob(e, "s1")) is not None else None for e in all_entries])
+    chart_s2 = json.dumps([round(p * 100) if (p := get_scenario_prob(e, "s2")) is not None else None for e in all_entries])
+    chart_s3 = json.dumps([round(p * 100) if (p := get_scenario_prob(e, "s3")) is not None else None for e in all_entries])
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -469,12 +488,12 @@ def generate_pdf(entry):
         ("s3", "s3_oil_trap", "Oil trap", "#9A6B11"),
     ]
     for key, prob_key, name, color in sc_configs:
-        prob = s.get(prob_key, 0)
+        prob = get_scenario_prob(entry, key)
         sc_detail = scenarios.get(key, {})
         direction = sc_detail.get("direction", "stable")
         signal = sc_detail.get("key_signal", "")
         story.append(Paragraph(
-            f"<font color='{color}'><b>{name}: {round(prob*100)}%</b></font> ({direction}) — {signal}",
+            f"<font color='{color}'><b>{name}: {fmt_prob(prob)}</b></font> ({direction}) — {signal}",
             styles['B']))
 
     # Elaborations

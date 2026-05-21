@@ -59,6 +59,12 @@ pivot-framework/
 | `log` | Show historical readings and trend |
 | `obsidian` | Generate a vault-ready markdown note |
 
+### Local Data and Reports
+
+Path A stores its history in `data/weekly_log.json`. The local report generator
+reads that file and writes `output/latest.html` and `output/report.pdf`; it does
+not read from the deployed Worker KV store.
+
 ### Yield Channel
 
 The framework now tracks two parallel pressure channels:
@@ -159,6 +165,12 @@ In Cloudflare Pages dashboard → Custom domains → Add your domain.
 3. The Worker calls Claude Sonnet with web search, collects live data, re-evaluates scenarios
 4. Click any scenario card for a deep-dive elaboration
 
+### Deployed History
+
+Path B stores deployed dashboard history in Cloudflare Worker KV. That KV
+history is separate from local `data/weekly_log.json`; there is currently no
+automatic KV-to-local or local-to-KV sync step unless one is implemented later.
+
 ### Cost
 
 - Worker: Free tier covers 100K requests/day
@@ -179,9 +191,10 @@ source of truth for searches, thresholds, scenarios, and output schemas.
 colleagues, and set up on a schedule. It's the monitoring tool.
 
 They complement each other: use Path A for deep weekly analysis, Path B for
-quick daily checks. Both paths preserve a dual-track data contract: local
-reports use `scenario_probs` plus `scenarios.sN.direction/key_signal`, while
-the Worker API can expose probabilities inside `scenarios.sN.prob`.
+quick daily checks. Both paths should converge on the canonical data contract:
+top-level `scenario_probs` plus `scenarios.sN.direction/key_signal`. Frontends
+and reports may still read old `scenarios.sN.prob` history entries as a
+compatibility fallback, but that old shape is not the target contract.
 
 ### Extending the framework
 

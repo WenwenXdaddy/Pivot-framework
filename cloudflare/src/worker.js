@@ -239,6 +239,115 @@ function normalizeProbability(value) {
   return Math.round(parsed * 10000) / 10000;
 }
 
+function parseGenericBallot(value) {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : null;
+  if (typeof value !== 'string') return null;
+
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  if (/^(even|tie|tied)$/i.test(trimmed)) return 0;
+
+  const match = trimmed.match(/\b([DR])\s*\+?\s*(-?\d+(?:\.\d+)?)\b/i);
+  if (!match) return null;
+
+  const party = match[1].toUpperCase();
+  const margin = Number(match[2]);
+  if (!Number.isFinite(margin)) return null;
+  return party === 'D' ? margin : -margin;
+}
+
+function formatReadingValue(value, unit = '') {
+  if (value == null) return 'n/a';
+  if (unit === '$') return '$' + value;
+  return String(value) + unit;
+}
+
+function alertForThreshold(metric, value, { warning, critical, direction, unit = '' }) {
+  if (value == null) return null;
+
+  const crossedCritical = direction === 'below' ? value < critical : value > critical;
+  const crossedWarning = direction === 'below' ? value < warning : value > warning;
+
+  if (crossedCritical) {
+    return `CRITICAL: ${metric} (${formatReadingValue(value, unit)}) crossed critical threshold`;
+  }
+  if (crossedWarning) {
+    return `WARNING: ${metric} (${formatReadingValue(value, unit)}) crossed warning threshold`;
+  }
+  return null;
+}
+
+function buildThresholdAlerts(readings = {}) {
+  const alerts = [
+    alertForThreshold('Econ approval', toNumber(readings.econ_approval), { warning: 30, critical: 25, direction: 'below', unit: '%' }),
+    alertForThreshold('GOP approval', toNumber(readings.gop_approval), { warning: 80, critical: 75, direction: 'below', unit: '%' }),
+    alertForThreshold('VIX', toNumber(readings.vix), { warning: 30, critical: 40, direction: 'above' }),
+    alertForThreshold('WTI crude', toNumber(readings.wti), { warning: 100, critical: 120, direction: 'above', unit: '$' }),
+    alertForThreshold('Gas price avg', toNumber(readings.gas_price), { warning: 4.00, critical: 5.00, direction: 'above', unit: '$' }),
+    alertForThreshold('10Y yield', toNumber(readings.yield_10y), { warning: 4.60, critical: 5.00, direction: 'above', unit: '%' }),
+    alertForThreshold('2s10s spread', toNumber(readings.spread_2s10s), { warning: 0.75, critical: 1.00, direction: 'above', unit: '%' }),
+    alertForThreshold('30Y yield', toNumber(readings.yield_30y), { warning: 5.25, critical: 5.50, direction: 'above', unit: '%' }),
+    alertForThreshold('Fed hike probability', normalizeProbability(readings.fed_hike_prob), { warning: 0.30, critical: 0.50, direction: 'above' }),
+  ].filter(Boolean);
+
+  const genericBallotMargin = parseGenericBallot(readings.generic_ballot);
+  const genericBallotAlert = alertForThreshold('Generic ballot', genericBallotMargin, {
+    warning: 7,
+    critical: 12,
+    direction: 'above',
+  });
+  if (genericBallotAlert) {
+    alerts.splice(2, 0, genericBallotAlert.replace(`(${genericBallotMargin})`, `(${readings.generic_ballot})`));
+  }
+
+  return alerts;
+}
+
+const SCENARIO_PROB_KEYS = [
+  ['s1_no_pivot', 's1'],
+  ['s2_tariff_rollback', 's2'],
+  ['s3_oil_trap', 's3'],
+];
+
+function roundProbabilitiesToOne(values) {
+  const rounded = values.map((value) => Math.round(value * 10000) / 10000);
+  const drift = Math.round((1 - rounded.reduce((sum, value) => sum + value, 0)) * 10000) / 10000;
+  rounded[rounded.length - 1] = Math.round((rounded[rounded.length - 1] + drift) * 10000) / 10000;
+  return rounded;
+}
+
+function normalizeScenarioProbabilities(data) {
+  const canonical = data.scenario_probs || {};
+  const scenarios = data.scenarios || {};
+  const values = SCENARIO_PROB_KEYS.map(([canonicalKey, oldKey]) => {
+    const canonicalProb = normalizeProbability(canonical[canonicalKey]);
+    if (canonicalProb != null) return canonicalProb;
+    return normalizeProbability(scenarios[oldKey]?.prob);
+  });
+
+  const present = values.filter((value) => value != null);
+  if (present.length === 0) {
+    values.fill(1 / values.length);
+  } else if (present.length < values.length) {
+    const presentSum = present.reduce((sum, value) => sum + value, 0);
+    const remaining = Math.max(0, 1 - presentSum);
+    const missingShare = remaining / (values.length - present.length);
+    for (let i = 0; i < values.length; i++) {
+      if (values[i] == null) values[i] = missingShare;
+    }
+  }
+
+  const total = values.reduce((sum, value) => sum + value, 0);
+  const normalized = total > 0 ? values.map((value) => value / total) : values.map(() => 1 / values.length);
+  const rounded = roundProbabilitiesToOne(normalized);
+
+  data.scenario_probs = Object.fromEntries(
+    SCENARIO_PROB_KEYS.map(([canonicalKey], index) => [canonicalKey, rounded[index]])
+  );
+
+  return data;
+}
+
 function normalizeReadings(data) {
   const r = data.readings || {};
   const numericFields = [
@@ -278,6 +387,62 @@ function normalizeReadings(data) {
   return data;
 }
 
+function normalizeScenarioEntry(entry) {
+  const clean = {};
+  const direction = entry?.direction;
+  clean.direction = ['strengthening', 'weakening', 'stable'].includes(direction) ? direction : 'stable';
+  clean.key_signal = typeof entry?.key_signal === 'string' ? entry.key_signal : '';
+  return clean;
+}
+
+function normalizeScenarioSchema(data) {
+  const scenarios = data.scenarios || {};
+  const canonicalProbs = data.scenario_probs || {};
+  const scenario_probs = {
+    s1_no_pivot: canonicalProbs.s1_no_pivot ?? scenarios.s1?.prob,
+    s2_tariff_rollback: canonicalProbs.s2_tariff_rollback ?? scenarios.s2?.prob,
+    s3_oil_trap: canonicalProbs.s3_oil_trap ?? scenarios.s3?.prob,
+  };
+
+  for (const key of Object.keys(scenario_probs)) {
+    scenario_probs[key] = normalizeProbability(scenario_probs[key]);
+  }
+
+  data.scenario_probs = scenario_probs;
+  data.scenarios = {
+    s1: normalizeScenarioEntry(scenarios.s1),
+    s2: normalizeScenarioEntry(scenarios.s2),
+    s3: normalizeScenarioEntry(scenarios.s3),
+  };
+  data.elaborations = data.elaborations && typeof data.elaborations === 'object' ? data.elaborations : {};
+  data.notes = typeof data.notes === 'string' ? data.notes : '';
+  return data;
+}
+
+function postprocessRefreshData(data) {
+  data = normalizeReadings(data);
+  data = normalizeScenarioSchema(data);
+
+  // Agent B owns deterministic threshold alerts and probability integrity.
+  // If those helpers are present, this call point wires them into refresh output.
+  if (typeof normalizeScenarioProbabilities === 'function') {
+    data = normalizeScenarioProbabilities(data);
+  }
+  if (typeof buildThresholdAlerts === 'function') {
+    data.threshold_alerts = buildThresholdAlerts(data.readings || {});
+  } else if (!Array.isArray(data.threshold_alerts)) {
+    data.threshold_alerts = [];
+  }
+
+  return data;
+}
+
+function scenarioProbabilityFor(entry, canonicalKey, legacyKey) {
+  const canonical = normalizeProbability(entry?.scenario_probs?.[canonicalKey]);
+  if (canonical != null) return canonical;
+  return normalizeProbability(entry?.scenarios?.[legacyKey]?.prob);
+}
+
 const SYSTEM_PROMPT = `You are an investment research analyst updating a political-economic framework. 
 
 Your task: Use the provided recent search context to get the latest data on Trump's economic approval ratings, GOP approval, generic ballot, VIX, gold, oil prices, gas prices, Treasury yields, Fed hike/cut probabilities, S&P 500 forward P/E, and Iran war status. Then re-evaluate three scenarios and assign probabilities. Ensure your numbers reflect the realities in the context.
@@ -301,6 +466,17 @@ KEY THRESHOLDS:
 - ERP: warning below 0.50%, critical below 0.00%. ERP is computed after extraction; do not estimate it.
 - Fed hike probability: warning > 25%, critical > 40%
 
+SCHEMA RULES:
+- Respond only with JSON, no markdown fences or extra text.
+- Use the canonical top-level "scenario_probs" object for scenario probabilities.
+- Each "scenarios.s1/s2/s3" object must contain only "direction" and "key_signal"; do not include "name" or "prob" inside scenarios.
+- Include "threshold_alerts", "headline", "positioning_update", "elaborations", and "notes".
+- "elaborations" should be {} unless scenario elaborations were explicitly requested.
+- Number fields must be numbers, not strings. "generic_ballot" should be a string like "D+9".
+- "yield_10y", "yield_2y", "yield_30y", "spread_2s10s", and "erp" are percentage points, not decimals.
+- "fed_hike_prob" and "fed_cut_prob" are 0-1 probabilities.
+- ERP is computed deterministically as (1 / sp500_forward_pe) * 100 - yield_10y when inputs are available.
+
 OUTPUT FORMAT — respond ONLY with this JSON, no other text:
 {
   "date": "YYYY-MM-DD",
@@ -322,16 +498,24 @@ OUTPUT FORMAT — respond ONLY with this JSON, no other text:
     "fed_hike_prob": <0-1>,
     "fed_cut_prob": <0-1>,
     "sp500_forward_pe": <number>,
+    "erp": <number>,
     "iran_status": "<1-2 sentence summary>"
   },
+  "scenario_probs": {
+    "s1_no_pivot": <0-1>,
+    "s2_tariff_rollback": <0-1>,
+    "s3_oil_trap": <0-1>
+  },
   "scenarios": {
-    "s1": { "name": "No pivot", "prob": <0-1>, "direction": "<strengthening|stable|weakening>", "key_signal": "<1 sentence>" },
-    "s2": { "name": "Tariff rollback", "prob": <0-1>, "direction": "<strengthening|stable|weakening>", "key_signal": "<1 sentence>" },
-    "s3": { "name": "Oil trap", "prob": <0-1>, "direction": "<strengthening|stable|weakening>", "key_signal": "<1 sentence>" }
+    "s1": { "direction": "<strengthening|stable|weakening>", "key_signal": "<1 sentence>" },
+    "s2": { "direction": "<strengthening|stable|weakening>", "key_signal": "<1 sentence>" },
+    "s3": { "direction": "<strengthening|stable|weakening>", "key_signal": "<1 sentence>" }
   },
   "threshold_alerts": ["<alert strings>"],
   "headline": "<1 sentence summary of what changed most since last week>",
-  "positioning_update": "<2-3 sentences on what to do differently this week>"
+  "positioning_update": "<2-3 sentences on what to do differently this week>",
+  "elaborations": {},
+  "notes": "<freeform notes on key developments>"
 }`;
 
 const ELABORATE_PROMPTS = {
@@ -450,17 +634,22 @@ async function doRefresh(env) {
     'Today is ' + dateStr + '. Update the pivot framework using the real-time context provided below:';
 
   const context = await getSearchContext([
+    { q: 'Reuters Ipsos Trump economic approval', topic: 'news' },
+    { q: 'Trump approval rating latest poll', topic: 'news' },
+    { q: 'Trump Republican approval rating', topic: 'news' },
+    { q: 'generic ballot 2026 midterms poll', topic: 'news' },
+    { q: 'Nate Silver Trump approval rating', topic: 'news' },
     { q: 'VIX index today', topic: 'finance' },
-    { q: 'gold price XAU USD today', topic: 'finance' },
-    { q: 'WTI crude oil price today', topic: 'finance' },
-    { q: 'US gas price average today', topic: 'finance' },
-    { q: 'US 10 year Treasury yield today', topic: 'finance' },
-    { q: 'US 2 year Treasury yield today', topic: 'finance' },
-    { q: 'US 30 year Treasury yield today', topic: 'finance' },
-    { q: 'CME FedWatch probability hike latest', topic: 'finance' },
+    { q: 'gold price today', topic: 'finance' },
+    { q: 'oil price WTI Brent today', topic: 'finance' },
+    { q: 'average gas price US today', topic: 'finance' },
+    { q: 'Iran war ceasefire negotiations latest', topic: 'news' },
+    { q: 'Congress tariff vote Republican 2026', topic: 'news' },
+    { q: '10 year Treasury yield today', topic: 'finance' },
+    { q: '2 year Treasury yield today', topic: 'finance' },
+    { q: '30 year Treasury yield today', topic: 'finance' },
+    { q: 'CME FedWatch rate hike cut probability 2026', topic: 'finance' },
     { q: 'S&P 500 12 month forward P/E FactSet latest', topic: 'finance' },
-    { q: 'Trump economic approval rating latest poll', topic: 'news' },
-    { q: 'Trump generic ballot poll 2026', topic: 'news' },
   ], env);
   if (context) {
     userMsg += '\n\n--- RECENT WEB SEARCH CONTEXT ---\n' + context + '\n---------------------------------';
@@ -470,7 +659,7 @@ async function doRefresh(env) {
   const parsed = extractJSON(text);
   parsed.date = parsed.date || dateStr;
   parsed._refreshedAt = new Date().toISOString();
-  return normalizeReadings(parsed);
+  return postprocessRefreshData(parsed);
 }
 
 const SCENARIO_QUERIES = {
@@ -650,8 +839,19 @@ export default {
           return {
             date: d,
             readings: parsed.readings || {},
+            scenario_probs: {
+              s1_no_pivot: scenarioProbabilityFor(parsed, 's1_no_pivot', 's1'),
+              s2_tariff_rollback: scenarioProbabilityFor(parsed, 's2_tariff_rollback', 's2'),
+              s3_oil_trap: scenarioProbabilityFor(parsed, 's3_oil_trap', 's3'),
+            },
             scenarios: Object.fromEntries(
-              Object.entries(parsed.scenarios || {}).map(([k, v]) => [k, { prob: v.prob, direction: v.direction }])
+              Object.entries(parsed.scenarios || {}).map(([k, v]) => [
+                k,
+                {
+                  prob: scenarioProbabilityFor(parsed, k === 's1' ? 's1_no_pivot' : k === 's2' ? 's2_tariff_rollback' : 's3_oil_trap', k),
+                  direction: v.direction,
+                },
+              ])
             ),
           };
         }));
@@ -729,10 +929,17 @@ export default {
       // ── GET /api/provider ──
       if (url.pathname === '/api/provider') {
         const P = PROVIDERS[ACTIVE_PROVIDER];
+        const hasModelSearch = Boolean(P.searchTool);
+        const hasTavilySearch = Boolean(env.TAVILY_API_KEY);
+        const searchMode = hasModelSearch
+          ? (hasTavilySearch ? 'model_and_tavily_prefetch' : 'model_native')
+          : (hasTavilySearch ? 'tavily_prefetch' : 'none');
         return new Response(JSON.stringify({
           active: ACTIVE_PROVIDER,
           model: P.model,
-          hasSearch: true,
+          hasModelSearch,
+          hasTavilySearch,
+          searchMode,
         }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });

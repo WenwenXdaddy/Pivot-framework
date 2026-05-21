@@ -42,10 +42,10 @@
     }
 
     .container {
-      max-width: 860px;
+      width: min(100% - 32px, 1200px);
+      max-width: 1200px;
       margin: 0 auto;
       padding: 2rem 1.5rem 4rem;
-      zoom: 1.4;
     }
 
     header {
@@ -745,6 +745,10 @@
           <div class="chart-title" data-i18n="chartS2">S2: Tariff Rollback %</div>
           <canvas id="chart-s2"></canvas>
         </div>
+        <div class="chart-card">
+          <div class="chart-title" data-i18n="chartS3">S3: Oil Trap %</div>
+          <canvas id="chart-s3"></canvas>
+        </div>
       </div>
     </div>
 
@@ -776,7 +780,7 @@
         historicalTrends: 'Historical trends',
         chartEcon: 'Economic Approval %', chartGold: 'Gold (USD)',
         chartWti: 'WTI Crude (USD)', chartYield10y: '10Y yield %', chartErp: 'ERP %',
-        chartS1: 'S1: No Pivot %', chartS2: 'S2: Tariff Rollback %',
+        chartS1: 'S1: No Pivot %', chartS2: 'S2: Tariff Rollback %', chartS3: 'S3: Oil Trap %',
         footer: 'Framework sources: Reuters/Ipsos, Silver Bulletin, Pew Research, RealClearPolling, Morning Consult, Wells Fargo, JP Morgan, Allianz. Not investment advice.',
         detailTitles: { 1: 'S1: No pivot — deep dive', 2: 'S2: Tariff rollback — deep dive', 3: 'S3: Oil trap — deep dive' },
         analyzing: 'Analyzing scenario',
@@ -800,7 +804,7 @@
         historicalTrends: '历史趋势',
         chartEcon: '经济支持率 %', chartGold: '黄金 (美元)',
         chartWti: 'WTI原油 (美元)', chartYield10y: '10Y收益率 %', chartErp: '股权风险溢价 %',
-        chartS1: 'S1：不转向 %', chartS2: 'S2：关税回撤 %',
+        chartS1: 'S1：不转向 %', chartS2: 'S2：关税回撤 %', chartS3: 'S3：石油陷阱 %',
         footer: '数据来源：路透/益普索、Silver Bulletin、皮尤研究中心、RealClearPolling、Morning Consult、富国银行、摩根大通、安联。本页面不构成投资建议。',
         detailTitles: { 1: 'S1：不转向 — 深度分析', 2: 'S2：关税回撤 — 深度分析', 3: 'S3：石油陷阱 — 深度分析' },
         analyzing: '正在分析情景',
@@ -873,6 +877,39 @@
       return Math.round((n > 1 ? n : n * 100)) + '%';
     }
 
+    function probabilityValue(value) {
+      const n = asNumber(value);
+      if (n == null) return null;
+      return n > 1 ? n / 100 : n;
+    }
+
+    const SCENARIO_PROB_KEYS = {
+      1: 's1_no_pivot',
+      2: 's2_tariff_rollback',
+      3: 's3_oil_trap',
+    };
+
+    function getScenarioProbability(data, scenarioNumber) {
+      const canonicalKey = SCENARIO_PROB_KEYS[scenarioNumber];
+      const canonical = probabilityValue(data?.scenario_probs?.[canonicalKey]);
+      if (canonical != null) return canonical;
+      return probabilityValue(data?.scenarios?.['s' + scenarioNumber]?.prob);
+    }
+
+    function getScenarioProbabilityPercent(data, scenarioNumber) {
+      const p = getScenarioProbability(data, scenarioNumber);
+      return p == null ? null : Math.round(p * 100);
+    }
+
+    function providerSearchLabel(info) {
+      if (!info) return '';
+      if (info.searchMode) return info.searchMode;
+      if (info.hasModelSearch) return 'model search';
+      if (info.hasTavilySearch) return 'Tavily search';
+      if (info.hasSearch) return 'search';
+      return 'no search';
+    }
+
     function fmtBp(value) {
       const n = asNumber(value);
       if (n == null) return '—';
@@ -909,18 +946,18 @@
       document.getElementById('m-yield-30y').textContent = fmtPercent(r.yield_30y, 2);
       document.getElementById('m-erp').textContent = fmtPercent(r.erp, 2);
       document.getElementById('m-fed-hike').textContent = fmtProbability(r.fed_hike_prob);
-      const s = data.scenarios || {};
       const dirLabels = currentLang === 'cn'
         ? { strengthening: '增强', weakening: '减弱', stable: '稳定' }
         : { strengthening: 'strengthening', weakening: 'weakening', stable: 'stable' };
-      for (const [key, sc] of Object.entries(s)) {
-        const num = key.replace('s', '');
-        document.getElementById('s' + num + '-prob').textContent = Math.round(sc.prob * 100) + '%';
+      for (const num of [1, 2, 3]) {
+        const sc = data.scenarios?.['s' + num] || {};
+        const prob = getScenarioProbability(data, num);
+        document.getElementById('s' + num + '-prob').textContent = prob == null ? '—' : Math.round(prob * 100) + '%';
         const dirColors = { strengthening: 'var(--success)', weakening: 'var(--danger)', stable: 'var(--tert)' };
         const dirArrows = { strengthening: '↑', weakening: '↓', stable: '→' };
         document.getElementById('s' + num + '-dir').innerHTML =
           '<span style="color:' + (dirColors[sc.direction] || 'var(--tert)') + '">' +
-          (dirArrows[sc.direction] || '→') + ' ' + (dirLabels[sc.direction] || sc.direction) + '</span>';
+          (dirArrows[sc.direction] || '→') + ' ' + (dirLabels[sc.direction] || sc.direction || '') + '</span>';
         document.getElementById('s' + num + '-signal').textContent = sc.key_signal || '';
       }
       if (data.headline) {
@@ -950,7 +987,8 @@
       try {
         const res = await fetch(WORKER_URL + '/api/provider');
         const info = await res.json();
-        document.getElementById('provider-info').textContent = info.active + ' / ' + info.model + (info.hasSearch ? ' + search' : '');
+        const searchLabel = providerSearchLabel(info);
+        document.getElementById('provider-info').textContent = info.active + ' / ' + info.model + (searchLabel ? ' / ' + searchLabel : '');
       } catch (e) {}
       setStatus('Loading cached data...', true);
       await fetchLatestData();
@@ -1026,8 +1064,9 @@
         drawChart('chart-wti', labels, entries.map(e => e.readings?.wti ?? null), '#6B6960');
         drawChart('chart-yield-10y', labels, entries.map(e => derivedReadings(e.readings).yield_10y ?? null), '#2D7A3A');
         drawChart('chart-erp', labels, entries.map(e => derivedReadings(e.readings).erp ?? null), '#9A6B11');
-        drawChart('chart-s1', labels, entries.map(e => e.scenarios?.s1?.prob != null ? Math.round(e.scenarios.s1.prob * 100) : null), '#B03030');
-        drawChart('chart-s2', labels, entries.map(e => e.scenarios?.s2?.prob != null ? Math.round(e.scenarios.s2.prob * 100) : null), '#2D5A9E');
+        drawChart('chart-s1', labels, entries.map(e => getScenarioProbabilityPercent(e, 1)), '#B03030');
+        drawChart('chart-s2', labels, entries.map(e => getScenarioProbabilityPercent(e, 2)), '#2D5A9E');
+        drawChart('chart-s3', labels, entries.map(e => getScenarioProbabilityPercent(e, 3)), '#9A6B11');
       } catch (e) {}
     }
 
